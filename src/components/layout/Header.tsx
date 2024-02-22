@@ -3,6 +3,7 @@ import { Search } from './Header/Search';
 import { Link } from '../common/Link';
 import { ThemeChange } from './Header/ThemeChange';
 import { Separator } from '../ui/separator';
+import { Avatar } from './Header/Avatar';
 
 export const Header = () => {
 	return (
@@ -12,7 +13,7 @@ export const Header = () => {
 				<Separator className='w-2' orientation='vertical' />
 				<Link className='w-min h-min' path='/' title='Учебник' />
 			</h2>
-			<nav></nav>
+			<Avatar />
 			<Search />
 		</header>
 	);

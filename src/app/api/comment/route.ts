@@ -9,6 +9,7 @@ const comments: Comments[] = [
 				created_at: 'now',
 				id: 1,
 				username: 'user1',
+				rate: 0,
 			},
 		],
 	},
@@ -20,6 +21,7 @@ const comments: Comments[] = [
 				created_at: 'now',
 				id: 2,
 				username: 'user1',
+				rate: 0,
 			},
 		],
 	},
@@ -62,6 +64,12 @@ const comments: Comments[] = [
 ];
 
 export async function GET(req: NextRequest) {
+	const comment = comments.find(
+		com => String(com.book_id) == req.nextUrl.searchParams.get('book_id')
+	);
+
+	comment?.comments.sort((a, b) => b.rate - a.rate);
+
 	return NextResponse.json(
 		comments.find(
 			com => String(com.book_id) == req.nextUrl.searchParams.get('book_id')
@@ -70,7 +78,28 @@ export async function GET(req: NextRequest) {
 }
 
 export async function POST(req: NextRequest) {
-	return NextResponse.json(comments.push((await req.json()).comment));
+	const { comment, book_id } = await req.json();
+
+	const commentNew = {
+		content: comment.content,
+		created_at: String(new Date().getTime()),
+		id: new Date().getTime() + comment.content + comment.username,
+		rate: 0,
+		username: comment.username,
+	};
+	comments.find(com => com.book_id == book_id)?.comments.push(commentNew);
+	return NextResponse.json(commentNew);
+}
+
+export async function PUT(req: NextRequest) {
+	const { comment, book_id } = await req.json();
+	const book = comments.find(com => com.book_id == book_id);
+
+	const indexComment = book?.comments.findIndex(com => com.id == comment.id)!;
+
+	if (book) {
+		book.comments[indexComment] = comment;
+	}
 }
 
 export function DELETE(req: NextRequest) {
