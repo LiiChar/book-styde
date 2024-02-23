@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
+import { Skeleton } from '@/components/ui/skeleton';
 import { Textarea } from '@/components/ui/textarea';
 import {
 	getCommentsByBookId,
@@ -40,7 +41,10 @@ export const Comments: FC<Props> = memo(({ book_id }) => {
 
 	const handleLike = async (com: Comment, like: number) => {
 		com.rate = like;
-		await likeComment(com);
+		await likeComment({
+			comment: com,
+			book_id,
+		});
 		await getCommentsByBookId(book_id).then(data => setComments(data.comments));
 	};
 
@@ -52,7 +56,7 @@ export const Comments: FC<Props> = memo(({ book_id }) => {
 					id='comment'
 					value={comment}
 					placeholder='Введите ваш комментарий'
-					className='min-h-14 max-h-44 h-auto'
+					className='min-h-10 max-h-44 h-auto'
 					onChange={e => setComment(e.target.value)}
 				/>
 				<Button onClick={handleSendComment}>Написать комментарий</Button>
@@ -60,38 +64,42 @@ export const Comments: FC<Props> = memo(({ book_id }) => {
 			<article>
 				<h3 className='text-2xl'>Комментарии</h3>
 				<div className='flex flex-col gap-4'>
-					{comments.map(com => (
-						<div className='bg-accent p-2  rounded-sm' key={com.id}>
-							<div className='flex justify-between mb-3 items-center'>
-								<div className='flex gap-4 items-center'>
-									<Avatar>
-										<AvatarImage
-											src={`https://ui-avatars.com/api/?name=${com.username}`}
-										/>
-										<AvatarFallback>{com.username}</AvatarFallback>
-									</Avatar>
+					{comments.length > 0 ? (
+						comments.map(com => (
+							<div className='bg-accent p-2  rounded-sm' key={com.id}>
+								<div className='flex md:justify-between mb-3 items-center'>
+									<div className='flex w-full justify-between md:gap-4 items-center'>
+										<Avatar>
+											<AvatarImage
+												src={`https://ui-avatars.com/api/?name=${com.username}`}
+											/>
+											<AvatarFallback>{com.username}</AvatarFallback>
+										</Avatar>
 
-									{com.username}
+										{com.username}
+									</div>
+									<div className='hidden md:block'>{com.created_at}</div>
 								</div>
-								<div>{com.created_at}</div>
+								<div>{com.content}</div>
+								<Separator className='my-2 bg-background' />
+								<div className='flex gap-2 md:justify-between md:justify-end w-full items-center'>
+									<ThumbsUp
+										onClick={() => handleLike(com, com.rate + 1)}
+										width={18}
+										height={18}
+									/>
+									{com.rate}
+									<ThumbsDown
+										onClick={() => handleLike(com, com.rate - 1)}
+										width={18}
+										height={18}
+									/>
+								</div>
 							</div>
-							<div>{com.content}</div>
-							<Separator className='my-2 bg-background' />
-							<div className='flex gap-2'>
-								<ThumbsUp
-									onClick={() => handleLike(com, com.rate + 1)}
-									width={18}
-									height={18}
-								/>
-								{com.rate}
-								<ThumbsDown
-									onClick={() => handleLike(com, com.rate - 1)}
-									width={18}
-									height={18}
-								/>
-							</div>
-						</div>
-					))}
+						))
+					) : (
+						<Skeleton className='w-full h-28 bg-accent' />
+					)}
 				</div>
 			</article>
 		</section>

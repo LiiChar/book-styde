@@ -7,7 +7,7 @@ import { Avatar } from './Header/Avatar';
 
 export const Header = () => {
 	return (
-		<header className='h-12 z-50 sticky top-0 flex justify-between items-center px-2 overflow-y-visible'>
+		<header className='header	 h-12 z-50 sticky top-0 flex justify-between items-center px-2 overflow-y-visible'>
 			<h2 className='text-2xl flex justify-center items-center space-x-4 '>
 				<ThemeChange />
 				<Separator className='w-2' orientation='vertical' />

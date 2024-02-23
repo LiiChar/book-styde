@@ -21,7 +21,7 @@ export const Search = memo(() => {
 			className=' flex overflow-x-hidden z-40 bg-background overflow-y-visible'
 		>
 			{visible ? (
-				<div className='animate-show-r overflow-y-visible'>
+				<div className=' animate-show-r overflow-y-visible'>
 					<SearchBook />
 				</div>
 			) : (

@@ -3,17 +3,22 @@ import { useThemeStore } from '@/store/ThemeStore';
 import Editor from 'react-simple-code-editor';
 import { PropsWithChildren, useState } from 'react';
 // @ts-ignore
-import saveEval from 'safe-eval';
 import { Play } from 'lucide-react';
 import parse from 'react-html-parser';
+import {
+	ResizableHandle,
+	ResizablePanel,
+	ResizablePanelGroup,
+} from '@/components/ui/resizable';
 
 // @ts-ignore
 import { highlight, languages } from 'prismjs/components/prism-core';
 import 'prismjs/components/prism-clike';
 import 'prismjs/components/prism-javascript';
-// import 'prismjs/components/prism-css';
-// import 'prismjs/components/prism-cshtml';
-import 'prismjs/themes/prism.css'; //Example style, you can use another
+import 'prismjs/components/prism-css';
+import 'prismjs/components/prism-markup';
+
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 export const Code = ({
 	children,
@@ -23,6 +28,9 @@ export const Code = ({
 }) => {
 	const { isLight } = useThemeStore();
 	const [code, setCode] = useState(children as string);
+	const [html, setHtml] = useState(`<body>
+	
+</body>`);
 	const [result, setResult] = useState<{
 		type: 'error' | 'successefuly';
 		result: string[];
@@ -54,23 +62,72 @@ export const Code = ({
 		return result;
 	};
 
+	const transfoncCodeToValidCss = (code: string): string => {
+		let ht = html;
+		code = code.replaceAll('body', '.main_start');
+		code = code.replaceAll('*', '.main_start');
+		code = code.replaceAll('html', '.main_start');
+		ht = ht.replaceAll('<body', '<div class="main_start"');
+		ht = ht.replaceAll('<html', '<div class="main_start"');
+		let result = `
+	<style>${code}</style>
+	${ht}`;
+		return result;
+	};
+
 	return (
 		<div className='relative flex min-h-10 max-h-64 overflow-auto my-4 w-full h-full'>
-			<Editor
-				value={code}
-				onValueChange={e => handleInputCode(e ?? '')}
-				highlight={code => highlight(code, languages[language])}
-				padding={10}
-				placeholder={String(children)}
-				className='w-full min-h-10 bg-accent rounded-md'
-			/>
-			{languages != 'css' && languages != 'html' && (
-				<Play
-					onClick={runCode}
-					className='w-8 h-8 stroke-green-700 absolute top-1 hover:fill-green-900 hover:stroke-green-900 right-6 fill-green-700 '
-				/>
-			)}
-			{(languages == 'css' || languages == 'html') && <div>{parse(code)}</div>}
+			<ResizablePanelGroup direction='horizontal'>
+				<ResizablePanel minSize={15} defaultSize={50}>
+					<Tabs defaultValue='language'>
+						{(language == 'css' || language == 'html') && (
+							<TabsList>
+								<TabsTrigger value='language'>index.{language}</TabsTrigger>
+								<TabsTrigger value='html'>index.html</TabsTrigger>
+							</TabsList>
+						)}
+						<TabsContent value='language'>
+							<Editor
+								value={code}
+								onValueChange={e => handleInputCode(e ?? '')}
+								highlight={code => highlight(code, languages[language])}
+								padding={10}
+								placeholder={String(children)}
+								className='w-full min-h-10 bg-accent rounded-md'
+							/>
+						</TabsContent>
+						<TabsContent value='html'>
+							<Editor
+								value={html}
+								onValueChange={e => setHtml(e ?? '')}
+								highlight={code => highlight(code, languages.markup)}
+								padding={10}
+								placeholder={'Enter your html code'}
+								className='w-full min-h-10 bg-accent rounded-md'
+							/>
+						</TabsContent>
+						{language != 'css' && language != 'html' && (
+							<Play
+								onClick={runCode}
+								className='w-8 h-8 stroke-green-700 absolute top-1 hover:fill-green-900 hover:stroke-green-900 right-6 fill-green-700 '
+							/>
+						)}
+					</Tabs>
+				</ResizablePanel>
+				{(language == 'css' || language == 'html') && (
+					<ResizableHandle className='mx-1 w-[1px] h-full bg-green-700' />
+				)}
+				{(language == 'css' || language == 'html') && (
+					<ResizablePanel
+						className='bg-accent rounded-md'
+						minSize={15}
+						maxSize={85}
+						defaultSize={50}
+					>
+						{parse(transfoncCodeToValidCss(code))}
+					</ResizablePanel>
+				)}
+			</ResizablePanelGroup>
 			{result?.result.map(res => (
 				<div
 					className={`${result && result.type == 'error' && 'text-red-600'}`}

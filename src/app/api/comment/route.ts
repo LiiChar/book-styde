@@ -100,6 +100,8 @@ export async function PUT(req: NextRequest) {
 	if (book) {
 		book.comments[indexComment] = comment;
 	}
+
+	return NextResponse.json(comment);
 }
 
 export function DELETE(req: NextRequest) {

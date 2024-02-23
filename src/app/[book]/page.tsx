@@ -23,6 +23,7 @@ const page = ({ params }: Props) => {
 	const book: Book | BookPart = getResultBySearch(
 		decodeURI(params.book.replaceAll('_', ' '))
 	)[0];
+	console.log(decodeURI(params.book.replaceAll('_', ' ')));
 
 	function isBook(obj: any): obj is Book {
 		return 'parts' in book;
@@ -58,7 +59,7 @@ const page = ({ params }: Props) => {
 								return (
 									<Code
 										key={node.children && node.children[0].data + node.type}
-										language={'javascript'}
+										language={(node.attribs && node.attribs.language) ?? 'js'}
 									>
 										{node.children && node.children[0].data}
 									</Code>

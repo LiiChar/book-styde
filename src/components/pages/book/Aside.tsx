@@ -52,7 +52,7 @@ export const Aside = ({ className, chapter }: Props) => {
 		<aside
 			className={cn(
 				!chapter && headings.length == 0 && 'hidden',
-				'h-full top-[48px] w-1/5 sticky px-[23px] py-[25px]',
+				'h-full top-[48px] w-1/5 sticky px-[23px] py-[25px] hidden md:block',
 				className
 			)}
 		>
