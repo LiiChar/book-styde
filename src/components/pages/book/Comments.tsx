@@ -51,7 +51,9 @@ export const Comments: FC<Props> = memo(({ book_id }) => {
 	return (
 		<section className='my-4'>
 			<div className='grid w-full gap-1.5 mb-4'>
-				<Label htmlFor='comment'>Ваш комментарий</Label>
+				<Label className='text-xl' htmlFor='comment'>
+					Ваш комментарий
+				</Label>
 				<Textarea
 					id='comment'
 					value={comment}
@@ -68,7 +70,7 @@ export const Comments: FC<Props> = memo(({ book_id }) => {
 						comments.map(com => (
 							<div className='bg-accent p-2  rounded-sm' key={com.id}>
 								<div className='flex md:justify-between mb-3 items-center'>
-									<div className='flex w-full justify-between md:gap-4 items-center'>
+									<div className='flex w-full justify-between md:justify-normal md:gap-4 items-center'>
 										<Avatar>
 											<AvatarImage
 												src={`https://ui-avatars.com/api/?name=${com.username}`}
@@ -82,7 +84,7 @@ export const Comments: FC<Props> = memo(({ book_id }) => {
 								</div>
 								<div>{com.content}</div>
 								<Separator className='my-2 bg-background' />
-								<div className='flex gap-2 md:justify-between md:justify-end w-full items-center'>
+								<div className='flex gap-2 justify-between md:justify-end w-full items-center'>
 									<ThumbsUp
 										onClick={() => handleLike(com, com.rate + 1)}
 										width={18}

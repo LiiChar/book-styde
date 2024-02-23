@@ -23,13 +23,17 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 export const Code = ({
 	children,
 	language,
+	compile = true,
+	disable = false,
 }: PropsWithChildren & {
 	language: string;
+	compile?: boolean;
+	disable?: boolean;
 }) => {
 	const { isLight } = useThemeStore();
 	const [code, setCode] = useState(children as string);
 	const [html, setHtml] = useState(`<body>
-	
+
 </body>`);
 	const [result, setResult] = useState<{
 		type: 'error' | 'successefuly';
@@ -67,11 +71,34 @@ export const Code = ({
 		code = code.replaceAll('body', '.main_start');
 		code = code.replaceAll('*', '.main_start');
 		code = code.replaceAll('html', '.main_start');
+
 		ht = ht.replaceAll('<body', '<div class="main_start"');
+		ht = ht.replaceAll('</body', '</div');
 		ht = ht.replaceAll('<html', '<div class="main_start"');
+		ht = ht.replaceAll('</html', '</div');
+
+		ht = ht.replaceAll('<head', '<div');
+		ht = ht.replaceAll('</head', '</div');
+
 		let result = `
 	<style>${code}</style>
 	${ht}`;
+		return result;
+	};
+
+	const transfoncCodeToValidHTML = (code: string): string => {
+		let ht = code;
+
+		ht = ht.replaceAll('<body', '<div class="main_start"');
+		ht = ht.replaceAll('</body', '</div');
+		ht = ht.replaceAll('<html', '<div class="main_start"');
+		ht = ht.replaceAll('</html', '</div');
+
+		ht = ht.replaceAll('<head', '<div');
+		ht = ht.replaceAll('</head', '</div');
+
+		let result = `
+	${code}`;
 		return result;
 	};
 
@@ -80,7 +107,7 @@ export const Code = ({
 			<ResizablePanelGroup direction='horizontal'>
 				<ResizablePanel minSize={15} defaultSize={50}>
 					<Tabs defaultValue='language'>
-						{(language == 'css' || language == 'html') && (
+						{(language == 'css' || language == 'js') && (
 							<TabsList>
 								<TabsTrigger value='language'>index.{language}</TabsTrigger>
 								<TabsTrigger value='html'>index.html</TabsTrigger>
@@ -92,8 +119,9 @@ export const Code = ({
 								onValueChange={e => handleInputCode(e ?? '')}
 								highlight={code => highlight(code, languages[language])}
 								padding={10}
+								disabled={disable}
 								placeholder={String(children)}
-								className='w-full min-h-10 bg-accent rounded-md'
+								className='w-full h-full min-h-10 bg-accent rounded-md'
 							/>
 						</TabsContent>
 						<TabsContent value='html'>
@@ -102,11 +130,12 @@ export const Code = ({
 								onValueChange={e => setHtml(e ?? '')}
 								highlight={code => highlight(code, languages.markup)}
 								padding={10}
+								disabled={disable}
 								placeholder={'Enter your html code'}
 								className='w-full min-h-10 bg-accent rounded-md'
 							/>
 						</TabsContent>
-						{language != 'css' && language != 'html' && (
+						{language != 'css' && language != 'markup' && (
 							<Play
 								onClick={runCode}
 								className='w-8 h-8 stroke-green-700 absolute top-1 hover:fill-green-900 hover:stroke-green-900 right-6 fill-green-700 '
@@ -114,10 +143,10 @@ export const Code = ({
 						)}
 					</Tabs>
 				</ResizablePanel>
-				{(language == 'css' || language == 'html') && (
+				{(language == 'css' || language == 'markup') && compile && (
 					<ResizableHandle className='mx-1 w-[1px] h-full bg-green-700' />
 				)}
-				{(language == 'css' || language == 'html') && (
+				{language == 'css' && compile && (
 					<ResizablePanel
 						className='bg-accent rounded-md'
 						minSize={15}
@@ -125,6 +154,16 @@ export const Code = ({
 						defaultSize={50}
 					>
 						{parse(transfoncCodeToValidCss(code))}
+					</ResizablePanel>
+				)}
+				{language == 'markup' && compile && (
+					<ResizablePanel
+						className='bg-accent rounded-md'
+						minSize={15}
+						maxSize={85}
+						defaultSize={50}
+					>
+						{parse(transfoncCodeToValidHTML(code))}
 					</ResizablePanel>
 				)}
 			</ResizablePanelGroup>

@@ -150,8 +150,7 @@ h3 {
 p {
 	margin: 7px 0 14px 0;
 }
-
-h1,
+li h1,
 h2,
 h4,
 h5,
@@ -163,6 +162,24 @@ h6 {
 ol,
 ul {
 	list-style: none;
+}
+
+.content {
+	ol,
+	ul {
+		list-style: circle;
+		padding-left: 16px;
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+		margin-bottom: 6px;
+	}
+
+	li:hover {
+		cursor: default;
+		background-color: hsl(var(--background));
+		color: hsl(var(--foreground));
+	}
 }
 
 li:hover {

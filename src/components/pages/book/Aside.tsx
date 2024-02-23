@@ -21,8 +21,10 @@ export const Aside = ({ className, chapter }: Props) => {
 		const h3Element = document.querySelectorAll('h3');
 		const headingsArray = Array.from(h3Element).map(heading => {
 			heading.id = heading.innerText;
-			const observer = new IntersectionObserver(e => {
-				setActiveHead(heading.id);
+			const observer = new IntersectionObserver(([entry]) => {
+				if (entry.isIntersecting) {
+					setActiveHead(heading.id);
+				}
 			});
 			observer.observe(heading);
 			heading.style.backgroundClip = 'content-box';
@@ -52,7 +54,7 @@ export const Aside = ({ className, chapter }: Props) => {
 		<aside
 			className={cn(
 				!chapter && headings.length == 0 && 'hidden',
-				'h-full top-[48px] w-1/5 sticky px-[23px] py-[25px] hidden md:block',
+				'h-full top-[48px] w-[28%] sticky px-[23px] py-[25px] hidden md:block',
 				className
 			)}
 		>
@@ -73,7 +75,7 @@ export const Aside = ({ className, chapter }: Props) => {
 					<ul className=' text-sm'>
 						{headings.map(heading => (
 							<li
-								className={`w-full  ${
+								className={`w-full flex flex-col gap-1  ${
 									activeHead == heading.text && 'bg-foreground text-background'
 								}`}
 								key={heading.id}
