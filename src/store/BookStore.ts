@@ -1,3 +1,4 @@
+'use client';
 import { book, book as bookJSON, data } from '@/assets/book';
 import { Book, BookPart, Books } from '@/types/Book';
 import { create } from 'zustand';
