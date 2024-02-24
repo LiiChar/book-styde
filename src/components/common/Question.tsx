@@ -6,7 +6,7 @@ interface Props {
 	question: QuestionWork;
 }
 
-export const Question: FC<Props> = memo(({ question }) => {
+const Question: FC<Props> = memo(({ question }) => {
 	const [answer, setAnswer] = useState('');
 
 	return (
@@ -17,3 +17,7 @@ export const Question: FC<Props> = memo(({ question }) => {
 		</div>
 	);
 });
+
+Question.displayName = 'Question';
+
+export { Question };

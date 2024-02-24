@@ -18,7 +18,7 @@ interface Props {
 	};
 }
 
-const page = ({ params }: Props) => {
+const Book = ({ params }: Props) => {
 	const { getResultBySearch, getBookByChapter } = useBookStore();
 
 	const book: Book | BookPart = getResultBySearch(
@@ -162,4 +162,4 @@ const page = ({ params }: Props) => {
 	);
 };
 
-export default page;
+export default Book;

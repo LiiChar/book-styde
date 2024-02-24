@@ -5,7 +5,7 @@ import { Button } from '../../ui/button';
 import { SearchBook } from '@/components/common/SearchBook';
 import { useOnClickOutside } from 'usehooks-ts';
 
-export const Search = memo(() => {
+const Search = memo(() => {
 	const [visible, setVisible] = useState(false);
 	const ref = useRef<HTMLDivElement>(null);
 
@@ -32,3 +32,7 @@ export const Search = memo(() => {
 		</search>
 	);
 });
+
+Search.displayName = 'Search';
+
+export { Search };

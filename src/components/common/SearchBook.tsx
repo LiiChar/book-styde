@@ -17,7 +17,7 @@ interface Props {
 	className?: HTMLProps<HTMLElement>['className'];
 }
 
-export const SearchBook = memo(({ className }: Props) => {
+const SearchBook = memo(({ className }: Props) => {
 	const [search, setSearch] = useState('');
 	const [books, setBooks] = useState<Book[] | BookPart[]>([]);
 	const { getResultBySearch } = useBookStore();
@@ -58,3 +58,7 @@ export const SearchBook = memo(({ className }: Props) => {
 		</article>
 	);
 });
+
+SearchBook.displayName = 'SearchBook';
+
+export { SearchBook };

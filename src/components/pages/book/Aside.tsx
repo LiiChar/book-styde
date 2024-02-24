@@ -12,7 +12,7 @@ type headings = {
 	text: string;
 };
 
-export const Aside = ({ className, chapter }: Props) => {
+const Aside = ({ className, chapter }: Props) => {
 	const [headings, setHeadings] = useState<headings[]>([]);
 	const [activeHead, setActiveHead] = useState('');
 	const observers: [IntersectionObserver, HTMLHeadingElement][] = [];
@@ -95,3 +95,7 @@ export const Aside = ({ className, chapter }: Props) => {
 		</aside>
 	);
 };
+
+Aside.displayName = 'Aside';
+
+export { Aside };

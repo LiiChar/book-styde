@@ -20,7 +20,7 @@ import 'prismjs/components/prism-markup';
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
-export const Code = ({
+const Code = ({
 	children,
 	language,
 	compile = true,
@@ -178,3 +178,7 @@ export const Code = ({
 		</div>
 	);
 };
+
+Code.displayName = 'Code';
+
+export { Code };

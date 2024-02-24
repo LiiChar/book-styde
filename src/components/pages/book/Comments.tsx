@@ -19,7 +19,7 @@ interface Props {
 	book_id: number;
 }
 
-export const Comments: FC<Props> = memo(({ book_id }) => {
+const Comments: FC<Props> = memo(({ book_id }) => {
 	const { username } = useUserStore();
 	const [comments, setComments] = useState<Comment[]>([]);
 	const [comment, setComment] = useState('');
@@ -107,3 +107,7 @@ export const Comments: FC<Props> = memo(({ book_id }) => {
 		</section>
 	);
 });
+
+Comments.displayName = 'Comments';
+
+export { Comments };

@@ -7,10 +7,14 @@ interface Props {
 	className?: HTMLProps<HTMLElement>['className'];
 }
 
-export const Link: React.FC<Props> = ({ path, className, title }) => {
+const Link: React.FC<Props> = ({ path, className, title }) => {
 	return (
 		<LinkHref className={className} href={path.replaceAll(' ', '_')}>
 			{title ?? path}
 		</LinkHref>
 	);
 };
+
+Link.displayName = 'Link';
+
+export { Link };

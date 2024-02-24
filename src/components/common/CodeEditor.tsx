@@ -6,7 +6,7 @@ import { useState } from 'react';
 // @ts-ignore
 import saveEval from 'safe-eval';
 
-export const CodeEditor = ({ work }: { work: CodeWork }) => {
+const CodeEditor = ({ work }: { work: CodeWork }) => {
 	const { isLight } = useThemeStore();
 	const { answer, code: defaultCode, explain, language } = work;
 	const [code, setCode] = useState(defaultCode);
@@ -33,3 +33,7 @@ export const CodeEditor = ({ work }: { work: CodeWork }) => {
 		</div>
 	);
 };
+
+CodeEditor.displayName = 'CodeEditor';
+
+export { CodeEditor };

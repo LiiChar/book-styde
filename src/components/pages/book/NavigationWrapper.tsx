@@ -17,7 +17,7 @@ interface Props {
 	chapter: number;
 }
 
-export const NavigationWrapper: FC<Props> = memo(
+const NavigationWrapper: FC<Props> = memo(
 	({ children, className, chapter }) => {
 		const { getNavigatePartByChapter } = useBookStore();
 		const [prev, next] = getNavigatePartByChapter(chapter);
@@ -45,3 +45,7 @@ export const NavigationWrapper: FC<Props> = memo(
 		);
 	}
 );
+
+NavigationWrapper.displayName = 'NavigationWrapper';
+
+export { NavigationWrapper };

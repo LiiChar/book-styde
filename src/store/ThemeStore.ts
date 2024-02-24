@@ -14,13 +14,15 @@ const defaultDark = (): Theme => {
 	const theme = { theme: 'dark' };
 	// const theme = JSON.parse(localStorage.getItem('theme') ?? '');
 
-	const body = document.querySelector('body')!;
+	try {
+		const body = document && document.querySelector('body')!;
 
-	if (theme.theme == 'dark') {
-		body.classList.add('dark');
-	} else {
-		body.classList.remove('dark');
-	}
+		if (theme.theme == 'dark') {
+			body.classList.add('dark');
+		} else {
+			body.classList.remove('dark');
+		}
+	} catch (e) {}
 
 	return 'dark';
 };
@@ -32,15 +34,19 @@ export const useThemeStore = create<ThemeStore>()(
 			isLight: false,
 			setTheme: theme =>
 				set(() => {
-					const body = document.querySelector('body')!;
+					try {
+						const body = document && document.querySelector('body')!;
 
-					if (theme == 'dark') {
-						body.classList.add('dark');
-					} else {
-						body.classList.remove('dark');
+						if (theme == 'dark') {
+							body.classList.add('dark');
+						} else {
+							body.classList.remove('dark');
+						}
+
+						return { theme, isLight: theme === 'light' };
+					} catch (error) {
+						return { theme, isLight: theme === 'light' };
 					}
-
-					return { theme, isLight: theme === 'light' };
 				}),
 		}),
 		{
