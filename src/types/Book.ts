@@ -22,7 +22,7 @@ export type BookPart = {
 	title: string;
 	chapter: number;
 	content: string;
-	works: CodeWork[] | QuestionWork[];
+	works: (CodeWork | QuestionWork)[];
 };
 
 export type CodeWork = {
@@ -38,4 +38,5 @@ export type QuestionWork = {
 	question: string;
 	answer: string;
 	explain: string;
+	variant: string[];
 };

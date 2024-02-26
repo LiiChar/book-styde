@@ -19,6 +19,7 @@ import 'prismjs/components/prism-css';
 import 'prismjs/components/prism-markup';
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { transfoncCodeToValidCss, transfoncCodeToValidHTML, transformCodeToParse } from '@/utils/parser';
 
 const Code = ({
 	children,
@@ -54,52 +55,6 @@ const Code = ({
 			/*In html make a div and put id "screen" in it for this to work
 		you can also replace this line with document.write or alert as per your wish*/
 		}
-	};
-
-	const transformCodeToParse = (code: string): string => {
-		let result =
-			'const result = []; function push(el) {result.push(JSON.stringify(el))};' +
-			code +
-			`${code.trim().at(-1) == ';' ? '' : ';'}return result;`;
-		result = result.replaceAll('alert(', 'push(');
-		result = result.replaceAll('console.log(', 'push(');
-		return result;
-	};
-
-	const transfoncCodeToValidCss = (code: string): string => {
-		let ht = html;
-		code = code.replaceAll('body', '.main_start');
-		code = code.replaceAll('*', '.main_start');
-		code = code.replaceAll('html', '.main_start');
-
-		ht = ht.replaceAll('<body', '<div class="main_start"');
-		ht = ht.replaceAll('</body', '</div');
-		ht = ht.replaceAll('<html', '<div class="main_start"');
-		ht = ht.replaceAll('</html', '</div');
-
-		ht = ht.replaceAll('<head', '<div');
-		ht = ht.replaceAll('</head', '</div');
-
-		let result = `
-	<style>${code}</style>
-	${ht}`;
-		return result;
-	};
-
-	const transfoncCodeToValidHTML = (code: string): string => {
-		let ht = code;
-
-		ht = ht.replaceAll('<body', '<div class="main_start"');
-		ht = ht.replaceAll('</body', '</div');
-		ht = ht.replaceAll('<html', '<div class="main_start"');
-		ht = ht.replaceAll('</html', '</div');
-
-		ht = ht.replaceAll('<head', '<div');
-		ht = ht.replaceAll('</head', '</div');
-
-		let result = `
-	${code}`;
-		return result;
 	};
 
 	return (
@@ -153,7 +108,7 @@ const Code = ({
 						maxSize={85}
 						defaultSize={50}
 					>
-						{parse(transfoncCodeToValidCss(code))}
+						{parse(transfoncCodeToValidCss(code, html))}
 					</ResizablePanel>
 				)}
 				{language == 'markup' && compile && (

@@ -6,6 +6,7 @@ import { Aside } from '@/components/pages/book/Aside';
 import { Comments } from '@/components/pages/book/Comments';
 import { NavigationWrapper } from '@/components/pages/book/NavigationWrapper';
 import { Button } from '@/components/ui/button';
+import { Separator } from '@/components/ui/separator';
 import { useBookStore } from '@/store/BookStore';
 import { Book, BookPart, BookTypeWork } from '@/types/Book';
 import { ArrowLeft } from 'lucide-react';
@@ -30,7 +31,7 @@ const Book = ({ params }: Props) => {
 	}
 
 	function isPart(obj: any): obj is BookPart {
-		return 'code' in book;
+		return 'works' in book;
 	}
 
 	function NextToStringHTML(nodes: any[] | any): string {
@@ -105,7 +106,7 @@ const Book = ({ params }: Props) => {
 					<Button className='w-8 h-8 bg-background'>
 						<ArrowLeft className='fill-foreground' width={14} height={14} />
 					</Button>
-					<h1 className='text-4xl'>{book.title}</h1>
+					<h1 className='text-4xl text-center'>{book.title}</h1>
 					<div className='w-8'></div>
 				</div>
 				<section className='content'>
@@ -113,9 +114,7 @@ const Book = ({ params }: Props) => {
 						transform(node, index) {
 							if (node.type == 'tag' && node.name == 'code') {
 								const chilren = node.children && node.children;
-								console.log(chilren);
 								let child = chilren ? NodeToStringHTML(chilren) : '';
-
 								return (
 									<Code
 										key={node.children && node.children[0].data + node.type}
@@ -138,24 +137,28 @@ const Book = ({ params }: Props) => {
 						},
 					})}
 				</section>
-
-				<div>
-					{isPart(book) &&
-						book.works.map(work => (
-							<div key={work.answer + work.explain} className='w-full h-72'>
+				{'works' in book && (
+					<div>
+						<h3>Задачи</h3>
+						{book.works.map((work, i) => (
+							<div key={work.answer + work.explain} className='w-full'>
 								{work.type == BookTypeWork.CODE && (
 									<div className='w-full h-full'>
-										<CodeEditor work={work} />
+										<CodeEditor {...work} />
 									</div>
 								)}
 								{work.type == BookTypeWork.QUESTION && (
-									<div className='w-full h-72'>
+									<div className='w-full'>
 										<Question question={work} />
 									</div>
 								)}
+								{'works' in book &&
+									book.works.length > 1 &&
+									book.works.length - 1 != i && <Separator className='mt-4' />}
 							</div>
 						))}
-				</div>
+					</div>
+				)}
 				<Comments book_id={book.chapter} />
 			</NavigationWrapper>
 		</div>

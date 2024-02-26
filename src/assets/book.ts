@@ -100,7 +100,7 @@ export const book = `{
 }
 `;
 
-export const data: any = {
+export const data: Books = {
 	book: [
 		{
 			title: 'Язык HTML',
@@ -128,21 +128,7 @@ export const data: any = {
 
 <p>Перед тем, как начать эту тему, рекомендуется пройтись по разделу "Начало работы с вебом", однако это необязательно; многое из того, что описано в статье "Основы HTML", также рассматривается и во "Введении в HTML", причём даже более подробно.</p>
 `,
-					works: [
-						{
-							type: BookTypeWork.CODE,
-							code: 'const x = 5;',
-							answer: '5',
-							explain: 'This is a simple code example.',
-							language: 'js',
-						},
-						{
-							type: BookTypeWork.QUESTION,
-							question: 'What is the capital of France?',
-							answer: 'Paris',
-							explain: 'Paris is the capital of France.',
-						},
-					],
+					works: [],
 				},
 				{
 					title: 'Что внутри "head"? Метаданные в HTML',
@@ -212,7 +198,27 @@ export const data: any = {
 <h3>Активное изучение: экспериментируем с символьными кодировками</h3>
 <p>Чтобы проверить это, вернитесь к HTML из примера title (странице title-example.html), поменяйте meta charset на ISO-8859-1 и попробуйте написать что-нибудь на японском или русском. Вот текст из нашего примера (кстати, там написано «рис горячий»):</p>
           `,
-					works: [],
+					works: [
+						{
+							type: BookTypeWork.CODE,
+							code: 'const x = 5;',
+							answer: '5',
+							explain: 'This is a simple code example.',
+							language: 'javascript',
+						},
+						{
+							type: BookTypeWork.QUESTION,
+							question: 'Для чего нужент мета тег title',
+							answer: 'Указание названия страницы',
+							explain:
+								'Мы уже видели, как работает элемент title: его используют для добавления заголовка (названия страницы) в документ.',
+							variant: [
+								'Указание названия страницы',
+								'Указание описания страницы',
+								'Для указания ключевого слова',
+							],
+						},
+					],
 				},
 			],
 		},

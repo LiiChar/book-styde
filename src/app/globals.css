@@ -121,6 +121,17 @@ button:hover {
 	}
 }
 
+.disable_hover_button {
+	svg {
+		stroke: hsl(var(--background));
+	}
+	button:hover {
+		svg {
+			stroke: hsl(var(--background));
+		}
+	}
+}
+
 table {
 	border-collapse: collapse;
 	border-spacing: 0;
