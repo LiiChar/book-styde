@@ -19,7 +19,12 @@ import 'prismjs/components/prism-css';
 import 'prismjs/components/prism-markup';
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { transfoncCodeToValidCss, transfoncCodeToValidHTML, transformCodeToParse } from '@/utils/parser';
+import {
+	transfoncCodeToValidCss,
+	transfoncCodeToValidHTML,
+	transformCodeToParse,
+} from '@/utils/parser';
+import dedent from 'dedent';
 
 const Code = ({
 	children,
@@ -32,7 +37,7 @@ const Code = ({
 	disable?: boolean;
 }) => {
 	const { isLight } = useThemeStore();
-	const [code, setCode] = useState(children as string);
+	const [code, setCode] = useState(dedent`${children as string}`);
 	const [html, setHtml] = useState(`<body>
 
 </body>`);

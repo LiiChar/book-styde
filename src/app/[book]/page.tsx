@@ -6,6 +6,7 @@ import { Aside } from '@/components/pages/book/Aside';
 import { Comments } from '@/components/pages/book/Comments';
 import { NavigationWrapper } from '@/components/pages/book/NavigationWrapper';
 import { Button } from '@/components/ui/button';
+import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 import { useBookStore } from '@/store/BookStore';
 import { Book, BookPart, BookTypeWork } from '@/types/Book';
@@ -139,11 +140,12 @@ const Book = ({ params }: Props) => {
 				</section>
 				{'works' in book && (
 					<div>
-						<h3>Задачи</h3>
+						<h3 className='text-2xl'>Задачи</h3>
 						{book.works.map((work, i) => (
 							<div key={work.answer + work.explain} className='w-full'>
 								{work.type == BookTypeWork.CODE && (
 									<div className='w-full h-full'>
+										<Label className='text-xl'>{work.question}</Label>
 										<CodeEditor {...work} />
 									</div>
 								)}

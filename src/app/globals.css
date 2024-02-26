@@ -285,17 +285,65 @@ textarea {
 }
 
 textarea::-webkit-scrollbar {
-	width: 12px; /* width of the entire scrollbar */
+	width: 6px; /* width of the entire scrollbar */
 }
 
 textarea::-webkit-scrollbar-track {
-	background: orange; /* color of the tracking area */
+	background: rgba(255, 166, 0, 0); /* color of the tracking area */
 }
 
 textarea::-webkit-scrollbar-thumb {
-	background-color: blue; /* color of the scroll thumb */
-	border-radius: 20px; /* roundness of the scroll thumb */
-	border: 3px solid orange; /* creates padding around scroll thumb */
+	background-color: hsl(var(--foreground)); /* color of the scroll thumb */
+	border-radius: 6px; /* roundness of the scroll thumb */
+}
+
+.scroll_class {
+	overflow: auto;
+	::-webkit-scrollbar {
+		width: 6px; /* width of the entire scrollbar */
+	}
+
+	::-webkit-scrollbar-track {
+		background: rgba(255, 166, 0, 0); /* color of the tracking area */
+	}
+
+	::-webkit-scrollbar-thumb {
+		background-color: hsl(var(--foreground)); /* color of the scroll thumb */
+		border-radius: 6x; /* roundness of the scroll thumb */
+	}
+
+	pre {
+		overflow: auto;
+	}
+	pre::-webkit-scrollbar {
+		width: 6px; /* width of the entire scrollbar */
+	}
+
+	pre::-webkit-scrollbar-track {
+		background: rgba(255, 166, 0, 0); /* color of the tracking area */
+	}
+
+	pre::-webkit-scrollbar-thumb {
+		background-color: hsl(var(--foreground)); /* color of the scroll thumb */
+		border-radius: 6x; /* roundness of the scroll thumb */
+	}
+
+	textarea {
+		overflow: auto;
+	}
+
+	textarea::-webkit-scrollbar {
+		width: 6px; /* width of the entire scrollbar */
+	}
+
+	textarea::-webkit-scrollbar-track {
+		background: rgba(255, 166, 0, 0); /* color of the tracking area */
+	}
+
+	textarea::-webkit-scrollbar-thumb {
+		background-color: hsl(var(--foreground)); /* color of the scroll thumb */
+		border-radius: 6px; /* roundness of the scroll thumb */
+	}
 }
 
 .link {

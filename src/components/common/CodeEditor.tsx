@@ -27,6 +27,9 @@ import {
 import { Button } from '../ui/button';
 import { highlight, languages } from 'prismjs';
 import dedent from 'dedent';
+import { Label } from '../ui/label';
+import { useBookStore } from '@/store/BookStore';
+import { BookTypeWork, CodeWork } from '@/types/Book';
 
 const CodeEditor = ({
 	code,
@@ -35,6 +38,7 @@ const CodeEditor = ({
 	disable = false,
 	answer,
 	explain,
+	question,
 }: {
 	code: string;
 	language: string;
@@ -42,8 +46,9 @@ const CodeEditor = ({
 	disable?: boolean;
 	answer: string;
 	explain: string;
+	question: string;
 }) => {
-	const [coder, setCode] = useState(code as string);
+	const [coder, setCode] = useState(dedent`${code as string}`);
 	const [html, setHtml] = useState(`<body>
 
 </body>`);
@@ -51,6 +56,16 @@ const CodeEditor = ({
 		type: 'error' | 'successefuly';
 		result: string[];
 	}>();
+	const [help, setHelp] = useState('');
+	const { setWork, checkWork } = useBookStore();
+	const resolve = checkWork({
+		answer,
+		code,
+		explain,
+		language: 'javascript',
+		question,
+		type: BookTypeWork.CODE,
+	});
 
 	const handleInputCode = (e: string) => {
 		setCode(e);
@@ -60,17 +75,40 @@ const CodeEditor = ({
 		try {
 			const evalq = new Function(transformCodeToParse(coder))();
 			setResult({ result: evalq, type: 'successefuly' });
-		} catch (err) {
-			if (err instanceof SyntaxError)
-				setResult({ result: [err.message], type: 'error' });
+		} catch (err: any) {
+			setResult({ result: [err.message], type: 'error' });
 			/*In html make a div and put id "screen" in it for this to work
 		you can also replace this line with document.write or alert as per your wish*/
 		}
 	};
 
+	const showResolve = () => {
+		setHelp(explain + '\n' + `Ответ: ${answer}`);
+	};
+
+	const verifyResolve = () => {
+		if (result?.type == 'successefuly') {
+			if (JSON.parse(result.result.join(',')) == String(answer)) {
+				setHelp('Задача решена');
+				setWork({
+					answer,
+					code,
+					explain,
+					language: 'javascript',
+					question,
+					type: BookTypeWork.CODE,
+				});
+			} else {
+				setHelp('Ответ неверный, попробуйте снова');
+			}
+		} else {
+			setHelp('Произошла ошибка, исправьте и попробуйте снова');
+		}
+	};
+
 	return (
-		<div className='w-full h-auto'>
-			<div className='relative flex flex-col min-h-10 max-h-64 h-auto overflow-auto my-4 w-full'>
+		<div className='w-full h-auto overflow-auto'>
+			<div className='relative flex flex-col min-h-10 max-h-64 h-auto overflow-auto mb-4 w-full'>
 				<ResizablePanelGroup direction='horizontal'>
 					<ResizablePanel minSize={15} defaultSize={50}>
 						<Tabs defaultValue='language'>
@@ -82,7 +120,7 @@ const CodeEditor = ({
 							)}
 							<TabsContent value='language'>
 								<Editor
-									value={dedent`${coder}`}
+									value={coder}
 									onValueChange={e => handleInputCode(e ?? '')}
 									highlight={code =>
 										highlight(code, languages[language], language)
@@ -90,7 +128,7 @@ const CodeEditor = ({
 									padding={10}
 									disabled={disable}
 									placeholder={String(code)}
-									className='w-full h-full min-h-10 bg-accent rounded-md'
+									className='w-full scroll_class h-full min-h-10 bg-accent rounded-md'
 								/>
 							</TabsContent>
 							<TabsContent value='html'>
@@ -103,7 +141,7 @@ const CodeEditor = ({
 									padding={10}
 									disabled={disable}
 									placeholder={'Enter your html code'}
-									className='w-full min-h-10 bg-accent rounded-md'
+									className='w-full scroll_class min-h-10 bg-accent rounded-md'
 								/>
 							</TabsContent>
 							{language != 'css' && language != 'markup' && (
@@ -145,7 +183,9 @@ const CodeEditor = ({
 							{result?.result.map(res => (
 								<div
 									className={`${
-										result && result.type == 'error' && 'text-red-600'
+										result && result.type == 'error'
+											? 'text-red-400'
+											: 'text-green-500'
 									}`}
 									key={res}
 								>
@@ -156,9 +196,14 @@ const CodeEditor = ({
 					</div>
 				)}
 			</div>
-			<div className='flex justify-between'>
-				<Button>Решение</Button>
-				<Button>Проверить</Button>
+			<div className='flex justify-between items-center'>
+				<Button onClick={showResolve}>Решение</Button>
+				{(help.length > 0 || resolve) && (
+					<div className='text-xs overflow-auto text-wrap flex bg-accent justify-center h-[35px] rounded-sm items-center w-1/2'>
+						{(resolve && 'Задача решена') || help}
+					</div>
+				)}
+				<Button onClick={verifyResolve}>Проверить</Button>
 			</div>
 		</div>
 	);

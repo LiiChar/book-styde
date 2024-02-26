@@ -27,6 +27,7 @@ export type BookPart = {
 
 export type CodeWork = {
 	type: BookTypeWork.CODE;
+	question: string;
 	code: string;
 	answer: string;
 	explain: string;

@@ -1,6 +1,10 @@
 export const transformCodeToParse = (code: string): string => {
 	let result =
-		'const result = []; function push(el) {result.push(JSON.stringify(el))};' +
+		`const result = []; 
+		function push(...el) {
+			let rets = el.join(', ');
+			result.push(JSON.stringify(rets))
+		};` +
 		code +
 		`${code.trim().at(-1) == ';' ? '' : ';'}return result;`;
 	result = result.replaceAll('alert(', 'push(');
