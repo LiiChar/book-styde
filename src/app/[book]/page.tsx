@@ -37,9 +37,16 @@ const Book = ({ params }: Props) => {
 
 	function NextToStringHTML(nodes: any[] | any): string {
 		let result = '';
-		if (nodes && !Array.isArray(nodes) && nodes.type == 'text') {
+		if (
+			nodes &&
+			!Array.isArray(nodes) &&
+			(nodes.type == 'text' || nodes.type == 'comment')
+		) {
 			if (nodes.data.includes('/n')) {
 				return '';
+			}
+			if (nodes.type == 'comment') {
+				return `<-- ${nodes.data} -->`;
 			}
 			return nodes.data;
 		}
@@ -60,9 +67,16 @@ const Book = ({ params }: Props) => {
 
 	function NodeToStringHTML(nodes: any[] | any): string {
 		let result = '';
-		if (nodes && !Array.isArray(nodes) && nodes.type == 'text') {
+		if (
+			nodes &&
+			!Array.isArray(nodes) &&
+			(nodes.type == 'text' || nodes.type == 'comment')
+		) {
 			if (nodes.data.includes('\n ')) {
 				return '';
+			}
+			if (nodes.type == 'comment') {
+				return `<-- ${nodes.data} -->`;
 			}
 			return nodes.data;
 		}
