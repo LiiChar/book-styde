@@ -24,7 +24,7 @@ const Book = ({ params }: Props) => {
 	const { getResultBySearch, getBookByChapter } = useBookStore();
 
 	const book: Book | BookPart = getResultBySearch(
-		decodeURI(params.book.replaceAll('_', ' '))
+		params.book.replaceAll('_', ' ')
 	)[0];
 
 	function isBook(obj: any): obj is Book {
@@ -107,7 +107,7 @@ const Book = ({ params }: Props) => {
 	}
 
 	return (
-		<div className='flex relative'>
+		<div className='flex relative '>
 			<Aside
 				chapter={
 					getBookByChapter(
@@ -116,8 +116,11 @@ const Book = ({ params }: Props) => {
 				}
 				className='overflow-y-auto'
 			/>
-			<NavigationWrapper chapter={book.chapter} className=''>
-				<div className='flex justify-between items-center mb-4'>
+			<NavigationWrapper
+				chapter={book.chapter}
+				className='w-[82vw] border-l-[1px]'
+			>
+				<div className='flex justify-between items-center mb-4 '>
 					<Button className='w-8 h-8 bg-background'>
 						<ArrowLeft className='fill-foreground' width={14} height={14} />
 					</Button>
@@ -127,7 +130,7 @@ const Book = ({ params }: Props) => {
 				<section className='content'>
 					{parse(book.content, {
 						transform(node, index) {
-							if (node.type == 'tag' && node.name == 'code') {
+							if (node.type == 'tag' && node.name == 'pre') {
 								const chilren = node.children && node.children;
 								let child = chilren ? NodeToStringHTML(chilren) : '';
 								return (

@@ -27,6 +27,8 @@ const Aside = ({ className, chapter }: Props) => {
 					setActiveHead(heading.id);
 				}
 			});
+			let a = 5;
+			a = 1;
 			observer.observe(heading);
 			heading.style.backgroundClip = 'content-box';
 			heading.style.paddingTop = '42px';
@@ -55,43 +57,45 @@ const Aside = ({ className, chapter }: Props) => {
 		<aside
 			className={cn(
 				!chapter && headings.length == 0 && 'hidden',
-				'h-full top-[48px] w-[28%] sticky px-[23px] py-[25px] hidden md:block',
+				'h-full top-[48px] w-full sticky py-4 p flex-col items-end hidden md:flex',
 				className
 			)}
 		>
-			<div></div>
-			<div className='mb-4'>
-				{chapter && (
-					<>
-						<h4>Каталог</h4>
-						<Link path={String(chapter)} />
-					</>
-				)}
-			</div>
-			<div>
-				<h4>Навигация урока</h4>
-				{headings.length == 0 ? (
-					<div>Нет</div>
-				) : (
-					<ul className=' text-sm'>
-						{headings.map(heading => (
-							<li
-								className={`w-full flex flex-col gap-1  ${
-									activeHead == heading.text && 'bg-foreground text-background'
-								}`}
-								key={heading.id}
-							>
-								<button
-									className={`pl-4 text-left w-full h-full
-							`}
-									onClick={() => handleNavigation(heading.id)}
+			<div className='w-[95%]'>
+				<div className='mb-4'>
+					{chapter && (
+						<div>
+							<h4>Каталог</h4>
+							<Link path={String(chapter)} />
+						</div>
+					)}
+				</div>
+				<div>
+					<h4>Навигация урока</h4>
+					{headings.length == 0 ? (
+						<div>Нет</div>
+					) : (
+						<ul className=' text-sm'>
+							{headings.map(heading => (
+								<li
+									className={`w-full flex flex-col gap-1  ${
+										activeHead == heading.text &&
+										'bg-foreground text-background'
+									}`}
+									key={heading.id}
 								>
-									{heading.text}
-								</button>
-							</li>
-						))}
-					</ul>
-				)}
+									<button
+										className={`pl-4 text-left w-full h-full
+							`}
+										onClick={() => handleNavigation(heading.id)}
+									>
+										{heading.text}
+									</button>
+								</li>
+							))}
+						</ul>
+					)}
+				</div>
 			</div>
 		</aside>
 	);

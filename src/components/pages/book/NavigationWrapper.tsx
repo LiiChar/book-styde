@@ -31,7 +31,9 @@ const NavigationWrapper: FC<Props> = memo(
 						className='hidden h-18 w-18 md:block fixed translate-y-[calc(50% + 32px)] top-1/2 '
 					/>
 				)}
-				<div className={cn('py-4 px-6 md:px-24 w-full h-full', className)}>
+				<div
+					className={cn('py-4 px-[6px] md:px-[48px] w-full h-full', className)}
+				>
 					{children}
 				</div>
 				{next && (

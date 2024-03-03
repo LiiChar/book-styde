@@ -44,10 +44,11 @@ export const useBookStore = create<BookStore>(set => ({
 	},
 	setReadingChapter: chapter =>
 		set(state => ({ reads: [...state.reads, chapter] })),
-	getResultBySearch: search => {
-		if (search.length == 0) {
+	getResultBySearch: srh => {
+		if (srh.length == 0) {
 			return [];
 		}
+		const search = decodeURI(srh);
 		let books: Book[] = [];
 		let result: any[] = [];
 
