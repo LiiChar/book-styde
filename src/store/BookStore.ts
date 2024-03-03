@@ -1,5 +1,5 @@
 'use client';
-import { book, book as bookJSON, data } from '@/assets/book';
+import { data } from '@/assets/book';
 import { Book, BookPart, Books, CodeWork, QuestionWork } from '@/types/Book';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
