@@ -12,6 +12,8 @@ export const storeComment = async (comment: any): Promise<Comment> => {
 		body: JSON.stringify(comment),
 		method: 'POST',
 	});
+	console.log(data);
+
 	return data.json();
 };
 

@@ -23,7 +23,7 @@ const NavigationWrapper: FC<Props> = memo(
 		const [prev, next] = getNavigatePartByChapter(chapter);
 
 		return (
-			<div className='relative w-full'>
+			<div className='relative w-full '>
 				{prev && (
 					<Link
 						path={prev.title}

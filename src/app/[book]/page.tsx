@@ -54,7 +54,7 @@ const Book = ({ params }: Props) => {
 			const tagOpen = `<${nodes.name} ${
 				nodes.attribs
 					? Object.entries(nodes.attribs).map(
-							([key, value]) => `${key}=${value}`
+							([key, value]) => `${key}${value ? `="${value}"` : ''} ~~`
 					  )
 					: ''
 			}>`;
@@ -70,8 +70,13 @@ const Book = ({ params }: Props) => {
 		if (
 			nodes &&
 			!Array.isArray(nodes) &&
-			(nodes.type == 'text' || nodes.type == 'comment')
+			(nodes.type == 'text' ||
+				nodes.type == 'comment' ||
+				nodes.type == 'script')
 		) {
+			if (nodes.type == 'script') {
+				return '';
+			}
 			if (nodes.data.includes('\n ')) {
 				return '';
 			}
@@ -89,7 +94,7 @@ const Book = ({ params }: Props) => {
 			const tagOpen = `<${nodes.name} ${
 				nodes.attribs
 					? Object.entries(nodes.attribs).map(
-							([key, value]) => `${key}=${value}`
+							([key, value]) => `${key}${value ? `="${value}"` : ''} ~~`
 					  )
 					: ''
 			}>`;
@@ -99,15 +104,19 @@ const Book = ({ params }: Props) => {
 				nodes.next ? NextToStringHTML(nodes.next) : ''
 			}`;
 		} else if (nodes) {
-			nodes.forEach((node: any) => {
-				result += NodeToStringHTML(node);
-			});
+			if (!Array.isArray(nodes)) {
+				result += NodeToStringHTML(nodes);
+			} else {
+				nodes.forEach((node: any) => {
+					result += NodeToStringHTML(node);
+				});
+			}
 		}
 		return result;
 	}
 
 	return (
-		<div className='flex relative '>
+		<div className='flex relative'>
 			<Aside
 				chapter={
 					getBookByChapter(
@@ -118,7 +127,7 @@ const Book = ({ params }: Props) => {
 			/>
 			<NavigationWrapper
 				chapter={book.chapter}
-				className='w-[82vw] border-l-[1px]'
+				className='md:w-[82vw] w-full md:border-l-[1px] flex flex-col items-center'
 			>
 				<div className='flex justify-between items-center mb-4 '>
 					<Button className='w-8 h-8 bg-background'>
@@ -133,9 +142,17 @@ const Book = ({ params }: Props) => {
 							if (node.type == 'tag' && node.name == 'pre') {
 								const chilren = node.children && node.children;
 								let child = chilren ? NodeToStringHTML(chilren) : '';
+								child = child.replaceAll('~~,', '');
+								child = child.replaceAll('~~', '');
+								console.log(!child && console.log(chilren));
+
 								return (
 									<Code
-										key={node.children && node.children[0].data + node.type}
+										key={
+											node.children && node.children.length != 0
+												? node.children[0].data + node.type
+												: node.type + index
+										}
 										language={(node.attribs && node.attribs.language) ?? 'js'}
 										disable={
 											(node.attribs && node.attribs.disable == 'true'

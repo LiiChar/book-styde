@@ -41,6 +41,7 @@ const Code = ({
 	const [html, setHtml] = useState(`<body>
 
 </body>`);
+
 	const [result, setResult] = useState<{
 		type: 'error' | 'successefuly';
 		result: string[];
@@ -95,7 +96,7 @@ const Code = ({
 								className='w-full min-h-10 bg-accent rounded-md'
 							/>
 						</TabsContent>
-						{language != 'css' && language != 'markup' && (
+						{language == 'js' && (
 							<Play
 								onClick={runCode}
 								className='w-8 h-8 stroke-green-700 absolute top-1 hover:fill-green-900 hover:stroke-green-900 right-6 fill-green-700 '
@@ -106,25 +107,31 @@ const Code = ({
 				{(language == 'css' || language == 'markup') && compile && (
 					<ResizableHandle className='mx-1 w-[1px] h-full bg-green-700' />
 				)}
-				{language == 'css' && compile && (
-					<ResizablePanel
-						className='bg-accent rounded-md'
-						minSize={15}
-						maxSize={85}
-						defaultSize={50}
-					>
-						{parse(transfoncCodeToValidCss(code, html))}
-					</ResizablePanel>
+				{language == 'css' && (
+					<>
+						<ResizableHandle className='mx-1 w-[1px] h-full bg-green-700' />
+						<ResizablePanel
+							className='bg-accent rounded-md'
+							minSize={15}
+							maxSize={85}
+							defaultSize={50}
+						>
+							{parse(transfoncCodeToValidCss(code, html))}
+						</ResizablePanel>
+					</>
 				)}
-				{language == 'markup' && compile && (
-					<ResizablePanel
-						className='bg-accent rounded-md'
-						minSize={15}
-						maxSize={85}
-						defaultSize={50}
-					>
-						{parse(transfoncCodeToValidHTML(code))}
-					</ResizablePanel>
+				{language == 'markup' && (
+					<>
+						<ResizableHandle className='mx-1 w-[1px] h-full bg-green-700' />
+						<ResizablePanel
+							className='bg-accent result_hmtl rounded-md mt-[7px] p-[10px]'
+							minSize={15}
+							maxSize={85}
+							defaultSize={50}
+						>
+							{parse(transfoncCodeToValidHTML(code))}
+						</ResizablePanel>
+					</>
 				)}
 			</ResizablePanelGroup>
 			{result?.result.map(res => (

@@ -88,6 +88,8 @@ export async function POST(req: NextRequest) {
 		username: comment.username,
 	};
 	comments.find(com => com.book_id == book_id)?.comments.push(commentNew);
+	console.log(JSON.stringify(commentNew));
+
 	return NextResponse.json(commentNew);
 }
 

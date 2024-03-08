@@ -23,9 +23,14 @@ const Comments: FC<Props> = memo(({ book_id }) => {
 	const { username } = useUserStore();
 	const [comments, setComments] = useState<Comment[]>([]);
 	const [comment, setComment] = useState('');
+	const [loading, setLoading] = useState(true);
 
 	useEffect(() => {
-		getCommentsByBookId(book_id).then(data => setComments(data.comments));
+		setLoading(true);
+		getCommentsByBookId(book_id).then(data => {
+			setComments(data.comments);
+			setLoading(false);
+		});
 	}, []);
 
 	const handleSendComment = async () => {
@@ -49,7 +54,7 @@ const Comments: FC<Props> = memo(({ book_id }) => {
 	};
 
 	return (
-		<section className='my-4'>
+		<section className='my-4 w-full'>
 			<div className='grid w-full gap-1.5 mb-4'>
 				<Label className='text-xl' htmlFor='comment'>
 					Ваш комментарий
@@ -99,8 +104,10 @@ const Comments: FC<Props> = memo(({ book_id }) => {
 								</div>
 							</div>
 						))
-					) : (
+					) : loading ? (
 						<Skeleton className='w-full h-28 bg-accent' />
+					) : (
+						<section>Нет комментариев</section>
 					)}
 				</div>
 			</article>
