@@ -63,6 +63,8 @@ const Code = ({
 		}
 	};
 
+	const allowLang = ['js', 'markup', 'css'];
+
 	return (
 		<div className='relative flex min-h-10 max-h-64 overflow-auto my-4 w-full h-full'>
 			<ResizablePanelGroup direction='horizontal'>
@@ -78,7 +80,14 @@ const Code = ({
 							<Editor
 								value={code}
 								onValueChange={e => handleInputCode(e ?? '')}
-								highlight={code => highlight(code, languages[language])}
+								highlight={code =>
+									highlight(
+										code,
+										allowLang.includes(language)
+											? languages[language]
+											: languages.markup
+									)
+								}
 								padding={10}
 								disabled={disable}
 								placeholder={String(children)}

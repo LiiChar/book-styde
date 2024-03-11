@@ -66,7 +66,7 @@ const Aside = ({ className, chapter }: Props) => {
 					{chapter && (
 						<div>
 							<h4>Каталог</h4>
-							<Link path={String(chapter)} />
+							<Link path={'page/' + String(chapter)} />
 						</div>
 					)}
 				</div>

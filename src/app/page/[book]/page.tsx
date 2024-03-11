@@ -40,17 +40,24 @@ const Book = ({ params }: Props) => {
 		if (
 			nodes &&
 			!Array.isArray(nodes) &&
-			(nodes.type == 'text' || nodes.type == 'comment')
+			(nodes.type == 'text' ||
+				nodes.type == 'comment' ||
+				nodes.type == 'script')
 		) {
-			if (nodes.data.includes('/n')) {
-				return '';
-			}
+			// if (nodes.data && nodes.data.includes('/n')) {
+			// 	return '';
+			// }
 			if (nodes.type == 'comment') {
 				return `<-- ${nodes.data} -->`;
 			}
 			return nodes.data;
 		}
-		if (nodes && !Array.isArray(nodes) && nodes.type == 'tag' && nodes.next) {
+		if (
+			nodes &&
+			!Array.isArray(nodes) &&
+			(nodes.type == 'tag' || nodes.type == 'style') &&
+			nodes.next
+		) {
 			const tagOpen = `<${nodes.name} ${
 				nodes.attribs
 					? Object.entries(nodes.attribs).map(
@@ -74,12 +81,9 @@ const Book = ({ params }: Props) => {
 				nodes.type == 'comment' ||
 				nodes.type == 'script')
 		) {
-			if (nodes.type == 'script') {
-				return '';
-			}
-			if (nodes.data.includes('\n ')) {
-				return '';
-			}
+			// if (nodes.data && nodes.data.includes('\n ')) {
+			// 	return '';
+			// }
 			if (nodes.type == 'comment') {
 				return `<-- ${nodes.data} -->`;
 			}
@@ -88,7 +92,7 @@ const Book = ({ params }: Props) => {
 		if (
 			nodes &&
 			!Array.isArray(nodes) &&
-			nodes.type == 'tag' &&
+			(nodes.type == 'tag' || nodes.type == 'style') &&
 			nodes.children
 		) {
 			const tagOpen = `<${nodes.name} ${
@@ -127,7 +131,7 @@ const Book = ({ params }: Props) => {
 			/>
 			<NavigationWrapper
 				chapter={book.chapter}
-				className='md:w-[82vw] w-full md:border-l-[1px] flex flex-col items-center'
+				className='md:w-[82vw] md:max-w-[82vw] w-full md:border-l-[1px] flex flex-col items-center'
 			>
 				<div className='flex justify-between items-center mb-4 '>
 					<Button className='w-8 h-8 bg-background'>
@@ -141,10 +145,11 @@ const Book = ({ params }: Props) => {
 						transform(node, index) {
 							if (node.type == 'tag' && node.name == 'pre') {
 								const chilren = node.children && node.children;
+
 								let child = chilren ? NodeToStringHTML(chilren) : '';
 								child = child.replaceAll('~~,', '');
 								child = child.replaceAll('~~', '');
-								console.log(!child && console.log(chilren));
+								child = child.replaceAll('\n  </dd>\n', '');
 
 								return (
 									<Code
@@ -172,7 +177,7 @@ const Book = ({ params }: Props) => {
 						},
 					})}
 				</section>
-				{'works' in book && (
+				{'works' in book && book.works.length > 0 && (
 					<div>
 						<h3 className='text-2xl'>Задачи</h3>
 						{book.works.map((work, i) => (

@@ -7,14 +7,11 @@ export const getCommentsByBookId = async (
 	return data.json();
 };
 
-export const storeComment = async (comment: any): Promise<Comment> => {
-	const data = await fetch(`/api/comment`, {
+export const storeComment = async (comment: any) => {
+	await fetch(`/api/comment`, {
 		body: JSON.stringify(comment),
 		method: 'POST',
 	});
-	console.log(data);
-
-	return data.json();
 };
 
 export const likeComment = async (comment: any) => {

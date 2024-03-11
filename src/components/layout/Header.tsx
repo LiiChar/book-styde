@@ -4,6 +4,7 @@ import { Link } from '../common/Link';
 import { ThemeChange } from './Header/ThemeChange';
 import { Separator } from '../ui/separator';
 import { Avatar } from './Header/Avatar';
+import DialogWrapper from '../common/DialogWrapper';
 
 export const Header = () => {
 	return (
@@ -14,6 +15,7 @@ export const Header = () => {
 				<Link className='w-min h-min' path='/' title='Учебник' />
 			</h2>
 			<Avatar />
+			<DialogWrapper />
 			<Search />
 		</header>
 	);

@@ -6,11 +6,9 @@ import { persist } from 'zustand/middleware';
 
 interface BookStore {
 	book: Book[];
-	reads: number[];
 	workResolve: (CodeWork | QuestionWork)[];
 	checkWork: (work: CodeWork | QuestionWork) => boolean;
 	setWork: (work: CodeWork | QuestionWork) => void;
-	setReadingChapter: (chapter: number) => void;
 	getResultBySearch: (search: string) => any;
 	getBookByChapter: (chapter: number) => Book | BookPart | null;
 	getNavigatePartByChapter: (
@@ -22,7 +20,6 @@ interface BookStore {
 
 export const useBookStore = create<BookStore>(set => ({
 	book: data.book,
-	reads: [],
 	workResolve: [],
 	setWork: work =>
 		set(state => ({ workResolve: [...state.workResolve, work] })),
@@ -42,8 +39,6 @@ export const useBookStore = create<BookStore>(set => ({
 		});
 		return result;
 	},
-	setReadingChapter: chapter =>
-		set(state => ({ reads: [...state.reads, chapter] })),
 	getResultBySearch: srh => {
 		if (srh.length == 0) {
 			return [];

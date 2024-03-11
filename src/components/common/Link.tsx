@@ -9,7 +9,10 @@ interface Props {
 
 const Link: React.FC<Props> = ({ path, className, title }) => {
 	return (
-		<LinkHref className={className} href={path.replaceAll(' ', '_')}>
+		<LinkHref
+			className={className}
+			href={'http://localhost:3000/' + path.replaceAll(' ', '_')}
+		>
 			{title ?? path}
 		</LinkHref>
 	);

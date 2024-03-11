@@ -17,7 +17,7 @@ export const BookNavigation = () => {
 						{book.parts.map(part => (
 							<li key={part.chapter}>
 								<Link
-									path={part.title}
+									path={'page/' + part.title}
 									title={part.chapter + ': ' + part.title}
 								/>
 							</li>

@@ -51,7 +51,7 @@ const SearchBook = memo(({ className }: Props) => {
 				<Separator className='' />
 				{books.map(book => (
 					<li key={book.chapter + book.content} className='h-6 p-1 '>
-						<Link path={book.title} />
+						<Link path={'page/' + book.title} />
 					</li>
 				))}
 			</ul>

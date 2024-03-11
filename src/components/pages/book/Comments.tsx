@@ -27,10 +27,13 @@ const Comments: FC<Props> = memo(({ book_id }) => {
 
 	useEffect(() => {
 		setLoading(true);
-		getCommentsByBookId(book_id).then(data => {
-			setComments(data.comments);
-			setLoading(false);
-		});
+		getCommentsByBookId(book_id)
+			.then(data => {
+				setComments(data.comments);
+			})
+			.finally(() => {
+				setLoading(false);
+			});
 	}, []);
 
 	const handleSendComment = async () => {
@@ -41,6 +44,7 @@ const Comments: FC<Props> = memo(({ book_id }) => {
 			},
 			book_id,
 		});
+		setComment('');
 		await getCommentsByBookId(book_id).then(data => setComments(data.comments));
 	};
 

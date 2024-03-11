@@ -68,6 +68,13 @@ export async function GET(req: NextRequest) {
 		com => String(com.book_id) == req.nextUrl.searchParams.get('book_id')
 	);
 
+	if (!comment) {
+		return NextResponse.json({
+			book_id: req.nextUrl.searchParams.get('book_id'),
+			comments: [],
+		});
+	}
+
 	comment?.comments.sort((a, b) => b.rate - a.rate);
 
 	return NextResponse.json(
@@ -87,8 +94,17 @@ export async function POST(req: NextRequest) {
 		rate: 0,
 		username: comment.username,
 	};
-	comments.find(com => com.book_id == book_id)?.comments.push(commentNew);
-	console.log(JSON.stringify(commentNew));
+
+	const chapter = comments.find(com => com.book_id == book_id);
+
+	if (chapter) {
+		chapter.comments.push(commentNew);
+	} else {
+		comments.push({
+			book_id,
+			comments: [commentNew],
+		});
+	}
 
 	return NextResponse.json(commentNew);
 }
