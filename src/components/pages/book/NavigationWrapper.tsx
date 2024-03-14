@@ -26,32 +26,47 @@ const NavigationWrapper: FC<Props> = memo(
 		const [prev, next] = getNavigatePartByChapter(chapter);
 
 		const handleNextChapter = () => {
-			addReadableBook(id, String(next?.chapter!));
+			if (id) {
+				addReadableBook(id, String(next?.chapter!));
+			}
+		};
+
+		const handlePrevChapter = () => {
+			if (id) {
+			addReadableBook(id, String(prev?.chapter!));
+			}
 		};
 
 		return (
-			<div className='relative w-full '>
+			<div className='relative w-full flex'>
+
 				{prev && (
 					<Link
-						path={'page/' + prev.title}
-						title={<ArrowLeft width={48} height={48} />}
-						className='hidden h-18 w-18 md:block fixed translate-y-[calc(50% + 32px)] top-1/2 '
+					path={'page/' + prev.title}
+					title={<ArrowLeft width={48} height={48} />}
+					className='hidden h-18 w-18 md:block fixed translate-y-[calc(50% + 32px)] top-1/2 '
+					attributes={{
+						onClick: handlePrevChapter
+					}}
 					/>
-				)}
+					)}
 				<div
 					className={cn('py-4 px-[6px] md:px-[48px] w-full h-full', className)}
 				>
 					{children}
 				</div>
+				<div>
 				{next && (
-					<div className='h-full w-18' onClick={handleNextChapter}>
 						<Link
 							path={'page/' + next.title}
 							title={<ArrowRight width={48} height={48} />}
+							attributes={{
+								onClick: handleNextChapter
+							}}
 							className='hidden h-18 w-18 md:block fixed translate-y-[calc(50% + 32px)] right-0 top-1/2'
-						/>
-					</div>
+							/>
 				)}
+				</div>
 			</div>
 		);
 	}
