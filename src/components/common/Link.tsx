@@ -1,3 +1,4 @@
+'use client'
 import React, { HTMLProps, ReactNode } from 'react';
 import LinkHref from 'next/link';
 
@@ -8,10 +9,12 @@ interface Props {
 }
 
 const Link: React.FC<Props> = ({ path, className, title }) => {
+	const host = window && window.location.host
+
 	return (
 		<LinkHref
 			className={className}
-			href={'http://localhost:3000/' + path.replaceAll(' ', '_')}
+			href={window.location.protocol + '//' + host + '/' + path.replaceAll(' ', '_')}
 		>
 			{title ?? path}
 		</LinkHref>
