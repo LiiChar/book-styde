@@ -59,6 +59,7 @@ const Comments: FC<Props> = memo(({ book_id }) => {
 
 	return (
 		<section className='my-4 w-full'>
+			{username.length > 0 &&
 			<div className='grid w-full gap-1.5 mb-4'>
 				<Label className='text-xl' htmlFor='comment'>
 					Ваш комментарий
@@ -72,6 +73,7 @@ const Comments: FC<Props> = memo(({ book_id }) => {
 				/>
 				<Button onClick={handleSendComment}>Написать комментарий</Button>
 			</div>
+}
 			<article>
 				<h3 className='text-2xl'>Комментарии</h3>
 				<div className='flex flex-col gap-4'>
