@@ -11,8 +11,9 @@ import { getCookies, setCookie, deleteCookie, getCookie } from 'cookies-next';
 import { DialogKeyword } from '@/components/common/DialogKeyword';
 import { getUserQuestion } from '@/request/user';
 import { AlertDialogRegister } from '@/components/common/AlertDialogVerify';
-import { useDialogStore } from '@/store/DialogStore';
+import { DialogProvider, useDialogStore } from '@/store/DialogStore';
 import { Button } from '@/components/ui/button';
+import { register } from 'module';
 
 export const Avatar = () => {
 	const { image, username, id, setUser, setQuestion } = useUserStore();
@@ -41,20 +42,26 @@ export const Avatar = () => {
 		openDialog('verify');
 	}, []);
 
+	const handleRegisterButton = () => {
+		console.log('register');
+
+		openDialog('register');
+	};
+
 	const component = useHidration(
 		<>
-			{username ? (
-				<a href={`/profile/${id}`}>
-					<Ava>
-						<AvatarImage src={image} />
-						<AvatarFallback>{username}</AvatarFallback>
-					</Ava>
-				</a>
-			) : (
-				<Button onClick={() => openDialog('register')}>
-					зарегестрироваться
-				</Button>
-			)}
+			<DialogProvider>
+				{username ? (
+					<a href={`/profile/${id}`}>
+						<Ava>
+							<AvatarImage src={image} />
+							<AvatarFallback>{username}</AvatarFallback>
+						</Ava>
+					</a>
+				) : (
+					<Button onClick={handleRegisterButton}>зарегестрироваться</Button>
+				)}
+			</DialogProvider>
 		</>,
 		null
 	);

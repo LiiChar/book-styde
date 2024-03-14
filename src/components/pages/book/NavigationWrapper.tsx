@@ -30,7 +30,7 @@ const NavigationWrapper: FC<Props> = memo(
 		};
 
 		return (
-			<div className='relative w-full '>
+			<div className='relative flex flex w-full '>
 				{prev && (
 					<Link
 						path={'page/' + prev.title}

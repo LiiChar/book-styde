@@ -22,6 +22,8 @@ export function AlertDialogRegister() {
 	};
 
 	const handleClose = () => {
+		console.log('close');
+
 		closeDialog('verify');
 	};
 
