@@ -13,16 +13,28 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { login, register } from '@/request/user';
-import { useDialogStore } from '@/store/DialogStore';
 import { useUserStore } from '@/store/UserStore';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { getCookie } from 'cookies-next';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { closeDialog } from '@/lib/dialogs';
 
 export function DialogRegister() {
 	const { question, username, setUser } = useUserStore();
 	const [keyword, setKeyword] = useState('');
 	const [name, setName] = useState('');
-	const { toggleDialog, closeDialog } = useDialogStore();
+	const {} = useRouter();
+	const { has, get } = useSearchParams();
+	const [open, setOpen] = useState(false);
+	const pathname = usePathname();
+
+	useEffect(() => {
+		if (has('register')) {
+			setOpen(true);
+		} else {
+			setOpen(false);
+		}
+	}, [pathname]);
 
 	const handleRegister = async () => {
 		const response: { type: string; data: string } = await register({});

@@ -9,26 +9,35 @@ import {
 	AlertDialogHeader,
 	AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import { useDialogStore } from '@/store/DialogStore';
-import { useRouter } from 'next/navigation';
+import { closeDialog, openDialog } from '@/lib/dialogs';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { useEffect, useRef, useState } from 'react';
 
-export function AlertDialogRegister() {
-	const router = useRouter();
-	const { dialog, toggleDialog, closeDialog, openDialog } = useDialogStore();
+export function AlertDialogVerify() {
+	const {} = useRouter();
+	const pathname = usePathname();
+	const { has, get } = useSearchParams();
+	const [open, setOpen] = useState(false);
 
-	const handleRegister = () => {
+	useEffect(() => {
+		if (has('verify')) {
+			setOpen(true);
+		} else {
+			setOpen(false);
+		}
+	}, [pathname]);
+
+	function handleClose(): void {
+		closeDialog('verify');
+	}
+
+	function handleRegister(): void {
 		openDialog('register');
 		closeDialog('verify');
-	};
-
-	const handleClose = () => {
-		console.log('close');
-
-		closeDialog('verify');
-	};
+	}
 
 	return (
-		<AlertDialog open={true}>
+		<AlertDialog defaultOpen={false} open={open}>
 			<AlertDialogContent>
 				<AlertDialogHeader>
 					<AlertDialogTitle>Хотите зарегестрироваться?</AlertDialogTitle>

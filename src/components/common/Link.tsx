@@ -1,4 +1,4 @@
-'use client'
+'use client';
 import React, { HTMLProps, ReactNode } from 'react';
 import LinkHref from 'next/link';
 import { addReadableBook } from '@/request/user';
@@ -12,9 +12,8 @@ interface Props {
 }
 
 const Link: React.FC<Props> = ({ path, className, title, attributes }) => {
-	const host = typeof window !== "undefined" && window.location.host
-	const protocol = typeof window !== "undefined" && window.location.protocol
-
+	const host = typeof window !== 'undefined' && window.location.host;
+	const protocol = typeof window !== 'undefined' && window.location.protocol;
 
 	return (
 		<LinkHref

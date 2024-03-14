@@ -4,7 +4,9 @@ import { Link } from '../common/Link';
 import { ThemeChange } from './Header/ThemeChange';
 import { Separator } from '../ui/separator';
 import { Avatar } from './Header/Avatar';
-import DialogWrapper from '../common/DialogWrapper';
+import { AlertDialogVerify } from '../common/AlertDialogVerify';
+import { DialogKeyword } from '../common/DialogKeyword';
+import { DialogRegister } from '../common/DialogRegister';
 
 export const Header = () => {
 	return (
@@ -15,7 +17,9 @@ export const Header = () => {
 				<Link className='w-min h-min' path='/' title='Учебник' />
 			</h2>
 			<Avatar />
-			<DialogWrapper />
+			<AlertDialogVerify />
+			<DialogKeyword />
+			<DialogRegister />
 			<Search />
 		</header>
 	);

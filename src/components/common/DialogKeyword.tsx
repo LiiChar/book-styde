@@ -12,16 +12,28 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { closeDialog } from '@/lib/dialogs';
 import { login } from '@/request/user';
-import { useDialogStore } from '@/store/DialogStore';
 import { useUserStore } from '@/store/UserStore';
-import { useState } from 'react';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
 export function DialogKeyword() {
 	const { question, username } = useUserStore();
 	const [keyword, setKeyword] = useState('');
-	const [visible, setVisible] = useState(true);
-	const { closeDialog } = useDialogStore();
+	const {} = useRouter();
+	const pathname = usePathname();
+
+	const { has, get } = useSearchParams();
+	const [open, setOpen] = useState(false);
+
+	useEffect(() => {
+		if (has('keyword')) {
+			setOpen(true);
+		} else {
+			setOpen(false);
+		}
+	}, [pathname]);
 
 	const handleKeywork = async () => {
 		const response: { type: string; data: string } = await login(
@@ -34,7 +46,7 @@ export function DialogKeyword() {
 	};
 
 	return (
-		<Dialog open={true}>
+		<Dialog defaultOpen={false} open={open}>
 			<DialogContent className='sm:max-w-md'>
 				<DialogHeader>
 					<DialogTitle>Подтвердите аккаунт</DialogTitle>
