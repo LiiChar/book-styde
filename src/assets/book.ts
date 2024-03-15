@@ -26,7 +26,7 @@ export const questions = [
 export const data: Books = {
 	book: [
 		{
-			title: '',
+			title: 'HTML: Язык Гипертекстовой Разметки',
 			chapter: 1,
 			part: 'javascript',
 			content: '',
@@ -195,7 +195,7 @@ export const data: Books = {
 			],
 		},
 		{
-			title: '',
+			title: 'CSS: Каскадная Таблица Стилей',
 			chapter: 2,
 			part: 'javascript',
 			content: '',
@@ -490,7 +490,7 @@ export const data: Books = {
 			],
 		},
 		{
-			title: '',
+			title: 'JavaScript: Язык программирования',
 			chapter: 3,
 			part: 'javascript',
 			content: '',

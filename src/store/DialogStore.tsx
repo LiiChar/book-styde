@@ -1,8 +1,8 @@
 'use client';
 import { create } from 'zustand';
-import { AlertDialogVerify } from '@/components/common/AlertDialogVerify';
-import { DialogKeyword } from '@/components/common/DialogKeyword';
-import { DialogRegister } from '@/components/common/DialogRegister';
+import { AlertDialogVerify } from '@/components/common/modal/AlertDialogVerify';
+import { DialogKeyword } from '@/components/common/modal/DialogKeyword';
+import { DialogRegister } from '@/components/common/modal/DialogRegister';
 import { useStoreSync } from '@/utils/useStoreSync';
 import { createContext, useContext, useState } from 'react';
 

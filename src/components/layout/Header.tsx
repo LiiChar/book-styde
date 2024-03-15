@@ -4,9 +4,9 @@ import { Link } from '../common/Link';
 import { ThemeChange } from './Header/ThemeChange';
 import { Separator } from '../ui/separator';
 import { Avatar } from './Header/Avatar';
-import { AlertDialogVerify } from '../common/AlertDialogVerify';
-import { DialogKeyword } from '../common/DialogKeyword';
-import { DialogRegister } from '../common/DialogRegister';
+import { AlertDialogVerify } from '../common/modal/AlertDialogVerify';
+import { DialogKeyword } from '../common/modal/DialogKeyword';
+import { DialogRegister } from '../common/modal/DialogRegister';
 
 export const Header = () => {
 	return (
@@ -17,9 +17,6 @@ export const Header = () => {
 				<Link className='w-min h-min' path='/' title='Учебник' />
 			</h2>
 			<Avatar />
-			<AlertDialogVerify />
-			<DialogKeyword />
-			<DialogRegister />
 			<Search />
 		</header>
 	);

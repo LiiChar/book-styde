@@ -13,33 +13,44 @@ import { Button } from '@/components/ui/button';
 import { register } from 'module';
 import { openDialog } from '@/lib/dialogs';
 import { useSearchParams } from 'next/navigation';
+import { cookies } from 'next/headers';
+import { User } from '@/api/entity/user.entity';
+import { Link } from '@/components/common/Link';
+import { DialogRegister } from '@/components/common/modal/DialogRegister';
+import { AlertDialogVerify } from '@/components/common/modal/AlertDialogVerify';
+// import Link from 'next/link';
 
 export const Avatar = () => {
-	const { image, username, id, setUser, setQuestion } = useUserStore();
-	const { has } = useSearchParams();
+	// const { has } = useSearchParams();
+	// const user = cookies().get('user') as User | undefined;
+	const [openVerify, setOpenVerify] = useState(false);
+	const [openKeyword, setOpenKeyword] = useState(false);
+	const [openRegister, setOpenRegister] = useState(false);
 
-	useEffect(() => {
-		const userStorage = localStorage.getItem('user_name');
-		const userCook = getCookie('user');
+	const user = null;
 
-		if (userCook) {
-			const user = JSON.parse(userCook) as UserStore;
-			localStorage.setItem('user_name', user.username);
-			setUser(user);
-			return;
-		}
+	// useEffect(() => {
+	// 	const userStorage = localStorage.getItem('user_name');
+	// 	const userCook = getCookie('user');
 
-		if (userStorage) {
-			const user = JSON.parse(userStorage);
-			getUserQuestion(user).then(data => {
-				setQuestion(data);
-				openDialog('keyword');
-			});
-			return;
-		}
+	// 	if (userCook) {
+	// 		const user = JSON.parse(userCook) as UserStore;
+	// 		localStorage.setItem('user_name', user.username);
+	// 		setUser(user);
+	// 		return;
+	// 	}
 
-		if (!has('verify')) openDialog('verify');
-	}, []);
+	// 	if (userStorage) {
+	// 		const user = JSON.parse(userStorage);
+	// 		getUserQuestion(user).then(data => {
+	// 			setQuestion(data);
+	// 			openDialog('keyword');
+	// 		});
+	// 		return;
+	// 	}
+
+	// 	if (has('verify')) openDialog('verify');
+	// }, []);
 
 	const handleRegisterButton = () => {
 		console.log('reg');
@@ -47,21 +58,37 @@ export const Avatar = () => {
 		openDialog('register');
 	};
 
-	const component = useHidration(
+	return (
 		<>
-			{username ? (
-				<a href={`/profile/${id}`}>
-					<Ava>
-						<AvatarImage src={image} />
-						<AvatarFallback>{username}</AvatarFallback>
-					</Ava>
-				</a>
+			{user != undefined ? (
+				// <a href={`/profile/${user.id}`}>
+				// 	<Ava>
+				// 		<AvatarImage
+				// 			src={`https://ui-avatars.com/api/?name=${user.name}`}
+				// 		/>
+				// 		<AvatarFallback>{user.name}</AvatarFallback>
+				// 	</Ava>
+				// </a>
+				'ehj'
 			) : (
-				<Button onClick={handleRegisterButton}>зарегестрироваться</Button>
+				// <Link href={'?register=yes'}>зарегестрироваться</Link>
+				<>
+					<Button
+						type='button'
+						variant='ghost'
+						onClick={() => setOpenRegister(true)}
+					>
+						Зарегестрироваться
+					</Button>
+					{/* <Link path='?register=yes' title='зарегестрироваться' /> */}
+				</>
 			)}
-		</>,
-		null
-	);
+			{openRegister && (
+				<DialogRegister onClose={() => setOpenRegister(false)} />
+			)}
+			{openVerify && <AlertDialogVerify onClose={() => setOpenVerify(false)} />}
 
-	return component;
+			{openKeyword && <DialogRegister onClose={() => setOpenKeyword(false)} />}
+		</>
+	);
 };
