@@ -20,7 +20,7 @@ export function AlertDialogVerify() {
 	const [open, setOpen] = useState(false);
 
 	useEffect(() => {
-		if (has('verify')) {
+		if (has('verify') && get('verify') == 'yes') {
 			setOpen(true);
 		} else {
 			setOpen(false);

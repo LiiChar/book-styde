@@ -28,7 +28,7 @@ export function DialogKeyword() {
 	const [open, setOpen] = useState(false);
 
 	useEffect(() => {
-		if (has('keyword')) {
+		if (has('keyword') && get('keyword') == 'yes') {
 			setOpen(true);
 		} else {
 			setOpen(false);

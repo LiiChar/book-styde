@@ -7,14 +7,14 @@ export const openDialog = (dialog: (typeof dialogs)[number]) => {
 		return;
 	}
 
-	params.set(dialog);
+	params.set(dialog, 'yes');
 };
 
 export const closeDialog = (dialog: (typeof dialogs)[number]) => {
 	if (!params.get(dialog) || typeof window == undefined) {
 		return;
 	}
-	params.delete(dialog);
+	params.set(dialog, 'not');
 };
 
 export const toggleDialog = (dialog: (typeof dialogs)[number]) => {
@@ -46,9 +46,9 @@ const params = {
 		);
 	},
 
-	set(param: (typeof dialogs)[number]) {
+	set(param: (typeof dialogs)[number], value: 'yes' | 'not' = 'yes') {
 		const urlParams = new URLSearchParams(window.location.search);
-		urlParams.set(param, 'yes');
+		urlParams.set(param, value);
 		window.location.assign(
 			`${window.location.origin}${
 				window.location.pathname

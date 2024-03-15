@@ -14,10 +14,11 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { login, register } from '@/request/user';
 import { useUserStore } from '@/store/UserStore';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { getCookie } from 'cookies-next';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { closeDialog } from '@/lib/dialogs';
+import { getRandomQuestion } from '@/lib/utils';
 
 export function DialogRegister() {
 	const { question, username, setUser } = useUserStore();
@@ -27,9 +28,12 @@ export function DialogRegister() {
 	const { has, get } = useSearchParams();
 	const [open, setOpen] = useState(false);
 	const pathname = usePathname();
+	const questionNew = useMemo(() => {
+		return getRandomQuestion()
+	}, []) 
 
 	useEffect(() => {
-		if (has('register')) {
+		if (has('register') && get('register') == 'yes') {
 			setOpen(true);
 		} else {
 			setOpen(false);
@@ -51,32 +55,28 @@ export function DialogRegister() {
 		<Dialog defaultOpen={true}>
 			<DialogContent className='sm:max-w-md'>
 				<DialogHeader>
-					<DialogTitle>Подтвердите аккаунт</DialogTitle>
-					<DialogDescription>{question}</DialogDescription>
+					<DialogTitle>Зарегестрируйте аккаунт</DialogTitle>
 				</DialogHeader>
-				<div className='flex items-center space-x-2'>
-					<div className='grid flex-1 gap-2'>
-						<Label htmlFor='link' className='sr-only'>
+				<div className=''>
+						<Label htmlFor='link1'>
 							Ваше имя
 						</Label>
 						<Input
-							id='link'
+							id='link1'
 							value={name}
 							onChange={e => setName(e.target.value)}
 						/>
-					</div>
 				</div>
-				<div className='flex items-center space-x-2'>
-					<div className='grid flex-1 gap-2'>
-						<Label htmlFor='link' className='sr-only'>
-							Ключевое слово
+				<div className=''>
+						<Label htmlFor='link2'>
+							Ответьте на вопрос: <br/>
+							{questionNew}
 						</Label>
 						<Input
-							id='link'
+							id='link2'
 							value={keyword}
 							onChange={e => setKeyword(e.target.value)}
 						/>
-					</div>
 				</div>
 				<DialogFooter className='sm:justify-start'>
 					<DialogClose onClick={() => closeDialog('register')} asChild>
@@ -84,6 +84,7 @@ export function DialogRegister() {
 							Close
 						</Button>
 					</DialogClose>
+					
 				</DialogFooter>
 			</DialogContent>
 		</Dialog>
