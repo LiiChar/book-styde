@@ -3,7 +3,10 @@ import {
 	removeUser,
 	updateUser,
 } from '@/api/controller/user.controller';
+import { setCookie } from 'cookies-next';
+import { cookies } from 'next/headers';
 import { NextRequest, NextResponse } from 'next/server';
+import {v4} from 'uuid'
 
 interface User {
 	id: string;
@@ -17,18 +20,34 @@ interface User {
 export let USER: User[] = [];
 
 export async function POST(req: NextRequest) {
-	const { user } = await req.json();
+	const user = await req.json();
+
+	const userFind = USER.find(use => use.name == user.name);
+
+	if (userFind) {
+		return NextResponse.json({ type: 'error', message: 'User will created' });
+	}
+	
 
 	// const user_id = await createUser(user);
 	const newUser: User = {
 		...user,
+		id: v4(),
 		is_verify: true,
-		readable_page: user.readable_page ? user.readable_page : [],
+		readable_page: user.hasOwnProperty('readable_page') ? user.readable_page : [],
 	};
 
 	USER.push(newUser);
 
-	return NextResponse.json(newUser);
+	setCookie('user', JSON.stringify(newUser), { httpOnly: true, maxAge: 60 * 60 * 160 });
+	cookies().set({
+		name: 'user',
+		value: JSON.stringify(newUser),
+		// httpOnly: true,
+		maxAge: 60 * 60 * 160
+	  })
+
+	return NextResponse.json({type: 'successfully', data: newUser});
 }
 
 export async function PUT(req: NextRequest) {

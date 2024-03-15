@@ -33,7 +33,13 @@ export const useUserStore = create<UserStore>(set => ({
 			state.question = question;
 			return state;
 		}),
-	setUser: user => set(() => user),
+	setUser: user => set(() => {
+		const newUser: UserStore = {
+			...user,
+image: `https://ui-avatars.com/api/?name=${user.username}`
+		}
+		return newUser
+	}),
 	setUsername: (username, keyword) =>
 		set(() => {
 			return {

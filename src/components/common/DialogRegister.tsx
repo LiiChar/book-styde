@@ -13,7 +13,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { login, register } from '@/request/user';
-import { useUserStore } from '@/store/UserStore';
+import { UserStore, useUserStore } from '@/store/UserStore';
 import { useEffect, useMemo, useState } from 'react';
 import { getCookie } from 'cookies-next';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
@@ -41,18 +41,32 @@ export function DialogRegister() {
 	}, [pathname]);
 
 	const handleRegister = async () => {
-		const response: { type: string; data: string } = await register({});
-		if (response.type == 'succefully') {
+		const response: { type: string; data: string } = await register({
+			name,
+			question: questionNew,
+			key_word: keyword,
+			is_verify: true,
+			readable_page: [],
+		});
+		if (response.type == 'successfully') {
 			const user = JSON.parse(getCookie('user')!);
-			localStorage.setItem('user_name', user.username);
-			setUser(user);
+			console.log(user);
+
+			const userer: UserStore = {
+				...user,
+				username: user.name,
+				image: ''
+			}
+			
+			localStorage.setItem('user_name', user.name);
+			setUser(userer);
 			closeDialog('register');
 			return;
 		}
 	};
 
 	return (
-		<Dialog defaultOpen={true}>
+		<Dialog defaultOpen={false} open={open}>
 			<DialogContent className='sm:max-w-md'>
 				<DialogHeader>
 					<DialogTitle>Зарегестрируйте аккаунт</DialogTitle>
@@ -80,11 +94,13 @@ export function DialogRegister() {
 				</div>
 				<DialogFooter className='sm:justify-start'>
 					<DialogClose onClick={() => closeDialog('register')} asChild>
-						<Button onClick={handleRegister} type='button' variant='secondary'>
+						<Button  type='button' variant='secondary'>
 							Close
 						</Button>
 					</DialogClose>
-					
+					<Button onClick={handleRegister}>
+						зарегестрироваться
+					</Button>
 				</DialogFooter>
 			</DialogContent>
 		</Dialog>
