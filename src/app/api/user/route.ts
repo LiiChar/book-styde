@@ -6,9 +6,9 @@ import {
 import { setCookie } from 'cookies-next';
 import { cookies } from 'next/headers';
 import { NextRequest, NextResponse } from 'next/server';
-import {v4} from 'uuid'
+import { v4 } from 'uuid';
 
-interface User {
+export interface User {
 	id: string;
 	name: string;
 	question: string;
@@ -27,27 +27,31 @@ export async function POST(req: NextRequest) {
 	if (userFind) {
 		return NextResponse.json({ type: 'error', message: 'User will created' });
 	}
-	
 
 	// const user_id = await createUser(user);
 	const newUser: User = {
 		...user,
 		id: v4(),
 		is_verify: true,
-		readable_page: user.hasOwnProperty('readable_page') ? user.readable_page : [],
+		readable_page: user.hasOwnProperty('readable_page')
+			? user.readable_page
+			: [],
 	};
 
 	USER.push(newUser);
 
-	setCookie('user', JSON.stringify(newUser), { httpOnly: true, maxAge: 60 * 60 * 160 });
+	setCookie('user', JSON.stringify(newUser), {
+		httpOnly: true,
+		maxAge: 60 * 60 * 160,
+	});
 	cookies().set({
 		name: 'user',
 		value: JSON.stringify(newUser),
 		// httpOnly: true,
-		maxAge: 60 * 60 * 160
-	  })
+		maxAge: 60 * 60 * 160,
+	});
 
-	return NextResponse.json({type: 'successfully', data: newUser});
+	return NextResponse.json({ type: 'successfully', data: newUser });
 }
 
 export async function PUT(req: NextRequest) {
@@ -79,4 +83,14 @@ export async function DELETE(req: NextRequest) {
 	USER = USER.slice(userFind, 1);
 
 	return NextResponse.json(user_id);
+}
+
+export async function GET(req: NextRequest) {
+	const user_id = req.nextUrl.searchParams.get('user_id');
+
+	const userFind = USER.find(user => user.id == user_id);
+	if (!userFind) {
+		return NextResponse.json({ type: 'error', data: 'User not find' });
+	}
+	return NextResponse.json(userFind);
 }

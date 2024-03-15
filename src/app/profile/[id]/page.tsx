@@ -1,43 +1,39 @@
-'use client';
+import { USER, User } from '@/app/api/user/route';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import useHidration from '@/hooks/useHidration';
-import { getReadableBook } from '@/request/user';
+import { getReadableBook, getUser } from '@/request/user';
 import { useUserStore } from '@/store/UserStore';
 import { Book } from '@/types/Book';
-import { useEffect, useState } from 'react';
 
-export default function Profile() {
-	const { image, id, keyword, username } = useUserStore();
-	const [readablePage, setReadablePage] = useState<Book[]>([]);
-	const component = useHidration(
+export default async function Profile({ params }: { params: { id: string } }) {
+	console.log(params.id, USER);
+
+	const user: User = await getUser(params.id);
+
+	console.log(user);
+
+	return (
 		<article>
 			<section>
 				<div>
 					<div>
 						<Avatar>
-							<AvatarImage src={image} />
-							<AvatarFallback>{username}</AvatarFallback>
+							<AvatarImage
+								src={`https://ui-avatars.com/api/?name=${user.name}`}
+							/>
+							<AvatarFallback>{user.name}</AvatarFallback>
 						</Avatar>
 					</div>
 					<div>
-						<h3>{username}</h3>
+						<h3>{user.name}</h3>
 					</div>
 				</div>
 			</section>
 			<section>
-				{readablePage.map(page => (
-					<div>{page.title}</div>
-				))}
+				{/* {readable_page.map(page => (
+					<div>{page}</div>
+				))} */}
 			</section>
-		</article>,
-		''
+		</article>
 	);
-
-	useEffect(() => {
-		getReadableBook(id).then(data => {
-			setReadablePage([]);
-		});
-	}, []);
-
-	return component;
 }

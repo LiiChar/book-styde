@@ -16,6 +16,13 @@ export const removeUser = async (user_id: string) => {
 	});
 };
 
+export const getUser = async (user_id: string) => {
+	const res = await fetch(`http://localhost:3000/api/user?user_id=${user_id}`, {
+		method: 'GET',
+	});
+	return res.json();
+};
+
 export const updateUser = async (user_id: string, user: User) => {
 	await fetch(`/api/user`, {
 		body: JSON.stringify({ user_id, user }),
