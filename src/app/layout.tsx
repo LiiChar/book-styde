@@ -1,10 +1,12 @@
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
+import { Gelasio } from 'next/font/google';
 import './globals.css';
 import { Header } from '@/components/layout/Header';
-import DialogWrapper from '@/components/common/DialogWrapper';
 
-const inter = Inter({ subsets: ['latin'] });
+const inter = Gelasio({
+	weight: ['400', '500', '600', '700'],
+	subsets: ['latin'],
+});
 
 export const metadata: Metadata = {
 	title: 'Учебник по веб-разработке',

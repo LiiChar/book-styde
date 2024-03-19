@@ -1,8 +1,8 @@
-import { Comments } from '@/app/api/comment/route';
+import { Comment } from '@/types/Comment';
 
 export const getCommentsByBookId = async (
 	book_id: number
-): Promise<Comments> => {
+): Promise<{ type: string; comments: any }> => {
 	const data = await fetch(`/api/comment?book_id=${book_id}`);
 	return data.json();
 };

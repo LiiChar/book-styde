@@ -1,44 +1,28 @@
-import {
-	createUser,
-	removeUser,
-	updateUser,
-} from '@/api/controller/user.controller';
 import { setCookie } from 'cookies-next';
 import { cookies } from 'next/headers';
 import { NextRequest, NextResponse } from 'next/server';
+import { PrismaClient } from '@prisma/client';
 import { v4 } from 'uuid';
-
-export interface User {
-	id: string;
-	name: string;
-	question: string;
-	key_word: string;
-	is_verify: boolean;
-	created_at: string;
-	readable_page: number[];
-}
-export let USER: User[] = [];
 
 export async function POST(req: NextRequest) {
 	const user = await req.json();
+	const USER = new PrismaClient().users;
 
-	const userFind = USER.find(use => use.name == user.name);
+	const userFind = await USER.findFirst({
+		where: {
+			name: user.name,
+		},
+	});
 
 	if (userFind) {
 		return NextResponse.json({ type: 'error', message: 'User will created' });
 	}
 
-	// const user_id = await createUser(user);
-	const newUser: User = {
-		...user,
-		id: v4(),
-		is_verify: true,
-		readable_page: user.hasOwnProperty('readable_page')
-			? user.readable_page
-			: [],
-	};
-
-	USER.push(newUser);
+	const newUser = await USER.create({
+		data: {
+			...user,
+		},
+	});
 
 	setCookie('user', JSON.stringify(newUser), {
 		httpOnly: true,
@@ -56,39 +40,69 @@ export async function POST(req: NextRequest) {
 
 export async function PUT(req: NextRequest) {
 	const { user_id, user } = await req.json();
-
+	const USER = new PrismaClient().users;
 	// const user_idx = await updateUser(user_id, user);
 
-	const userFind = USER.find(user => user.id == user_id);
+	const userFind = await USER.findFirst({
+		where: {
+			id: user_id,
+		},
+	});
+
 	if (!userFind) {
-		return;
+		return NextResponse.json({ type: 'error', message: 'User not found' });
 	}
-	const newUser: User = Object.entries(userFind).reduce((acc, ent) => {
-		if (user[ent[0]]) {
-			acc[ent[0]] = user[0];
-		} else {
-			acc[ent[0]] = ent[0];
-		}
-	}, {} as any);
-	return NextResponse.json(newUser);
+
+	const userUpdated = await USER.update({
+		where: {
+			id: userFind.id,
+		},
+		data: {
+			...user,
+		},
+	});
+
+	return NextResponse.json(userUpdated);
 }
 
 export async function DELETE(req: NextRequest) {
 	const { user_id } = await req.json();
+	const USER = new PrismaClient().users;
 
 	// const user_idx = await removeUser(user_id);
 
-	const userFind = USER.findIndex(user => user.id == user_id);
+	const userFind = await USER.findFirst({
+		where: {
+			id: user_id,
+		},
+	});
 
-	USER = USER.slice(userFind, 1);
+	if (!userFind) {
+		return NextResponse.json({ type: 'error', message: 'User not found' });
+	}
+	USER.delete({
+		where: {
+			id: userFind.id,
+		},
+	});
 
-	return NextResponse.json(user_id);
+	return NextResponse.json({ type: 'successfully', message: 'User deleted' });
 }
 
 export async function GET(req: NextRequest) {
 	const user_id = req.nextUrl.searchParams.get('user_id');
-
-	const userFind = USER.find(user => user.id == user_id);
+	if (!user_id) {
+		return NextResponse.json({
+			type: 'error',
+			data: 'Search params is user_id not request',
+		});
+	}
+	const USER = new PrismaClient().users;
+	const userFind = await USER.findFirst({
+		where: {
+			id: Number(user_id),
+		},
+	});
 	if (!userFind) {
 		return NextResponse.json({ type: 'error', data: 'User not find' });
 	}

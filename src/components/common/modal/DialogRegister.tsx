@@ -36,8 +36,6 @@ export function DialogRegister({ onClose }: { onClose: () => void }) {
 			name,
 			question: questionNew,
 			key_word: keyword,
-			is_verify: true,
-			readable_page: [],
 		});
 		if (response.type == 'successfully') {
 			const user = JSON.parse(getCookie('user')!);

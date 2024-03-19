@@ -46,7 +46,7 @@ const SearchBook = memo(({ className }: Props) => {
 			<ul
 				className={`${
 					books.length == 0 ? 'hidden' : 'border-t-0 animate-dropdawn'
-				} absolute  top-8  z-50 left-0 h-auto bg-background border-[1px] -translate-x-[1px] overflow-hidden box-content w-full`}
+				} absolute  top-8  z-100 left-0 h-auto bg-background border-[1px] -translate-x-[1px] overflow-hidden box-content w-full`}
 			>
 				<Separator className='' />
 				{books.map(book => (

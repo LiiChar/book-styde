@@ -12,29 +12,16 @@ import { useSearchParams } from 'next/navigation';
 import { DialogRegister } from '@/components/common/modal/DialogRegister';
 import { AlertDialogVerify } from '@/components/common/modal/AlertDialogVerify';
 import { getUser } from '@/request/user';
-import { User } from '@/app/api/user/route';
 import useHidration from '@/hooks/useHidration';
 import { Skeleton } from '@/components/ui/skeleton';
+import { User } from '@/types/User';
 
 export const Avatar = () => {
 	const { has } = useSearchParams();
-	const [user, setUser] = useState<User | undefined | null>(undefined);
+	const [user, setUser] = useState<User | undefined | null>(
+		getCookie('user') ? JSON.parse(getCookie('user')!) : null
+	);
 
-	useEffect(() => {
-		const userCookie = getCookie('user') as string | undefined;
-		if (userCookie) {
-			const userParse = JSON.parse(userCookie) as User;
-			getUser(userParse.id).then(data => {
-				console.log(userParse);
-
-				if (data.type != 'error') {
-					setUser(data);
-				} else {
-					setUser(null);
-				}
-			});
-		}
-	}, []);
 	const [openVerify, setOpenVerify] = useState(false);
 	const [openKeyword, setOpenKeyword] = useState(false);
 	const [openRegister, setOpenRegister] = useState(false);
@@ -55,7 +42,7 @@ export const Avatar = () => {
 
 	return (
 		<>
-			{user != null && user != undefined ? (
+			{user ? (
 				<a href={`/profile/${user.id}`}>
 					<Ava>
 						<AvatarImage
@@ -65,6 +52,8 @@ export const Avatar = () => {
 					</Ava>
 				</a>
 			) : user == null ? (
+				<Skeleton className='rounded-[50%] w-[35px] h-[35px]' />
+			) : (
 				<Button
 					type='button'
 					variant='ghost'
@@ -72,8 +61,6 @@ export const Avatar = () => {
 				>
 					Зарегестрироваться
 				</Button>
-			) : (
-				<Skeleton className='rounded-[50%] w-[35px] h-[35px]' />
 			)}
 
 			{openRegister && (

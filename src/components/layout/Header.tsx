@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import { Search } from './Header/Search';
 import { Link } from '../common/Link';
 import { ThemeChange } from './Header/ThemeChange';
@@ -16,7 +16,9 @@ export const Header = () => {
 				<Separator className='w-2' orientation='vertical' />
 				<Link className='w-min h-min' path='/' title='Учебник' />
 			</h2>
-			<Avatar />
+			<Suspense>
+				<Avatar />
+			</Suspense>
 			<Search />
 		</header>
 	);

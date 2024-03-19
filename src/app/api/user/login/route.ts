@@ -6,24 +6,21 @@ import {
 	deleteCookie,
 	hasCookie,
 } from 'cookies-next';
-import {
-	addReadableBook,
-	getReadableBook,
-} from '@/api/controller/user.controller';
-import { NextWithRepo, RepositoryNext } from '../../middleware';
-import { USER } from '../route';
+import { PrismaClient } from '@prisma/client';
 
-export async function POST(req: NextRequest & RepositoryNext) {
+export async function POST(req: NextRequest) {
 	const { name, keyword } = await req.json();
+	const USER = new PrismaClient().users;
+	const UserBook = new PrismaClient().userBooks;
 
-	const userFind = USER.find(user => user.name == name);
+	const userFind = await USER.findFirst({
+		where: {
+			name: name,
+		},
+	});
 
 	if (!userFind) {
 		return NextResponse.json({ type: 'error', message: 'User not found' });
-	}
-
-	if (userFind.is_verify == false) {
-		return NextResponse.json({ type: 'action', message: 'register' });
 	}
 
 	if (userFind.key_word != keyword) {
@@ -40,12 +37,21 @@ export async function POST(req: NextRequest & RepositoryNext) {
 
 export async function GET(req: NextRequest) {
 	const name = req.nextUrl.searchParams.get('name');
+	const USER = new PrismaClient().users;
+	const UserBook = new PrismaClient().userBooks;
 
 	if (!name) {
-		return;
+		return NextResponse.json({
+			type: 'error',
+			message: 'Name params not request',
+		});
 	}
 
-	const userFind = USER.find(user => user.name == name);
+	const userFind = await USER.findFirst({
+		where: {
+			name: name,
+		},
+	});
 
 	if (!userFind) {
 		return;

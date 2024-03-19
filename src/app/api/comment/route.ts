@@ -1,147 +1,135 @@
 import { NextRequest, NextResponse } from 'next/server';
-
-const comments: Comments[] = [
-	{
-		book_id: 1.1,
-		comments: [
-			{
-				content: '1.1',
-				created_at: 'now',
-				id: 1,
-				username: 'user1',
-				rate: 0,
-			},
-		],
-	},
-	{
-		book_id: 1.2,
-		comments: [
-			{
-				content: '1.2',
-				created_at: 'now',
-				id: 2,
-				username: 'user1',
-				rate: 0,
-			},
-		],
-	},
-	{
-		book_id: 2,
-		comments: [
-			{
-				content: '2',
-				created_at: 'now',
-				id: 3,
-				username: 'user1',
-				rate: 0,
-			},
-		],
-	},
-	{
-		book_id: 2.1,
-		comments: [
-			{
-				content: '2.1',
-				created_at: 'now',
-				id: 4,
-				username: 'user1',
-				rate: 0,
-			},
-		],
-	},
-	{
-		book_id: 2.2,
-		comments: [
-			{
-				content: '2.2',
-				created_at: 'now',
-				id: 5,
-				username: 'user1',
-				rate: 0,
-			},
-		],
-	},
-];
+import { PrismaClient } from '@prisma/client';
+import { User } from '@/types/User';
 
 export async function GET(req: NextRequest) {
-	const comment = comments.find(
-		com => String(com.book_id) == req.nextUrl.searchParams.get('book_id')
-	);
+	const COMMENTS = new PrismaClient().comments;
+	const book_id = req.nextUrl.searchParams.get('book_id');
 
-	if (!comment) {
+	if (!book_id) {
+		return NextResponse.json({
+			type: 'error',
+			message: 'Параметр book_id не пришёл',
+		});
+	}
+	const comments = COMMENTS.findMany({
+		where: {
+			book_id: Number(book_id),
+		},
+		orderBy: {
+			rate: 'asc',
+		},
+		include: {
+			user: {
+				select: {
+					name: true,
+					id: true,
+				},
+			},
+		},
+	});
+
+	if (!comments) {
 		return NextResponse.json({
 			book_id: req.nextUrl.searchParams.get('book_id'),
 			comments: [],
 		});
 	}
 
-	comment?.comments.sort((a, b) => b.rate - a.rate);
-
-	return NextResponse.json(
-		comments.find(
-			com => String(com.book_id) == req.nextUrl.searchParams.get('book_id')
-		)
-	);
+	return NextResponse.json({
+		book_id: req.nextUrl.searchParams.get('book_id'),
+		comments: comments,
+	});
 }
 
 export async function POST(req: NextRequest) {
 	const { comment, book_id } = await req.json();
+	const COMMENTS = new PrismaClient().comments;
 
-	const commentNew = {
-		content: comment.content,
-		created_at: String(new Date().getTime()),
-		id: new Date().getTime() + comment.content + comment.username,
-		rate: 0,
-		username: comment.username,
-	};
-
-	const chapter = comments.find(com => com.book_id == book_id);
-
-	if (chapter) {
-		chapter.comments.push(commentNew);
-	} else {
-		comments.push({
-			book_id,
-			comments: [commentNew],
-		});
-	}
+	const commentNew = await COMMENTS.create({
+		data: {
+			book_id: book_id,
+			content: comment.content,
+			user_id: comment.user_id,
+		},
+		// select: {
+		// 	content: true,
+		// 	created_at: true,
+		// 	updated_at: true,
+		// 	id: true,
+		// 	user: {
+		// 		select: {
+		// 			id: true,
+		// 			name: true,
+		// 		},
+		// 	},
+		// },
+	});
 
 	return NextResponse.json(commentNew);
 }
 
 export async function PUT(req: NextRequest) {
-	const { comment, book_id } = await req.json();
-	const book = comments.find(com => com.book_id == book_id);
+	const { comment, comment_id } = await req.json();
+	const COMMENTS = new PrismaClient().comments;
 
-	const indexComment = book?.comments.findIndex(com => com.id == comment.id)!;
+	const commentFind = await COMMENTS.findFirst({
+		where: {
+			id: comment_id,
+		},
+	});
 
-	if (book) {
-		book.comments[indexComment] = comment;
+	if (!commentFind) {
+		return NextResponse.json({
+			type: 'error',
+			message: 'Комментарий не найден',
+		});
 	}
 
-	return NextResponse.json(comment);
+	const commentPut = await COMMENTS.update({
+		where: {
+			id: comment_id,
+		},
+		data: {
+			...comment,
+		},
+		select: {
+			content: true,
+			rate: true,
+			created_at: true,
+			updated_at: true,
+			id: true,
+			user: {
+				select: {
+					id: true,
+					name: true,
+				},
+			},
+		},
+	});
+
+	return NextResponse.json(commentPut);
 }
 
-export function DELETE(req: NextRequest) {
-	comments.forEach(({ comments }) => {
-		comments.splice(
-			comments.findIndex(
-				com => Number(req.nextUrl.searchParams.get('id')) == com.id
-			),
-			1
-		);
+export async function DELETE(req: NextRequest) {
+	const COMMENTS = new PrismaClient().comments;
+	const comment_id = req.nextUrl.searchParams.get('id');
+
+	if (!comment_id) {
+		return NextResponse.json({
+			type: 'error',
+			message: 'Параметр book_id не пришёл',
+		});
+	}
+
+	await COMMENTS.delete({
+		where: {
+			id: Number(comment_id),
+		},
+	});
+
+	return NextResponse.json({
+		type: 'message',
+		message: 'Параметр book_id не пришёл',
 	});
 }
-
-export type Comment = {
-	username: string;
-	id: number;
-	content: string;
-	created_at: string;
-	rate: number;
-};
-
-export type Comments = {
-	book_id: number;
-	comments: Comment[];
-};

@@ -1,4 +1,3 @@
-import { Comment } from '@/app/api/comment/route';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -12,6 +11,9 @@ import {
 	storeComment,
 } from '@/request/comment';
 import { useUserStore } from '@/store/UserStore';
+import { Comment } from '@/types/Comment';
+import { User } from '@/types/User';
+import { getCookie } from 'cookies-next';
 import { ThumbsDown, ThumbsUp } from 'lucide-react';
 import { FC, memo, useEffect, useState } from 'react';
 
@@ -20,10 +22,12 @@ interface Props {
 }
 
 const Comments: FC<Props> = memo(({ book_id }) => {
-	const { username } = useUserStore();
 	const [comments, setComments] = useState<Comment[]>([]);
 	const [comment, setComment] = useState('');
 	const [loading, setLoading] = useState(true);
+	const [user, setUser] = useState<User | undefined | null>(
+		getCookie('user') ? JSON.parse(getCookie('user')!) : null
+	);
 
 	useEffect(() => {
 		setLoading(true);
@@ -39,7 +43,7 @@ const Comments: FC<Props> = memo(({ book_id }) => {
 	const handleSendComment = async () => {
 		await storeComment({
 			comment: {
-				username,
+				user_id: user!.id,
 				content: comment,
 			},
 			book_id,
@@ -59,7 +63,7 @@ const Comments: FC<Props> = memo(({ book_id }) => {
 
 	return (
 		<section className='my-4 w-full'>
-			{username.length > 0 && (
+			{user && (
 				<div className='grid w-full gap-1.5 mb-4'>
 					<Label className='text-xl' htmlFor='comment'>
 						Ваш комментарий
@@ -84,12 +88,12 @@ const Comments: FC<Props> = memo(({ book_id }) => {
 									<div className='flex w-full justify-between md:justify-normal md:gap-4 items-center'>
 										<Avatar>
 											<AvatarImage
-												src={`https://ui-avatars.com/api/?name=${com.username}`}
+												src={`https://ui-avatars.com/api/?name=${com.user.name}`}
 											/>
-											<AvatarFallback>{com.username}</AvatarFallback>
+											<AvatarFallback>{com.user.name}</AvatarFallback>
 										</Avatar>
 
-										{com.username}
+										{com.user.name}
 									</div>
 									<div className='hidden md:block'>{com.created_at}</div>
 								</div>

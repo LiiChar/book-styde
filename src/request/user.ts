@@ -1,4 +1,3 @@
-import { User } from '@/api/entity/user.entity';
 import { Book } from '@/types/Book';
 
 export const register = async (user: any): Promise<any> => {
@@ -23,7 +22,7 @@ export const getUser = async (user_id: string) => {
 	return res.json();
 };
 
-export const updateUser = async (user_id: string, user: User) => {
+export const updateUser = async (user_id: string, user: any) => {
 	await fetch(`/api/user`, {
 		body: JSON.stringify({ user_id, user }),
 		method: 'PUT',
