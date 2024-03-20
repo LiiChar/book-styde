@@ -12,6 +12,8 @@ import React, {
 	ReactNode,
 	memo,
 } from 'react';
+import { Comments } from './Comments';
+import { Button } from '@/components/ui/button';
 
 interface Props {
 	children?: ReactNode | undefined;
@@ -50,22 +52,64 @@ const NavigationWrapper: FC<Props> = memo(
 					/>
 				)}
 				<div
-					className={cn('py-4 px-[6px] md:px-[48px] w-full h-full', className)}
+					className={cn('py-4 px-[22px] md:px-[48px] w-full h-full', className)}
 				>
 					{children}
+					<div className='w-full flex gap-4 justify-between'>
+						{prev && (
+							<Button className='block  md:hidden'>
+								<Link
+									path={'page/' + prev.title}
+									title={
+										<div className='flex'>
+											<ArrowLeft
+												className='fill-black'
+												width={15}
+												height={15}
+											/>
+											{prev.title}
+										</div>
+									}
+									attributes={{
+										onClick: handlePrevChapter,
+									}}
+								/>
+							</Button>
+						)}
+						{next && (
+							<Button className='block md:hidden '>
+								<Link
+									path={'page/' + next.title}
+									title={
+										<div className='flex'>
+											{next.title}
+											<ArrowRight
+												className='fill-black'
+												width={15}
+												height={15}
+											/>
+										</div>
+									}
+									attributes={{
+										onClick: handleNextChapter,
+									}}
+								/>
+							</Button>
+						)}
+					</div>
+
+					<Comments book_id={chapter} />
 				</div>
-				<div>
-					{next && (
-						<Link
-							path={'page/' + next.title}
-							title={<ArrowRight width={48} height={48} />}
-							attributes={{
-								onClick: handleNextChapter,
-							}}
-							className='hidden h-18 w-18 md:block fixed translate-y-[calc(50% + 32px)] right-0 top-1/2'
-						/>
-					)}
-				</div>
+				{next && (
+					<Link
+						path={'page/' + next.title}
+						title={<ArrowRight width={48} height={48} />}
+						attributes={{
+							onClick: handleNextChapter,
+						}}
+						className='hidden h-18 w-18 md:block fixed translate-y-[calc(50% + 32px)] right-0 top-1/2'
+					/>
+				)}
 			</div>
 		);
 	}

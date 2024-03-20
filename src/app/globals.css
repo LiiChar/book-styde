@@ -212,6 +212,7 @@ aside {
 }
 
 .content {
+	width: 100%;
 	ol,
 	ul {
 		list-style: disc;
@@ -302,6 +303,21 @@ aside {
 		cursor: default;
 		background-color: hsl(var(--background));
 		color: hsl(var(--foreground));
+	}
+
+	section {
+		width: 100%;
+	}
+
+	header {
+		width: 100%;
+	}
+
+	.result_hmtl {
+		a {
+			color: #5c7bd1;
+			text-decoration: underline;
+		}
 	}
 }
 
@@ -521,6 +537,12 @@ textarea::-webkit-scrollbar-thumb {
 	textarea::-webkit-scrollbar-thumb {
 		background-color: hsl(var(--foreground)); /* color of the scroll thumb */
 		border-radius: 2px; /* roundness of the scroll thumb */
+	}
+}
+
+.hidden_close_buttom {
+	button {
+		display: none;
 	}
 }
 

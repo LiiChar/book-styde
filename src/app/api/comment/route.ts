@@ -45,12 +45,24 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
 	const { comment, book_id } = await req.json();
 	const COMMENTS = new PrismaClient().comments;
+	const USER = new PrismaClient().users;
+
+	const userFind = await USER.findFirst({
+		where: {
+			id: comment.user_id,
+		},
+	});
 
 	const commentNew = await COMMENTS.create({
 		data: {
 			book_id: book_id,
 			content: comment.content,
 			user_id: comment.user_id,
+			user: {
+				connect: {
+					...userFind!,
+				},
+			},
 		},
 		// select: {
 		// 	content: true,

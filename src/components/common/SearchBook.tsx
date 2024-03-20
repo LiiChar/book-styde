@@ -44,14 +44,15 @@ const SearchBook = memo(({ className }: Props) => {
 				/>
 			</div>
 			<ul
+				autoFocus
 				className={`${
 					books.length == 0 ? 'hidden' : 'border-t-0 animate-dropdawn'
-				} absolute  top-8  z-100 left-0 h-auto bg-background border-[1px] -translate-x-[1px] overflow-hidden box-content w-full`}
+				} absolute  top-8  z-100 left-0 h-auto bg-background border-[1px] -translate-x-[1px] overflow-auto box-content w-full max-h-[40vh]`}
 			>
 				<Separator className='' />
 				{books.map(book => (
 					<li key={book.chapter + book.content} className='h-6 p-1 '>
-						<Link path={'page/' + book.title} />
+						<Link path={'page/' + book.title} title={book.title} />
 					</li>
 				))}
 			</ul>

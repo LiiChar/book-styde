@@ -140,7 +140,7 @@ const Book = ({ params }: Props) => {
 					<h1 className='text-4xl text-center'>{book.title}</h1>
 					<div className='w-8'></div>
 				</div>
-				<section className='content'>
+				<section className='content overflow-hidden'>
 					{parse(book.content, {
 						transform(node, index) {
 							if (node.type == 'tag' && node.name == 'pre') {
@@ -200,7 +200,6 @@ const Book = ({ params }: Props) => {
 						))}
 					</div>
 				)}
-				<Comments book_id={book.chapter} />
 			</NavigationWrapper>
 		</div>
 	);

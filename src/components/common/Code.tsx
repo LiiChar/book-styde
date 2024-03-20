@@ -66,7 +66,7 @@ const Code = ({
 	const allowLang = ['js', 'markup', 'css'];
 
 	return (
-		<div className='relative flex min-h-10 max-h-64 overflow-auto my-4 w-full h-full'>
+		<div className='relative flex flex-col min-h-10 max-h-64 overflow-auto my-4 w-full h-full'>
 			<ResizablePanelGroup direction='horizontal'>
 				<ResizablePanel minSize={15} defaultSize={50}>
 					<Tabs defaultValue='language'>
@@ -143,14 +143,25 @@ const Code = ({
 					</>
 				)}
 			</ResizablePanelGroup>
-			{result?.result.map(res => (
-				<div
-					className={`${result && result.type == 'error' && 'text-red-600'}`}
-					key={res}
-				>
-					{res}
+			{result && result.result.length > 0 && (
+				<div className='mt-2 flex bg-accent rounded-md p-3 gap-2'>
+					<div>Вывод:</div>
+					<div className='flex flex-col gap-2'>
+						{result?.result.map(res => (
+							<div
+								className={`${
+									result && result.type == 'error'
+										? 'text-red-400'
+										: 'text-green-500'
+								}`}
+								key={res}
+							>
+								{res}
+							</div>
+						))}
+					</div>
 				</div>
-			))}
+			)}
 		</div>
 	);
 };
