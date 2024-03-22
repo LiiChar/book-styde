@@ -4,15 +4,13 @@ import { Comment, PrismaClient, User } from '@prisma/client';
 export type CommentChapter = Comment & { user: User };
 
 export async function GET(req: NextRequest) {
-	const COMMENTS = new PrismaClient({
-		log: ['query'],
-	}).comment;
+	const COMMENTS = new PrismaClient().comment;
 	const chapter_id = req.nextUrl.searchParams.get('chapter_id');
 
 	if (!chapter_id) {
 		return NextResponse.json([]);
 	}
-	const comments = COMMENTS.findMany({
+	const comments = await COMMENTS.findMany({
 		where: {
 			chapter_id: Number(chapter_id),
 		},

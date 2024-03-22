@@ -9,7 +9,7 @@ interface Props {
 	comment: Comment;
 }
 
-export const ThumbsComment: FC<Props> = memo(({ chapter_id, comment }) => {
+const ThumbsComment: FC<Props> = memo(({ chapter_id, comment }) => {
 	const handleLike = async (com: Comment, like: number) => {
 		com.rate = like;
 		await likeComment({
@@ -34,3 +34,7 @@ export const ThumbsComment: FC<Props> = memo(({ chapter_id, comment }) => {
 		</div>
 	);
 });
+
+ThumbsComment.displayName = 'ThumbsComment';
+
+export { ThumbsComment };

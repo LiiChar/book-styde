@@ -1,11 +1,6 @@
 'use server';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Separator } from '@/components/ui/separator';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Comment, PrismaClient } from '@prisma/client';
-import { FC, memo, useEffect, useState } from 'react';
 import { InputComment } from './comment/InputComment';
-import { ThumbsComment } from './comment/ThumbsComment';
 import { Suspense } from 'react';
 import { getCommentsByChapterId } from '@/request/comment';
 import { CommentChapter } from '@/app/api/comment/route';

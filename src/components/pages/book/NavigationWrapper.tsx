@@ -22,15 +22,15 @@ interface Props {
 	children?: ReactNode | undefined;
 	className?: HTMLProps<HTMLElement>['className'];
 	chapter: number;
-	books: Book[];
 }
 
-const NavigationWrapper: FC<Props> = ({
+const NavigationWrapper: FC<Props> = async ({
 	children,
 	className,
 	chapter,
-	books,
 }) => {
+	const books = await getBooks();
+
 	const user: User = getCookie('user') ? JSON.parse(getCookie('user')!) : null;
 	const [prev, next] = getNavigatePartByChapter(books, chapter);
 

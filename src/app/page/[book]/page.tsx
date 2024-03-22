@@ -20,18 +20,12 @@ export default async function Book({ params }: Props) {
 	const title = decodeURIComponent(params.book.replaceAll('_', ' '));
 
 	const book = await getBookOrChapterByTitle(title);
-	const books = await getBooks();
-
-	function isBook(obj: any): obj is Book {
-		return 'parts' in book;
-	}
 
 	return (
 		<div className=''>
 			<div className='flex relative'>
 				<Aside chapter={book.title} className='overflow-y-auto' />
 				<NavigationWrapper
-					books={books}
 					chapter={book.chapter}
 					className='md:w-[82vw] md:max-w-[82vw] w-full md:border-l-[1px] flex flex-col items-center'
 				>

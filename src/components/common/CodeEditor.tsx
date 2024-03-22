@@ -57,15 +57,6 @@ const CodeEditor = ({
 		result: string[];
 	}>();
 	const [help, setHelp] = useState('');
-	const { setWork, checkWork } = useBookStore();
-	const resolve = checkWork({
-		answer,
-		code,
-		explain,
-		language: 'javascript',
-		question,
-		type: BookTypeWork.CODE,
-	});
 
 	const handleInputCode = (e: string) => {
 		setCode(e);
@@ -90,14 +81,6 @@ const CodeEditor = ({
 		if (result?.type == 'successefuly') {
 			if (JSON.parse(result.result.join(',')) == String(answer)) {
 				setHelp('Задача решена');
-				setWork({
-					answer,
-					code,
-					explain,
-					language: 'javascript',
-					question,
-					type: BookTypeWork.CODE,
-				});
 			} else {
 				setHelp('Ответ неверный, попробуйте снова');
 			}
@@ -198,11 +181,11 @@ const CodeEditor = ({
 			</div>
 			<div className='flex justify-between items-center'>
 				<Button onClick={showResolve}>Решение</Button>
-				{(help.length > 0 || resolve) && (
+				{/* {(help.length > 0 || resolve) && (
 					<div className='text-xs overflow-auto text-wrap flex bg-accent justify-center h-[35px] rounded-sm items-center w-1/2'>
 						{(resolve && 'Задача решена') || help}
 					</div>
-				)}
+				)} */}
 				<Button onClick={verifyResolve}>Проверить</Button>
 			</div>
 		</div>
