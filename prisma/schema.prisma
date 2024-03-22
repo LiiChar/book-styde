@@ -10,26 +10,27 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model UserBooks {
+model UserBook {
   id         Int      @id @default(autoincrement())
   user_id    Int
-  user       Users    @relation(fields: [user_id], references: [id], onDelete: Cascade)
-  chapter    Float
+  user       User    @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  chapter_id    Int
+  chapter     Chapter    @relation(fields: [chapter_id], references: [id], onDelete: Cascade)
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 }
 
-model UserWorks {
+model UserWork {
   id         Int      @id @default(autoincrement())
-  user       Users    @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  user       User    @relation(fields: [user_id], references: [id], onDelete: Cascade)
   user_id    Int
-  work       Works    @relation(fields: [work_id], references: [id], onDelete: Cascade)
+  work       Work    @relation(fields: [work_id], references: [id], onDelete: Cascade)
   work_id    Int
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 }
 
-model Users {
+model User {
   id         Int         @id @default(autoincrement())
   name       String      @unique
   question   String
@@ -39,44 +40,50 @@ model Users {
   is_verify  Boolean     @default(false)
   created_at DateTime    @default(now())
   updated_at DateTime    @updatedAt
-  UserBooks  UserBooks[]
-  Comments   Comments[]
-  UserWorks  UserWorks[]
+  UserBook  UserBook[]
+  comment   Comment[]
+  UserWork  UserWork[]
 }
 
-model Comments {
+model Comment {
   id         Int      @id @default(autoincrement())
   content    String
-  user       Users    @relation(fields: [user_id], references: [id], onDelete: Cascade)
-  book_id    Float
   user_id    Int
+  user       User    @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  chapter_id    Int
+  chapter    Chapter   @relation(fields: [chapter_id], references: [id], onDelete: Cascade)
   rate       Int      @default(0)
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 }
 
-model Books {
+model Book {
   id         Int        @id @default(autoincrement())
-  title      String
-  chapter    Int
+  title      String   @unique
+  chapter    Float
   content    String
-  Chapters   Chapters[]
+  chapters   Chapter[]
+
   created_at DateTime   @default(now())
   updated_at DateTime   @updatedAt
 }
 
-model Chapters {
+model Chapter {
   id      Int     @id @default(autoincrement())
-  title   String
-  book    Books   @relation(fields: [book_id], references: [id], onDelete: Cascade)
+  title   String  @unique
+  book    Book   @relation(fields: [book_id], references: [id], onDelete: Cascade)
   book_id Int
-  chapter Int
+  chapter Float
   content String
-  Works   Works[]
+  works   Work[]
+  UserBook   UserBook[]
+  comment   Comment[]
 }
 
-model Works {
+model Work {
   id          Int         @id @default(autoincrement())
+  chapter     Chapter    @relation(fields: [chapter_id], references: [id], onDelete: Cascade)
+  chapter_id  Int
   visit       Int         @default(0)
   resolve     Int         @default(0)
   type        String
@@ -89,7 +96,5 @@ model Works {
   language    String?
   created_at  DateTime    @default(now())
   updated_at  DateTime    @updatedAt
-  UserWorks   UserWorks[]
-  Chapters    Chapters?   @relation(fields: [chaptersId], references: [id])
-  chaptersId  Int?
+  UserWork   UserWork[]
 }

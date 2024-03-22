@@ -6,39 +6,13 @@ import { persist } from 'zustand/middleware';
 
 interface BookStore {
 	book: Book[];
-	workResolve: (CodeWork | QuestionWork)[];
-	checkWork: (work: CodeWork | QuestionWork) => boolean;
-	setWork: (work: CodeWork | QuestionWork) => void;
 	getResultBySearch: (search: string) => any;
-	getBookByChapter: (chapter: number) => Book | BookPart | null;
-	getNavigatePartByChapter: (
-		chapter: number
-	) => [Book | BookPart | null, Book | BookPart | null];
 }
 
 // const { book } = JSON.parse(bookJSON) as Books;
 
 export const useBookStore = create<BookStore>(set => ({
 	book: data.book,
-	workResolve: [],
-	setWork: work =>
-		set(state => ({ workResolve: [...state.workResolve, work] })),
-	checkWork: work => {
-		let result = false;
-
-		set(state => {
-			state.workResolve.forEach(workResolve => {
-				if (
-					workResolve.answer + workResolve.explain + workResolve.question ==
-					work.answer + work.explain + work.question
-				) {
-					result = true;
-				}
-			});
-			return state;
-		});
-		return result;
-	},
 	getResultBySearch: srh => {
 		if (srh.length == 0) {
 			return [];
@@ -101,69 +75,6 @@ export const useBookStore = create<BookStore>(set => ({
 				}
 			});
 		});
-		return result;
-	},
-	getBookByChapter: chapter => {
-		let result: Book | BookPart | null = null;
-
-		set(state => {
-			state.book.forEach(el => {
-				if (el.chapter == chapter) {
-					result = el;
-					return state;
-				}
-				el.parts.forEach(part => {
-					if (part.chapter == chapter) {
-						result = el;
-						return state;
-					}
-				});
-			});
-			return state;
-		});
-
-		return result;
-	},
-	getNavigatePartByChapter: (chapter: number) => {
-		let chap = `${chapter}`;
-		let result: [Book | BookPart | null, Book | BookPart | null] = [null, null];
-		const nums = chap.split('.').map(el => Number(el));
-		set(state => {
-			let books = state.book;
-
-			if (nums.length == 1) {
-				let prev = books[nums[0] - 2] && books[nums[0] - 2].parts.at(-1);
-				if (prev) {
-					result[0] = prev;
-				}
-				let next = books[nums[0] - 1] && books[nums[0] - 1].parts[0];
-				if (next) {
-					result[1] = next;
-				}
-			} else {
-				let prev = books[nums[0] - 1] && books[nums[0] - 1].parts[nums[1] - 2];
-				if (prev) {
-					result[0] = prev;
-				} else {
-					let prev_book = books[nums[0] - 1];
-					if (prev_book) {
-						result[0] = prev_book;
-					}
-				}
-				let next = books[nums[0] - 1].parts[nums[1]];
-				if (next) {
-					result[1] = next;
-				} else {
-					let next_book = books[nums[0]];
-					if (next_book) {
-						result[1] = next_book;
-					}
-				}
-			}
-
-			return state;
-		});
-
 		return result;
 	},
 }));

@@ -6,7 +6,7 @@ import { v4 } from 'uuid';
 
 export async function POST(req: NextRequest) {
 	const user = await req.json();
-	const USER = new PrismaClient().users;
+	const USER = new PrismaClient().user;
 
 	const userFind = await USER.findFirst({
 		where: {
@@ -40,7 +40,7 @@ export async function POST(req: NextRequest) {
 
 export async function PUT(req: NextRequest) {
 	const { user_id, user } = await req.json();
-	const USER = new PrismaClient().users;
+	const USER = new PrismaClient().user;
 	// const user_idx = await updateUser(user_id, user);
 
 	const userFind = await USER.findFirst({
@@ -67,7 +67,7 @@ export async function PUT(req: NextRequest) {
 
 export async function DELETE(req: NextRequest) {
 	const { user_id } = await req.json();
-	const USER = new PrismaClient().users;
+	const USER = new PrismaClient().user;
 
 	// const user_idx = await removeUser(user_id);
 
@@ -97,7 +97,7 @@ export async function GET(req: NextRequest) {
 			data: 'Search params is user_id not request',
 		});
 	}
-	const USER = new PrismaClient().users;
+	const USER = new PrismaClient().user;
 	const userFind = await USER.findFirst({
 		where: {
 			id: Number(user_id),

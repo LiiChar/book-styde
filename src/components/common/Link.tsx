@@ -12,13 +12,19 @@ interface Props {
 }
 
 const Link: React.FC<Props> = ({ path, className, title, attributes }) => {
-	const host = typeof window !== 'undefined' && window.location.host;
-	const protocol = typeof window !== 'undefined' && window.location.protocol;
+	const host =
+		typeof window !== 'undefined' && window.location.host
+			? window.location.host
+			: 'localhost:3000';
+	const protocol =
+		typeof window !== 'undefined' && window.location.protocol
+			? window.location.protocol
+			: 'http:';
 
 	return (
 		<LinkHref
 			className={className}
-			href={protocol + '//' + host + '/' + path.replaceAll(' ', '_')}
+			href={'/' + path.replaceAll(' ', '_')}
 			{...attributes}
 		>
 			{title ?? path}

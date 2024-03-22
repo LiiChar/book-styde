@@ -2,9 +2,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import { PrismaClient } from '@prisma/client';
 
 export async function POST(req: NextRequest) {
-	const { user_id, book_id } = await req.json();
-	const USER = new PrismaClient().users;
-	const UserBook = new PrismaClient().userBooks;
+	const { user_id, chapter_id } = await req.json();
+	const USER = new PrismaClient().user;
+	const UserBook = new PrismaClient().userBook;
 
 	// const user_idx = await addReadableBook(user_id, book_id, repo);
 	const userFind = await USER.findFirst({
@@ -19,7 +19,7 @@ export async function POST(req: NextRequest) {
 
 	const partFind = await UserBook.findFirst({
 		where: {
-			chapter: book_id,
+			chapter_id: chapter_id,
 		},
 	});
 
@@ -29,7 +29,7 @@ export async function POST(req: NextRequest) {
 
 	const newPost = await UserBook.create({
 		data: {
-			chapter: book_id,
+			chapter_id: chapter_id,
 			user_id,
 		},
 		select: {
@@ -37,13 +37,13 @@ export async function POST(req: NextRequest) {
 		},
 	});
 
-	return NextResponse.json((await newPost).id);
+	return NextResponse.json(newPost.id);
 }
 
 export async function GET(req: NextRequest) {
 	const user_id = req.nextUrl.searchParams.get('user_id');
-	const USER = new PrismaClient().users;
-	const UserBook = new PrismaClient().userBooks;
+	const USER = new PrismaClient().user;
+	const UserBook = new PrismaClient().userBook;
 
 	if (!user_id) {
 		return NextResponse.json({

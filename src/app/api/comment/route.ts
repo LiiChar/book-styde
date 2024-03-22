@@ -1,68 +1,44 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { PrismaClient } from '@prisma/client';
-import { User } from '@/types/User';
+import { Comment, PrismaClient, User } from '@prisma/client';
+
+export type CommentChapter = Comment & { user: User };
 
 export async function GET(req: NextRequest) {
-	const COMMENTS = new PrismaClient().comments;
-	const book_id = req.nextUrl.searchParams.get('book_id');
+	const COMMENTS = new PrismaClient({
+		log: ['query'],
+	}).comment;
+	const chapter_id = req.nextUrl.searchParams.get('chapter_id');
 
-	if (!book_id) {
-		return NextResponse.json({
-			type: 'error',
-			message: 'Параметр book_id не пришёл',
-		});
+	if (!chapter_id) {
+		return NextResponse.json([]);
 	}
 	const comments = COMMENTS.findMany({
 		where: {
-			book_id: Number(book_id),
+			chapter_id: Number(chapter_id),
 		},
 		orderBy: {
 			rate: 'asc',
 		},
 		include: {
-			user: {
-				select: {
-					name: true,
-					id: true,
-				},
-			},
+			user: true,
 		},
 	});
 
-	if (!comments) {
-		return NextResponse.json({
-			book_id: req.nextUrl.searchParams.get('book_id'),
-			comments: [],
-		});
-	}
-
-	return NextResponse.json({
-		book_id: req.nextUrl.searchParams.get('book_id'),
-		comments: comments,
-	});
+	return NextResponse.json(comments);
 }
 
 export async function POST(req: NextRequest) {
-	const { comment, book_id } = await req.json();
-	const COMMENTS = new PrismaClient().comments;
-	const USER = new PrismaClient().users;
-
-	const userFind = await USER.findFirst({
-		where: {
-			id: comment.user_id,
-		},
-	});
+	const { comment, chapter_id } = await req.json();
+	const COMMENTS = new PrismaClient().comment;
 
 	const commentNew = await COMMENTS.create({
 		data: {
-			book_id: book_id,
+			chapter_id: chapter_id,
 			content: comment.content,
 			user_id: comment.user_id,
-			user: {
-				connect: {
-					...userFind!,
-				},
-			},
+		},
+		include: {
+			user: true,
 		},
 		// select: {
 		// 	content: true,
@@ -83,11 +59,11 @@ export async function POST(req: NextRequest) {
 
 export async function PUT(req: NextRequest) {
 	const { comment, comment_id } = await req.json();
-	const COMMENTS = new PrismaClient().comments;
+	const COMMENTS = new PrismaClient().comment;
 
 	const commentFind = await COMMENTS.findFirst({
 		where: {
-			id: comment_id,
+			id: +comment_id,
 		},
 	});
 
@@ -100,7 +76,7 @@ export async function PUT(req: NextRequest) {
 
 	const commentPut = await COMMENTS.update({
 		where: {
-			id: comment_id,
+			id: +comment_id,
 		},
 		data: {
 			...comment,
@@ -124,7 +100,7 @@ export async function PUT(req: NextRequest) {
 }
 
 export async function DELETE(req: NextRequest) {
-	const COMMENTS = new PrismaClient().comments;
+	const COMMENTS = new PrismaClient().comment;
 	const comment_id = req.nextUrl.searchParams.get('id');
 
 	if (!comment_id) {

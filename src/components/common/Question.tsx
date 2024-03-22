@@ -1,3 +1,4 @@
+'use client';
 import { BookTypeWork, QuestionWork } from '@/types/Book';
 import React, { FC, memo, useState } from 'react';
 import { Input } from '../ui/input';
@@ -14,14 +15,6 @@ const Question = memo(({ question }: Props) => {
 	const { answer: answ, explain, question: quest, variant } = question;
 	const [answer, setAnswer] = useState('');
 	const [help, setHelp] = useState('');
-	const { setWork, checkWork } = useBookStore();
-	const resolve = checkWork({
-		answer: answ,
-		explain,
-		question: quest,
-		variant,
-		type: BookTypeWork.QUESTION,
-	});
 
 	const showResolve = () => {
 		setHelp(explain + '\n' + `Ответ: ${answer}`);
@@ -30,13 +23,6 @@ const Question = memo(({ question }: Props) => {
 	const verifyResolve = () => {
 		if (answer == answ) {
 			setHelp('Задача решена');
-			setWork({
-				answer: answ,
-				explain,
-				question: quest,
-				variant,
-				type: BookTypeWork.QUESTION,
-			});
 		} else {
 			setHelp('Ответ неверный, попробуйте снова');
 		}
@@ -71,11 +57,11 @@ const Question = memo(({ question }: Props) => {
 			</div>
 			<div className='mt-2 flex justify-between items-center'>
 				<Button onClick={showResolve}>Решение</Button>
-				{(help.length > 0 || resolve) && (
+				{/* {(help.length > 0 || resolve) && (
 					<div className='text-xs overflow-auto text-wrap flex bg-accent justify-center h-[35px] rounded-sm items-center w-1/2'>
 						{(resolve && 'Задача решена') || help}
 					</div>
-				)}
+				)} */}
 				<Button onClick={verifyResolve}>Проверить</Button>
 			</div>
 		</div>

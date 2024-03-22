@@ -5,7 +5,7 @@ import { PrismaClient } from '@prisma/client';
 
 export default async function Profile({ params }: { params: { id: string } }) {
 	// const user: User = await getUser(params.id);
-	const USER = new PrismaClient().users;
+	const USER = new PrismaClient().user;
 	const user = await USER.findFirst({
 		where: {
 			id: Number(params.id!),
@@ -15,8 +15,9 @@ export default async function Profile({ params }: { params: { id: string } }) {
 			key_word: true,
 			question: true,
 			created_at: true,
-			Comments: true,
-			UserBooks: true,
+			comment: true,
+			UserBook: true,
+			group: true,
 			UserWork: true,
 		},
 	});

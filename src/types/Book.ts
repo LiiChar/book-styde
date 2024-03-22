@@ -19,6 +19,7 @@ export type Book = {
 };
 
 export type BookPart = {
+	[x: string]: any;
 	title: string;
 	chapter: number;
 	content: string;

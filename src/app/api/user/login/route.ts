@@ -10,8 +10,8 @@ import { PrismaClient } from '@prisma/client';
 
 export async function POST(req: NextRequest) {
 	const { name, keyword } = await req.json();
-	const USER = new PrismaClient().users;
-	const UserBook = new PrismaClient().userBooks;
+	const USER = new PrismaClient().user;
+	const UserBook = new PrismaClient().userBook;
 
 	const userFind = await USER.findFirst({
 		where: {
@@ -37,8 +37,8 @@ export async function POST(req: NextRequest) {
 
 export async function GET(req: NextRequest) {
 	const name = req.nextUrl.searchParams.get('name');
-	const USER = new PrismaClient().users;
-	const UserBook = new PrismaClient().userBooks;
+	const USER = new PrismaClient().user;
+	const UserBook = new PrismaClient().userBook;
 
 	if (!name) {
 		return NextResponse.json({

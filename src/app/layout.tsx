@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Gelasio } from 'next/font/google';
 import './globals.css';
 import { Header } from '@/components/layout/Header';
+import { SpeedInsights } from '@vercel/speed-insights/next';
 
 const inter = Gelasio({
 	weight: ['400', '500', '600', '700'],
@@ -24,6 +25,7 @@ export default function RootLayout({
 			<body className={`dark ${inter.className}`}>
 				<Header />
 				{children}
+				<SpeedInsights />
 			</body>
 		</html>
 	);

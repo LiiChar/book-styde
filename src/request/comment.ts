@@ -1,17 +1,24 @@
+import { CommentChapter } from '@/app/api/comment/route';
 import { Comment } from '@/types/Comment';
 
-export const getCommentsByBookId = async (
-	book_id: number
-): Promise<{ type: string; comments: any }> => {
-	const data = await fetch(`/api/comment?book_id=${book_id}`);
+export const getCommentsByChapterId = async (
+	chapter_id: number
+): Promise<CommentChapter[]> => {
+	const data = await fetch(
+		`http://localhost:3000/api/comment?chapter_id=${chapter_id}`,
+		{
+			cache: 'no-cache',
+		}
+	);
 	return data.json();
 };
 
-export const storeComment = async (comment: any) => {
-	await fetch(`/api/comment`, {
+export const storeComment = async (comment: any): Promise<CommentChapter> => {
+	const responce = await fetch(`/api/comment`, {
 		body: JSON.stringify(comment),
 		method: 'POST',
 	});
+	return responce.json();
 };
 
 export const likeComment = async (comment: any) => {

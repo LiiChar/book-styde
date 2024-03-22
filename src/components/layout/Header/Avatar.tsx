@@ -13,7 +13,7 @@ import { AlertDialogVerify } from '@/components/common/modal/AlertDialogVerify';
 import { Skeleton } from '@/components/ui/skeleton';
 import { User } from '@/types/User';
 
-export const Avatar = memo(() => {
+const Avatar = memo(() => {
 	const { has } = useSearchParams();
 	const [user, setUser] = useState<User | undefined | null>(
 		getCookie('user') ? JSON.parse(getCookie('user')!) : null
@@ -57,3 +57,7 @@ export const Avatar = memo(() => {
 		</>
 	);
 });
+
+Avatar.displayName = 'HeaderAvatar';
+
+export { Avatar };
