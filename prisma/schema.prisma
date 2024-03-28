@@ -1,91 +1,86 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "sqlite"
-  url      = env("DATABASE_URL")
+  provider = "postgresql"
+  url      = env("POSTGRES_URL")
 }
 
 model UserBook {
   id         Int      @id @default(autoincrement())
   user_id    Int?
-  user       User?    @relation(fields: [user_id], references: [id], onDelete: Cascade)
-  chapter_id    Int?
-  chapter     Chapter?    @relation(fields: [chapter_id], references: [id], onDelete: Cascade)
+  chapter_id Int?
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
+  chapter    Chapter? @relation(fields: [chapter_id], references: [id], onDelete: Cascade)
+  user       User?    @relation(fields: [user_id], references: [id], onDelete: Cascade)
 }
 
 model UserWork {
   id         Int      @id @default(autoincrement())
-  user       User?    @relation(fields: [user_id], references: [id], onDelete: Cascade)
   user_id    Int?
-  work       Work?    @relation(fields: [work_id], references: [id], onDelete: Cascade)
   work_id    Int?
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
+  user       User?    @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  work       Work?    @relation(fields: [work_id], references: [id], onDelete: Cascade)
 }
 
 model User {
-  id         Int         @id @default(autoincrement())
-  name       String      @unique
+  id         Int        @id @default(autoincrement())
+  name       String     @unique
   question   String
   key_word   String
   group      String?
-  role       String      @default("user")
-  is_verify  Boolean     @default(false)
-  created_at DateTime    @default(now())
-  updated_at DateTime    @updatedAt
-  UserBook  UserBook[]
-  comment   Comment[]
-  UserWork  UserWork[]
+  role       String     @default("user")
+  is_verify  Boolean    @default(false)
+  created_at DateTime   @default(now())
+  updated_at DateTime   @updatedAt
+  comment    Comment[]
+  UserBook   UserBook[]
+  UserWork   UserWork[]
 }
 
 model Comment {
   id         Int      @id @default(autoincrement())
   content    String
   user_id    Int?
-  user       User?    @relation(fields: [user_id], references: [id], onDelete: Cascade)
-  chapter_id    Int?
-  chapter    Chapter?   @relation(fields: [chapter_id], references: [id], onDelete: Cascade)
+  chapter_id Int?
   rate       Int      @default(0)
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
+  chapter    Chapter? @relation(fields: [chapter_id], references: [id], onDelete: Cascade)
+  user       User?    @relation(fields: [user_id], references: [id], onDelete: Cascade)
 }
 
 model Book {
-  id         Int        @id @default(autoincrement())
-  title      String   @unique
+  id         Int       @id @default(autoincrement())
+  title      String    @unique
   chapter    Float
   content    String
+  created_at DateTime  @default(now())
+  updated_at DateTime  @updatedAt
   chapters   Chapter[]
-
-  created_at DateTime   @default(now())
-  updated_at DateTime   @updatedAt
 }
 
 model Chapter {
-  id      Int     @id @default(autoincrement())
-  title   String  @unique
-  book    Book   @relation(fields: [book_id], references: [id], onDelete: Cascade)
-  book_id Int
-  chapter Float
-  content String
-  works   Work[]
-  UserBook   UserBook[]
-  comment   Comment[]
+  id       Int        @id @default(autoincrement())
+  title    String     @unique
+  book_id  Int
+  chapter  Float
+  content  String
+  book     Book       @relation(fields: [book_id], references: [id], onDelete: Cascade)
+  comment  Comment[]
+  UserBook UserBook[]
+  works    Work[]
 }
 
 model Work {
-  id          Int         @id @default(autoincrement())
-  chapter     Chapter    @relation(fields: [chapter_id], references: [id], onDelete: Cascade)
+  id          Int        @id @default(autoincrement())
   chapter_id  Int
-  visit       Int         @default(0)
-  resolve     Int         @default(0)
+  visit       Int        @default(0)
+  resolve     Int        @default(0)
   type        String
   description String?
   question    String
@@ -94,7 +89,8 @@ model Work {
   variant     String?
   code        String?
   language    String?
-  created_at  DateTime    @default(now())
-  updated_at  DateTime    @updatedAt
-  UserWork   UserWork[]
+  created_at  DateTime   @default(now())
+  updated_at  DateTime   @updatedAt
+  UserWork    UserWork[]
+  chapter     Chapter    @relation(fields: [chapter_id], references: [id], onDelete: Cascade)
 }
