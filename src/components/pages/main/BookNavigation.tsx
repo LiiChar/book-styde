@@ -13,7 +13,7 @@ export const BookNavigation = () => {
 					<h3 className='mb-4'>
 						{book.chapter}: {book.title}
 					</h3>
-					<ul className='grid grid-cols-1 min-[440px]:grid-cols-2 lg:grid-cols-3 gap-4 my-2'>
+					<ul className='grid grid-cols-1 min-[440px]:grid-cols-2 lg:grid-cols-3 gap-2 my-2'>
 						{book.parts.map(part => (
 							<li className='min-w-[175px]' key={part.chapter}>
 								<Link

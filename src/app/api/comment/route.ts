@@ -29,11 +29,13 @@ export async function POST(req: NextRequest) {
 	const { comment, chapter_id } = await req.json();
 	const COMMENTS = new PrismaClient().comment;
 
+	console.log(comment, chapter_id);
+
 	const commentNew = await COMMENTS.create({
 		data: {
-			chapter_id: chapter_id,
 			content: comment.content,
 			user_id: comment.user_id,
+			chapter_id: chapter_id,
 		},
 		include: {
 			user: true,
@@ -61,7 +63,7 @@ export async function PUT(req: NextRequest) {
 
 	const commentFind = await COMMENTS.findFirst({
 		where: {
-			id: +comment_id,
+			id: comment.id,
 		},
 	});
 
@@ -74,10 +76,10 @@ export async function PUT(req: NextRequest) {
 
 	const commentPut = await COMMENTS.update({
 		where: {
-			id: +comment_id,
+			id: comment.id,
 		},
 		data: {
-			...comment,
+			rate: +comment.rate,
 		},
 		select: {
 			content: true,

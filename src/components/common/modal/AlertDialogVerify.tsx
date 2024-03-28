@@ -1,4 +1,3 @@
-'use client';
 import {
 	AlertDialog,
 	AlertDialogAction,
@@ -9,22 +8,16 @@ import {
 	AlertDialogHeader,
 	AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import { closeDialog, openDialog } from '@/lib/dialogs';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { useEffect, useRef, useState } from 'react';
 
-export function AlertDialogVerify({ onClose }: { onClose: () => void }) {
-	function handleClose(): void {
-		onClose();
-	}
-
-	function handleRegister(): void {
-		openDialog('register');
-		onClose();
-	}
-
+export function AlertDialogVerify({
+	onClose,
+	onOk,
+}: {
+	onClose: () => void;
+	onOk: () => void;
+}) {
 	return (
-		<AlertDialog defaultOpen={true} onOpenChange={onClose}>
+		<AlertDialog onOpenChange={onClose}>
 			<AlertDialogContent>
 				<AlertDialogHeader>
 					<AlertDialogTitle>Хотите зарегестрироваться?</AlertDialogTitle>
@@ -35,9 +28,7 @@ export function AlertDialogVerify({ onClose }: { onClose: () => void }) {
 				</AlertDialogHeader>
 				<AlertDialogFooter>
 					<AlertDialogCancel>Отмена</AlertDialogCancel>
-					<AlertDialogAction onClick={handleRegister}>
-						Продолжить
-					</AlertDialogAction>
+					<AlertDialogAction onClick={onOk}>Продолжить</AlertDialogAction>
 				</AlertDialogFooter>
 			</AlertDialogContent>
 		</AlertDialog>

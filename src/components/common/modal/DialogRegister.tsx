@@ -17,11 +17,15 @@ import { UserStore, useUserStore } from '@/store/UserStore';
 import { useEffect, useMemo, useState } from 'react';
 import { getCookie } from 'cookies-next';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { closeDialog } from '@/lib/dialogs';
 import { getRandomQuestion } from '@/lib/utils';
 
-export function DialogRegister({ onClose }: { onClose: () => void }) {
-	const { question, username, setUser } = useUserStore();
+export function DialogRegister({
+	onClose,
+	setUser,
+}: {
+	onClose: () => void;
+	setUser: (user: any) => void;
+}) {
 	const [keyword, setKeyword] = useState('');
 	const [name, setName] = useState('');
 	const { back } = useRouter();
@@ -30,6 +34,7 @@ export function DialogRegister({ onClose }: { onClose: () => void }) {
 	const questionNew = useMemo(() => {
 		return getRandomQuestion();
 	}, []);
+	const router = useRouter();
 
 	const handleRegister = async () => {
 		const response: { type: string; data: string } = await register({
@@ -38,16 +43,12 @@ export function DialogRegister({ onClose }: { onClose: () => void }) {
 			key_word: keyword,
 		});
 		if (response.type == 'successfully') {
-			const user = JSON.parse(getCookie('user')!);
-
-			const userer: UserStore = {
-				...user,
-				username: user.name,
-				image: '',
-			};
-
-			localStorage.setItem('user_name', user.name);
-			setUser(userer);
+			const user: UserStore = JSON.parse(getCookie('user')!);
+			// setUser({
+			// 	id: user.id,
+			// 	username: user.username,
+			// });
+			router.refresh();
 			onClose();
 			return;
 		}

@@ -1,16 +1,12 @@
 import { PrismaClient } from '@prisma/client';
-const prisma = new PrismaClient({
-	transactionOptions: {
-		maxWait: 1000000,
-		timeout: 10000000,
-	},
-});
-const WORKS = prisma.work;
-const BOOK = prisma.book;
-const CHAPTER = prisma.chapter;
+
+const prisma = new PrismaClient();
 
 import { data } from '@/assets/book';
 import { BookTypeWork } from '@/types/Book';
+const WORKS = prisma.work;
+const BOOK = prisma.book;
+const CHAPTER = prisma.chapter;
 
 async function main() {
 	await WORKS.deleteMany();

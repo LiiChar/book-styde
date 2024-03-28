@@ -11,10 +11,82 @@ export type ChapterReletion = Chapter & {
 
 export type BookSearch = BookReletion | ChapterReletion;
 
-export async function POST(req: NextRequest) {
-	const prisma = new PrismaClient({
-		log: ['query'],
+export type NextPrevChapter = Book | Chapter | null;
+
+export async function GET(req: NextRequest) {
+	const book_id = req.nextUrl.searchParams.get('book_id');
+	const prisma = new PrismaClient();
+	const CHAPTER = prisma.chapter;
+	const BOOK = prisma.book;
+
+	if (!book_id) {
+		return NextResponse.json({ type: 'error', message: 'Параметр не пришёл' });
+	}
+
+	let prev: NextPrevChapter = null;
+	let next: NextPrevChapter = null;
+
+	const currentBook = await CHAPTER.findFirst({
+		where: {
+			id: Number(book_id),
+		},
 	});
+
+	if (!currentBook) {
+		return NextResponse.json({
+			type: 'error',
+			message: 'Данной книги не существует по id - ' + book_id,
+		});
+	}
+
+	let nextChapter = increaseChapter(currentBook.chapter);
+	let [int, part] = `${currentBook.chapter}`.split('.');
+
+	if (!part) {
+		prev = await prisma.$queryRaw`SELECT MAX(id) FROM Book WHERE chapter = ${
+			+int - 1
+		}`;
+	} else {
+		let increasePart = +part + 1;
+
+		if (increasePart == 10) {
+			prev = await BOOK.findFirst({
+				where: {
+					chapter: +int + 1,
+				},
+			});
+		} else {
+			prev = await BOOK.findFirst({
+				where: {
+					chapter: +(int + '.' + increasePart),
+				},
+			});
+		}
+	}
+
+	if (nextChapter.toString().length == 1) {
+		const nextBook = await BOOK.findFirst({
+			where: {
+				chapter: nextChapter,
+			},
+		});
+		next = nextBook;
+	}
+
+	if (next == null) {
+		const chapterNext = await CHAPTER.findFirst({
+			where: {
+				chapter: nextChapter,
+			},
+		});
+		next = chapterNext;
+	}
+
+	return NextResponse.json([prev, next]);
+}
+
+export async function POST(req: NextRequest) {
+	const prisma = new PrismaClient();
 	const BOOK = prisma.book;
 	const CHAPTER = prisma.chapter;
 
@@ -50,45 +122,23 @@ export async function POST(req: NextRequest) {
 		return NextResponse.json(chapterFind);
 	}
 
-	// const bookId = await prisma.$queryRaw<
-	// 	{ id: number }[]
-	// >`SELECT id FROM Book WHERE title LIKE '%${title}%';`;
-
-	// if (bookId.length != 0) {
-	// 	const bookFind = await BOOK.findFirst({
-	// 		where: {
-	// 			id: bookId[0].id,
-	// 		},
-	// 		include: {
-	// 			chapters: true,
-	// 		},
-	// 	});
-
-	// 	if (bookFind != null) {
-	// 		return NextResponse.json(bookFind);
-	// 	}
-	// }
-
-	// const chapterId = await prisma.$queryRaw<
-	// 	{ id: number }[]
-	// >`SELECT id FROM Chapter WHERE title LIKE '%${title}%';`;
-
-	// console.log(chapterId);
-
-	// if (chapterId.length != 0) {
-	// 	const chapterFind = await CHAPTER.findFirst({
-	// 		where: {
-	// 			id: chapterId[0].id,
-	// 		},
-	// 		include: {
-	// 			works: true,
-	// 		},
-	// 	});
-
-	// 	if (chapterFind != null) {
-	// 		return NextResponse.json(chapterFind);
-	// 	}
-	// }
-
 	return NextResponse.json(null);
 }
+
+const increaseChapter = (chapter: number) => {
+	let [int, part] = `${chapter}`.split('.');
+
+	if (!part) {
+		return +(int + '.' + 1);
+	}
+
+	let increasePart = +part + 1;
+
+	if (increasePart == 10) {
+		return +int + 1;
+	}
+
+	return +(int + '.' + increasePart);
+};
+
+const decreaseChapter = (chapter: number) => {};

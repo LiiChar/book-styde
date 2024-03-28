@@ -12,16 +12,32 @@ import { DialogRegister } from '@/components/common/modal/DialogRegister';
 import { AlertDialogVerify } from '@/components/common/modal/AlertDialogVerify';
 import { Skeleton } from '@/components/ui/skeleton';
 import { User } from '@/types/User';
+import { useRouter } from 'next/navigation';
 
 const Avatar = memo(() => {
-	const { has } = useSearchParams();
+	const param = useSearchParams();
 	const [user, setUser] = useState<User | undefined | null>(
 		getCookie('user') ? JSON.parse(getCookie('user')!) : null
 	);
+	const router = useRouter();
 
 	const [openVerify, setOpenVerify] = useState(false);
 	const [openKeyword, setOpenKeyword] = useState(false);
 	const [openRegister, setOpenRegister] = useState(false);
+
+	useEffect(() => {
+		if (param.has('verify') && param.get('verify') == 'true') {
+			setOpenVerify(true);
+		}
+		if (param.has('register') && param.get('register') == 'true') {
+			setOpenRegister(true);
+		}
+	}, []);
+
+	const handleSetUser = (user: User) => {
+		// setUser(user);
+		router.refresh();
+	};
 
 	return (
 		<>
@@ -47,13 +63,17 @@ const Avatar = memo(() => {
 			)}
 
 			{openRegister && (
-				<DialogRegister onClose={() => setOpenRegister(false)} />
+				<DialogRegister
+					onClose={() => setOpenRegister(false)}
+					setUser={handleSetUser}
+				/>
 			)}
-			{((getCookie('verify') && user) || openVerify) && (
-				<AlertDialogVerify onClose={() => setOpenVerify(false)} />
+			{(!getCookie('user') || openVerify) && (
+				<AlertDialogVerify
+					onOk={() => setOpenRegister(true)}
+					onClose={() => setOpenVerify(false)}
+				/>
 			)}
-
-			{openKeyword && <DialogRegister onClose={() => setOpenKeyword(false)} />}
 		</>
 	);
 });

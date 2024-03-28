@@ -1,7 +1,15 @@
-import { setCookie } from 'cookies-next';
+import { getCookie, setCookie } from 'cookies-next';
 import { cookies } from 'next/headers';
 import { NextRequest, NextResponse } from 'next/server';
-import { PrismaClient } from '@prisma/client';
+import {
+	Chapter,
+	Comment,
+	PrismaClient,
+	User,
+	UserBook,
+	UserWork,
+	Work,
+} from '@prisma/client';
 import { v4 } from 'uuid';
 
 export async function POST(req: NextRequest) {
@@ -24,15 +32,15 @@ export async function POST(req: NextRequest) {
 		},
 	});
 
-	setCookie('user', JSON.stringify(newUser), {
+	setCookie('user_private', JSON.stringify(newUser), {
 		httpOnly: true,
-		maxAge: 60 * 60 * 160,
+		maxAge: 86400,
 	});
 	cookies().set({
 		name: 'user',
 		value: JSON.stringify(newUser),
 		// httpOnly: true,
-		maxAge: 60 * 60 * 160,
+		maxAge: 86400,
 	});
 
 	return NextResponse.json({ type: 'successfully', data: newUser });
@@ -89,8 +97,17 @@ export async function DELETE(req: NextRequest) {
 	return NextResponse.json({ type: 'successfully', message: 'User deleted' });
 }
 
+export type UserAll =
+	| (User & {
+			comment: (Comment & { chapter: Chapter | null })[];
+			UserBook: (UserBook & { chapter: Chapter | null })[];
+			UserWork: (UserWork & { work: Work | null })[];
+	  })
+	| null;
+
 export async function GET(req: NextRequest) {
 	const user_id = req.nextUrl.searchParams.get('user_id');
+
 	if (!user_id) {
 		return NextResponse.json({
 			type: 'error',
@@ -98,9 +115,26 @@ export async function GET(req: NextRequest) {
 		});
 	}
 	const USER = new PrismaClient().user;
-	const userFind = await USER.findFirst({
+	const userFind: UserAll = await USER.findFirst({
 		where: {
 			id: Number(user_id),
+		},
+		include: {
+			comment: {
+				include: {
+					chapter: true,
+				},
+			},
+			UserBook: {
+				include: {
+					chapter: true,
+				},
+			},
+			UserWork: {
+				include: {
+					work: true,
+				},
+			},
 		},
 	});
 	if (!userFind) {

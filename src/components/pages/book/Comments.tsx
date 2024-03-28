@@ -1,7 +1,7 @@
 'use server';
 import { Skeleton } from '@/components/ui/skeleton';
 import { InputComment } from './comment/InputComment';
-import { Suspense } from 'react';
+import { FC, Suspense } from 'react';
 import { getCommentsByChapterId } from '@/request/comment';
 import { CommentChapter } from '@/app/api/comment/route';
 import { ListComment } from './comment/ListComment';
@@ -10,7 +10,7 @@ interface Props {
 	chapter_id: number;
 }
 
-export default async function ({ chapter_id }: Props) {
+const Comments: FC<Props> = async ({ chapter_id }) => {
 	const comments: CommentChapter[] = await getCommentsByChapterId(chapter_id);
 
 	return (
@@ -24,6 +24,8 @@ export default async function ({ chapter_id }: Props) {
 			</article>
 		</section>
 	);
-}
+};
 
-// <Skeleton className='w-full h-28 bg-accent' />
+Comments.displayName = 'Comments';
+
+export { Comments };

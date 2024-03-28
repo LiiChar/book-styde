@@ -1,5 +1,4 @@
 'use client';
-import { useThemeStore } from '@/store/ThemeStore';
 import Editor from 'react-simple-code-editor';
 import { PropsWithChildren, useState } from 'react';
 // @ts-ignore
@@ -92,8 +91,15 @@ const CodeEditor = ({
 	return (
 		<div className='w-full h-auto overflow-auto'>
 			<div className='relative flex flex-col min-h-10 max-h-64 h-auto overflow-auto mb-4 w-full'>
-				<ResizablePanelGroup direction='horizontal'>
-					<ResizablePanel minSize={15} defaultSize={50}>
+				<ResizablePanelGroup
+					direction='horizontal'
+					style={{ overflow: 'auto' }}
+				>
+					<ResizablePanel
+						minSize={15}
+						defaultSize={50}
+						style={{ overflow: 'auto' }}
+					>
 						<Tabs defaultValue='language'>
 							{(language == 'css' || language == 'js') && (
 								<TabsList>

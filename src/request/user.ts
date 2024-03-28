@@ -1,7 +1,7 @@
 import { Book } from '@/types/Book';
 
 export const register = async (user: any): Promise<any> => {
-	const res = await fetch(`/api/user`, {
+	const res = await fetch(process.env.NEXT_PUBLIC_URL_SITE + `/api/user`, {
 		body: JSON.stringify(user),
 		method: 'POST',
 	});
@@ -9,37 +9,52 @@ export const register = async (user: any): Promise<any> => {
 };
 
 export const removeUser = async (user_id: string) => {
-	await fetch(`/api/user`, {
+	await fetch(`${process.env.NEXT_PUBLIC_URL_SITE}/api/user`, {
 		body: JSON.stringify(user_id),
 		method: 'DELETE',
 	});
 };
 
 export const getUser = async (user_id: string) => {
-	const res = await fetch(`http://localhost:3000/api/user?user_id=${user_id}`, {
-		method: 'GET',
-	});
+	const res = await fetch(
+		`${process.env.NEXT_PUBLIC_URL_SITE}/api/user?user_id=${user_id}`
+	);
+	return res.json();
+};
+
+export const getUserAnalitic = async (user_id: string) => {
+	const res = await fetch(
+		`${process.env.NEXT_PUBLIC_URL_SITE}/api/user/analitic?user_id=${user_id}`,
+		{
+			next: {
+				revalidate: 30,
+			},
+		}
+	);
 	return res.json();
 };
 
 export const updateUser = async (user_id: string, user: any) => {
-	await fetch(`/api/user`, {
+	await fetch(`${process.env.NEXT_PUBLIC_URL_SITE}/api/user`, {
 		body: JSON.stringify({ user_id, user }),
 		method: 'PUT',
 	});
 };
 
 export const addReadableBook = async (user_id: string, book_id: string) => {
-	await fetch(`/api/user/book`, {
+	await fetch(`${process.env.NEXT_PUBLIC_URL_SITE}/api/user/book`, {
 		method: 'POST',
-		body: JSON.stringify({ user_id, book_id }),
+		body: JSON.stringify({ user_id, chapter_id: book_id }),
 	});
 };
 
 export const getReadableBook = async (user_id: string): Promise<number[]> => {
-	const books = await fetch(`/api/user/book?user_id=${user_id}`, {
-		method: 'GET',
-	});
+	const books = await fetch(
+		`${process.env.NEXT_PUBLIC_URL_SITE}/api/user/book?user_id=${user_id}`,
+		{
+			method: 'GET',
+		}
+	);
 
 	return books.json();
 };

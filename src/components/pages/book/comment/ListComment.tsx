@@ -24,25 +24,13 @@ export const ListComment = ({
 		await fetch(`/api/socket/comment?chapter_id=${chapter_id}`);
 
 		const socket = new WebSocket(
-			'ws://localhost:' +
-				(Number(process.env.NEXT_PUBLIC_WEBSOCKET_PORT) || 2020)
+			process.env.NEXT_PUBLIC_WEBSOCKET_PORT || 'ws://localhost:2020'
 		);
-
-		socket.addEventListener('message', ev => {
-			console.log(ev.data);
-
-			// const data = JSON.parse(ev.data);
-
-			// if (data.type == 'new_comment') {
-			// 	setComments(data.data);
-			// }
-		});
 
 		socket.onopen = () => {};
 
 		socket.onmessage = ev => {
 			const data = JSON.parse(ev.data);
-			console.log('aaa');
 
 			if (data.type == 'new_comment') {
 				setComments(data.data);

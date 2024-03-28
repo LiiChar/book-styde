@@ -6,31 +6,10 @@ export async function POST(req: NextRequest) {
 	const USER = new PrismaClient().user;
 	const UserBook = new PrismaClient().userBook;
 
-	// const user_idx = await addReadableBook(user_id, book_id, repo);
-	const userFind = await USER.findFirst({
-		where: {
-			id: user_id,
-		},
-	});
-
-	if (!userFind) {
-		return NextResponse.json({ type: 'error', message: 'User not found' });
-	}
-
-	const partFind = await UserBook.findFirst({
-		where: {
-			chapter_id: chapter_id,
-		},
-	});
-
-	if (partFind) {
-		return NextResponse.json({ type: 'message', message: 'Chapter readed' });
-	}
-
 	const newPost = await UserBook.create({
 		data: {
-			chapter_id: chapter_id,
-			user_id,
+			chapter_id: Number(chapter_id),
+			user_id: Number(user_id),
 		},
 		select: {
 			id: true,

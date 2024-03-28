@@ -1,5 +1,4 @@
 'use client';
-import { useThemeStore } from '@/store/ThemeStore';
 import Editor from 'react-simple-code-editor';
 import { PropsWithChildren, useState } from 'react';
 // @ts-ignore
@@ -36,7 +35,6 @@ const Code = ({
 	compile?: boolean;
 	disable?: boolean;
 }) => {
-	const { isLight } = useThemeStore();
 	const [code, setCode] = useState(dedent`${children as string}`);
 	const [html, setHtml] = useState(`<body>
 

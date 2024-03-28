@@ -12,9 +12,7 @@ interface Props {
 }
 
 export const InputComment: FC<Props> = ({ chapter_id }) => {
-	const [user, setUser] = useState(
-		getCookie('user') ? JSON.parse(getCookie('user')!) : null
-	);
+	const user = getCookie('user') ? JSON.parse(getCookie('user')!) : null;
 	const [comment, setComment] = useState('');
 	const handleSendComment = async () => {
 		const commentFetch = await storeComment({
@@ -26,8 +24,7 @@ export const InputComment: FC<Props> = ({ chapter_id }) => {
 		});
 
 		const socket = new WebSocket(
-			'ws://localhost:' +
-				(Number(process.env.NEXT_PUBLIC_WEBSOCKET_PORT) || 2020)
+			process.env.NEXT_PUBLIC_WEBSOCKET_PORT || 'ws://localhost:2020'
 		);
 
 		sendMessage(
@@ -71,21 +68,21 @@ export const InputComment: FC<Props> = ({ chapter_id }) => {
 
 	return (
 		<>
-			{/* {user && ( */}
-			<div className='grid w-full gap-1.5 mb-4'>
-				<Label className='text-xl' htmlFor='comment'>
-					Ваш комментарий
-				</Label>
-				<Textarea
-					id='comment'
-					value={comment}
-					placeholder='Введите ваш комментарий'
-					className='min-h-10 max-h-44 h-auto'
-					onChange={e => setComment(e.target.value)}
-				/>
-				<Button onClick={handleSendComment}>Написать комментарий</Button>
-			</div>
-			{/* )} */}
+			{user && (
+				<div className='grid w-full gap-1.5 mb-4'>
+					<Label className='text-xl' htmlFor='comment'>
+						Ваш комментарий
+					</Label>
+					<Textarea
+						id='comment'
+						value={comment}
+						placeholder='Введите ваш комментарий'
+						className='min-h-10 max-h-44 h-auto'
+						onChange={e => setComment(e.target.value)}
+					/>
+					<Button onClick={handleSendComment}>Написать комментарий</Button>
+				</div>
+			)}
 		</>
 	);
 };

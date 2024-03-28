@@ -1,4 +1,3 @@
-'use client';
 import { Link } from '@/components/common/Link';
 import { cn } from '@/lib/utils';
 import { addReadableBook } from '@/request/user';
@@ -14,9 +13,9 @@ import React, {
 } from 'react';
 import { Button } from '@/components/ui/button';
 import { getCookie } from 'cookies-next';
-import { User, PrismaClient, Book } from '@prisma/client';
+import { User, PrismaClient, Book, Chapter } from '@prisma/client';
 import { getNavigatePartByChapter } from '@/utils/bookUtils';
-import { getBooks } from '@/request/book';
+import { getBooks, getPrevNextBookById } from '@/request/book';
 
 interface Props {
 	children?: ReactNode | undefined;
@@ -31,31 +30,29 @@ const NavigationWrapper: FC<Props> = async ({
 }) => {
 	const books = await getBooks();
 
-	const user: User = getCookie('user') ? JSON.parse(getCookie('user')!) : null;
+	const user: User | null = getCookie('user')
+		? JSON.parse(getCookie('user')!)
+		: null;
+	if (user) {
+		addReadableBook(String(user.id), String(chapter));
+	}
 	const [prev, next] = getNavigatePartByChapter(books, chapter);
-
-	const handleNextChapter = () => {
-		if (user.id) {
-			addReadableBook(String(user.id), String(next?.chapter!));
-		}
-	};
-
-	const handlePrevChapter = () => {
-		if (user.id) {
-			addReadableBook(String(user.id), String(prev?.chapter!));
-		}
-	};
+	// const [prev, next]: [Chapter | null, Chapter | null] =
+	// 	await getPrevNextBookById(chapter);
 
 	return (
 		<div className='relative w-full flex'>
 			{prev && (
 				<Link
 					path={'page/' + prev.title}
-					title={<ArrowLeft width={48} height={48} />}
-					className='hidden h-18 w-18 md:block fixed translate-y-[calc(50% + 32px)] top-1/2 '
-					attributes={{
-						onClick: handlePrevChapter,
-					}}
+					title={
+						<ArrowLeft
+							className='hover:stroke-primary'
+							width={48}
+							height={48}
+						/>
+					}
+					className='hidden  h-18 w-18 md:block fixed translate-y-[calc(50% + 32px)] top-1/2 '
 				/>
 			)}
 			<div
@@ -73,9 +70,6 @@ const NavigationWrapper: FC<Props> = async ({
 										{prev.title}
 									</div>
 								}
-								attributes={{
-									onClick: handlePrevChapter,
-								}}
 							/>
 						</Button>
 					)}
@@ -89,9 +83,6 @@ const NavigationWrapper: FC<Props> = async ({
 										<ArrowRight className='fill-black' width={15} height={15} />
 									</div>
 								}
-								attributes={{
-									onClick: handleNextChapter,
-								}}
 							/>
 						</Button>
 					)}
@@ -100,11 +91,14 @@ const NavigationWrapper: FC<Props> = async ({
 			{next && (
 				<Link
 					path={'page/' + next.title}
-					title={<ArrowRight width={48} height={48} />}
-					attributes={{
-						onClick: handleNextChapter,
-					}}
-					className='hidden h-18 w-18 md:block fixed translate-y-[calc(50% + 32px)] right-0 top-1/2'
+					title={
+						<ArrowRight
+							className='hover:stroke-primary'
+							width={48}
+							height={48}
+						/>
+					}
+					className='hidden   h-18 w-18 md:block fixed translate-y-[calc(50% + 32px)] right-0 top-1/2'
 				/>
 			)}
 		</div>
