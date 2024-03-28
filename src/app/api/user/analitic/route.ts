@@ -7,6 +7,7 @@ import {
 	UserWork,
 	Work,
 	Comment,
+	Book,
 } from '@prisma/client';
 import { NextRequest, NextResponse } from 'next/server';
 
@@ -89,6 +90,7 @@ export async function GET(req: NextRequest) {
 			},
 		},
 	});
+
 	if (!userFind) {
 		return NextResponse.json({ type: 'error', data: 'User not find' });
 	}
@@ -100,21 +102,27 @@ export async function GET(req: NextRequest) {
 	const HTMLChapter = (
 		await CHAPTER.findMany({
 			where: {
-				book_id: HTML,
+				book: {
+					chapter: HTML,
+				},
 			},
 		})
 	).length;
 	const CSSChapter = (
 		await CHAPTER.findMany({
 			where: {
-				book_id: CSS,
+				book: {
+					chapter: CSS,
+				},
 			},
 		})
 	).length;
 	const JSChapter = (
 		await CHAPTER.findMany({
 			where: {
-				book_id: JS,
+				book: {
+					chapter: JS,
+				},
 			},
 		})
 	).length;
@@ -123,7 +131,9 @@ export async function GET(req: NextRequest) {
 		await WORK.findMany({
 			where: {
 				chapter: {
-					book_id: HTML,
+					book: {
+						chapter: HTML,
+					},
 				},
 			},
 		})
@@ -132,7 +142,9 @@ export async function GET(req: NextRequest) {
 		await WORK.findMany({
 			where: {
 				chapter: {
-					book_id: CSS,
+					book: {
+						chapter: CSS,
+					},
 				},
 			},
 		})
@@ -141,7 +153,9 @@ export async function GET(req: NextRequest) {
 		await WORK.findMany({
 			where: {
 				chapter: {
-					book_id: JS,
+					book: {
+						chapter: JS,
+					},
 				},
 			},
 		})
@@ -161,23 +175,23 @@ export async function GET(req: NextRequest) {
 	const currentWork = UserWork.length;
 
 	const HTMLChapterRead = UserChapter.filter(
-		chap => chap.chapter?.book_id == HTML
+		chap => Number(String(chap.chapter?.book_id).split('.')[1]) == HTML
 	).length;
 	const CSSChapterRead = UserChapter.filter(
-		chap => chap.chapter?.book_id == CSS
+		chap => Number(String(chap.chapter?.book_id).split('.')[1]) == CSS
 	).length;
 	const JSChapterRead = UserChapter.filter(
-		chap => chap.chapter?.book_id == JS
+		chap => Number(String(chap.chapter?.book_id).split('.')[1]) == JS
 	).length;
 
 	const HTMLWorkResolve = UserWork.filter(
-		chap => chap.work?.chapter?.book_id == HTML
+		chap => Number(String(chap.work?.chapter?.book_id).split('.')[1]) == HTML
 	).length;
 	const CSSWorkResolve = UserWork.filter(
-		chap => chap.work?.chapter?.book_id == CSS
+		chap => Number(String(chap.work?.chapter?.book_id).split('.')[1]) == CSS
 	).length;
 	const JSWorkResolve = UserWork.filter(
-		chap => chap.work?.chapter?.book_id == JS
+		chap => Number(String(chap.work?.chapter?.book_id).split('.')[1]) == JS
 	).length;
 
 	const analitic: Analitic = {
@@ -196,7 +210,7 @@ export async function GET(req: NextRequest) {
 					},
 					{
 						book: 'JS',
-						resolve: HTMLChapterRead,
+						resolve: JSChapterRead,
 						all: JSChapter,
 					},
 				],
