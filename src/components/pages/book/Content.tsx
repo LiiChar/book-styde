@@ -1,18 +1,5 @@
 import { BookSearch } from '@/app/api/book/search/route';
 import { Code } from '@/components/common/Code';
-import { CodeEditor } from '@/components/common/CodeEditor';
-import { Question } from '@/components/common/Question';
-import { Aside } from '@/components/pages/book/Aside';
-import { NavigationWrapper } from '@/components/pages/book/NavigationWrapper';
-import { Button } from '@/components/ui/button';
-import { Label } from '@/components/ui/label';
-import { Separator } from '@/components/ui/separator';
-import { getBookOrChapterByTitle, getBooks } from '@/request/book';
-import { useBookStore } from '@/store/BookStore';
-import { Book, BookPart, BookTypeWork } from '@/types/Book';
-import { getBookByChapter } from '@/utils/bookUtils';
-import { ArrowLeft } from 'lucide-react';
-import { DOMElement } from 'react';
 import parse, { convertNodeToElement } from 'react-html-parser';
 
 export const Content = async ({ book }: { book: BookSearch }) => {
