@@ -27,7 +27,6 @@ import { Button } from '../ui/button';
 import { highlight, languages } from 'prismjs';
 import dedent from 'dedent';
 import { Label } from '../ui/label';
-import { useBookStore } from '@/store/BookStore';
 import { BookTypeWork, CodeWork } from '@/types/Book';
 
 const CodeEditor = ({
