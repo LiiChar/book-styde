@@ -13,7 +13,6 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { login, register } from '@/request/user';
-import { UserStore, useUserStore } from '@/store/UserStore';
 import { useEffect, useMemo, useState } from 'react';
 import { getCookie } from 'cookies-next';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
@@ -43,7 +42,6 @@ export function DialogRegister({
 			key_word: keyword,
 		});
 		if (response.type == 'successfully') {
-			const user: UserStore = JSON.parse(getCookie('user')!);
 			// setUser({
 			// 	id: user.id,
 			// 	username: user.username,

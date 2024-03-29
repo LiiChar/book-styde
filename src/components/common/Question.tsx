@@ -5,7 +5,6 @@ import { Input } from '../ui/input';
 import { Checkbox } from '../ui/checkbox';
 import { Label } from '../ui/label';
 import { Button } from '../ui/button';
-import { useBookStore } from '@/store/BookStore';
 
 interface Props {
 	question: QuestionWork;

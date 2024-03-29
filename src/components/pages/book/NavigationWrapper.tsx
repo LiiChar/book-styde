@@ -1,8 +1,6 @@
 import { Link } from '@/components/common/Link';
 import { cn } from '@/lib/utils';
 import { addReadableBook } from '@/request/user';
-import { useBookStore } from '@/store/BookStore';
-import { useUserStore } from '@/store/UserStore';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
 import React, {
 	FC,

@@ -14,12 +14,13 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { closeDialog } from '@/lib/dialogs';
 import { login } from '@/request/user';
-import { useUserStore } from '@/store/UserStore';
+import { User } from '@/types/User';
+import { getCookie } from 'cookies-next';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 export function DialogKeyword({ onClose }: { onClose: () => void }) {
-	const { question, username } = useUserStore();
+	const user: User = JSON.parse(getCookie('user')!);
 	const [keyword, setKeyword] = useState('');
 	const {} = useRouter();
 	const pathname = usePathname();
@@ -29,7 +30,7 @@ export function DialogKeyword({ onClose }: { onClose: () => void }) {
 
 	const handleKeywork = async () => {
 		const response: { type: string; data: string } = await login(
-			username,
+			user.name,
 			keyword
 		);
 		if (response.type == 'succesfully') {
@@ -42,7 +43,7 @@ export function DialogKeyword({ onClose }: { onClose: () => void }) {
 			<DialogContent className='sm:max-w-md'>
 				<DialogHeader>
 					<DialogTitle>Подтвердите аккаунт</DialogTitle>
-					<DialogDescription>{question}</DialogDescription>
+					<DialogDescription>{user.question}</DialogDescription>
 				</DialogHeader>
 				<div className='flex items-center space-x-2'>
 					<div className='grid flex-1 gap-2'>
