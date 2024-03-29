@@ -1,18 +1,19 @@
-import { HTMLProps } from 'react';
+import { HTMLProps, PropsWithChildren, ReactElement, ReactNode } from 'react';
 
 type Props = {
 	resolve: number;
 	className?: HTMLProps<HTMLOrSVGElement>['className'];
+	children?: ReactNode;
 };
 
-export const CircleChar = ({ resolve, className }: Props) => {
+export const CircleChar = ({ resolve, className, children }: Props) => {
 	return (
 		<svg
 			version='1.1'
 			baseProfile='full'
 			viewBox='0 0 100 100'
 			strokeLinecap='round'
-			className={`${className} origin-center -rotate-90 transform`}
+			className={`${className} origin-center flex justify-center items-center -rotate-90 transform`}
 		>
 			<circle
 				fill='none'
@@ -22,8 +23,9 @@ export const CircleChar = ({ resolve, className }: Props) => {
 				strokeWidth='2'
 				strokeLinecap='round'
 				stroke='currentColor'
-				className='text-gray-4 text-background dark:text-dark-gray-4 w-[100px]'
+				className='text-gray-4  text-background dark:text-dark-gray-4 w-[100px]'
 			></circle>
+			{children}
 			<circle
 				fill='none'
 				cx='50px'

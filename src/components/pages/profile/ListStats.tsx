@@ -1,6 +1,9 @@
 import { UserAnalitic } from '@/app/api/user/analitic/route';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Separator } from '@/components/ui/separator';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { HTMLProps } from 'react';
+import { ThumbsComment } from '../book/comment/ThumbsComment';
 
 type Props = {
 	user: UserAnalitic;
@@ -43,7 +46,24 @@ export const ListStats = ({ user, className }: Props) => {
 				</TabsContent>
 				<TabsContent value='comment'>
 					{user.comment.map(com => (
-						<div key={com.id}>{com.content}</div>
+						<div className='bg-accent p-2 rounded-sm' key={com.id}>
+							<div className='flex md:justify-between mb-3 items-center'>
+								<div className='flex w-full justify-between md:justify-normal md:gap-4 items-center'>
+									<Avatar>
+										<AvatarImage
+											src={`https://ui-avatars.com/api/?name=${user.name}`}
+										/>
+										<AvatarFallback>{user.name}</AvatarFallback>
+									</Avatar>
+
+									{user.name}
+								</div>
+								{/* <div className='hidden md:block'>{com.created_at.getTime()}</div> */}
+							</div>
+							<div className='text-pretty break-words'>{com.content}</div>
+							<Separator className='my-2 bg-background' />
+							<ThumbsComment chapter_id={com.chapter_id ?? 0} comment={com} />
+						</div>
 					))}
 				</TabsContent>
 			</Tabs>
