@@ -91,6 +91,7 @@ export async function POST(req: NextRequest) {
 	const CHAPTER = prisma.chapter;
 
 	const { title } = await req.json();
+	console.log(title);
 
 	const bookFind = await BOOK.findFirst({
 		where: {

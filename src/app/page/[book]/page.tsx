@@ -17,8 +17,6 @@ interface Props {
 export default async function Book({ params }: Props) {
 	const title = decodeURIComponent(params.book.replaceAll('_', ' '));
 
-	console.log(title);
-
 	const book = await getBookOrChapterByTitle(title);
 
 	return (
