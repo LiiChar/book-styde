@@ -17,6 +17,9 @@ export async function GET(req: NextRequest) {
 				},
 			},
 		},
+		orderBy: {
+			chapter: 'asc',
+		},
 	});
 	return NextResponse.json(books);
 }

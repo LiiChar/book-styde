@@ -125,6 +125,54 @@ export async function POST(req: NextRequest) {
 	return NextResponse.json(null);
 }
 
+export type BookChapterSearh = {
+	id: number;
+	title: string;
+}[];
+
+export async function PUT(req: NextRequest) {
+	const { search } = await req.json();
+	const prisma = new PrismaClient();
+	const BOOK = prisma.book;
+	const CHAPTER = prisma.chapter;
+
+	const result: BookChapterSearh = [];
+
+	result.push(
+		...(await BOOK.findMany({
+			where: {
+				title: {
+					contains: search,
+				},
+			},
+			select: {
+				id: true,
+				title: true,
+			},
+		}))
+	);
+
+	if (result.length > 3) {
+		return NextResponse.json(result);
+	}
+
+	result.push(
+		...(await CHAPTER.findMany({
+			where: {
+				title: {
+					contains: search,
+				},
+			},
+			select: {
+				id: true,
+				title: true,
+			},
+		}))
+	);
+
+	return NextResponse.json(result);
+}
+
 const increaseChapter = (chapter: number) => {
 	let [int, part] = `${chapter}`.split('.');
 

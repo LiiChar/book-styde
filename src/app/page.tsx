@@ -1,3 +1,4 @@
+import { Focus } from '@/components/common/Focus';
 import { SearchBook } from '@/components/common/SearchBook';
 import { BookNavigation } from '@/components/pages/main/BookNavigation';
 
@@ -6,6 +7,7 @@ export default function Home() {
 		<main className='p-8'>
 			<header className='flex justify-center items-center mb-4'>
 				<h1 className='text-3xl'>Книга дизайна и программирования.</h1>
+				<Focus x={50} y={50} />
 			</header>
 			<SearchBook className='mb-2' />
 			<section>
@@ -24,18 +26,16 @@ export default function Home() {
 						множество практических примеров и руководств, которые помогут вам
 						лучше понять принципы веб-разработки и применить их на практике. Мы
 						также предлагаем поддержку со стороны сообщества и возможность
-						обмена опытом с другими участниками.
-					</p>
-					<p>
-						Благодаря нашему интерактивному подходу к обучению вы сможете не
-						только усвоить основы HTML, CSS и JavaScript, но и научиться
-						создавать стильные, адаптивные и интерактивные веб-сайты. Начните
-						свой путь в веб-разработке прямо сейчас и раскройте свой потенциал в
-						создании уникальных онлайн-проектов!
+						обмена опытом с другими участниками. Благодаря нашему интерактивному
+						подходу к обучению вы сможете не только усвоить основы HTML, CSS и
+						JavaScript, но и научиться создавать стильные, адаптивные и
+						интерактивные веб-сайты. Начните свой путь в веб-разработке прямо
+						сейчас и раскройте свой потенциал в создании уникальных
+						онлайн-проектов!
 					</p>
 				</article>
 			</section>
-			<BookNavigation />
+			<BookNavigation accardion={true} />
 		</main>
 	);
 }

@@ -3,59 +3,87 @@ import { Button } from '@/components/ui/button';
 import { Moon, Sun } from 'lucide-react';
 import React, { memo } from 'react';
 import {
-	ContextMenu,
-	ContextMenuContent,
-	ContextMenuItem,
-	ContextMenuTrigger,
-} from '@/components/ui/context-menu';
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuLabel,
+	DropdownMenuSeparator,
+	DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import { setTheme, getTheme } from '@/lib/theme';
 
 const ThemeChange = memo(() => {
 	return (
-		<ContextMenu>
-			<ContextMenuTrigger>
-				<Button
-					onClick={() => setTheme(getTheme() == 'light' ? 'dark' : 'light')}
-					className='w-[37px] bg-background rounded-[50%]'
-				>
-					<Sun className='scale-[2.5]' />
-				</Button>
-			</ContextMenuTrigger>
-			<ContextMenuContent>
-				<ContextMenuItem>
+		<DropdownMenu>
+			<DropdownMenuTrigger>
+				<Sun className='scale-[1]' />
+			</DropdownMenuTrigger>
+			<DropdownMenuContent>
+				<DropdownMenuItem>
+					<Button
+						onClick={() => setTheme('dark')}
+						className='text-foreground hover:text-background bg-background w-full h-full'
+					>
+						Тёмная
+					</Button>
+				</DropdownMenuItem>
+				<DropdownMenuItem>
+					<Button
+						onClick={() => setTheme('light')}
+						className='text-foreground hover:text-background bg-background w-full h-full'
+					>
+						Светлая
+					</Button>
+				</DropdownMenuItem>
+				<DropdownMenuItem>
 					<Button
 						onClick={() => setTheme('blue')}
 						className='text-foreground hover:text-background bg-background w-full h-full '
 					>
 						Синий
 					</Button>
-				</ContextMenuItem>
-				<ContextMenuItem>
+				</DropdownMenuItem>
+				<DropdownMenuItem>
 					<Button
 						onClick={() => setTheme('green')}
 						className='text-foreground hover:text-background bg-background w-full h-full '
 					>
 						Зелёный
 					</Button>
-				</ContextMenuItem>
-				<ContextMenuItem>
+				</DropdownMenuItem>
+				<DropdownMenuItem>
 					<Button
 						onClick={() => setTheme('orange')}
 						className='text-foreground hover:text-background bg-background w-full h-full '
 					>
 						Оранжевый
 					</Button>
-				</ContextMenuItem>
-				<ContextMenuItem>
+				</DropdownMenuItem>
+				<DropdownMenuItem>
 					<Button
 						onClick={() => setTheme('rose')}
 						className='text-foreground hover:text-background bg-background w-full h-full '
 					>
 						Розовый
 					</Button>
-				</ContextMenuItem>
-			</ContextMenuContent>
-		</ContextMenu>
+				</DropdownMenuItem>
+				<DropdownMenuItem>
+					<Button
+						onClick={() =>
+							setTheme(
+								window.matchMedia &&
+									window.matchMedia('(prefers-color-scheme: dark)').matches
+									? 'dark'
+									: 'light'
+							)
+						}
+						className='text-foreground hover:text-background bg-background w-full h-full '
+					>
+						Системная
+					</Button>
+				</DropdownMenuItem>
+			</DropdownMenuContent>
+		</DropdownMenu>
 	);
 });
 

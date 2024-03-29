@@ -255,7 +255,7 @@ svg {
 
 button:hover {
 	svg {
-		stroke: hsl(var(--background));
+		stroke: hsl(var(--primary));
 	}
 }
 

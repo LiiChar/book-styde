@@ -53,12 +53,21 @@ const config = {
 					foreground: 'hsl(var(--card-foreground))',
 				},
 			},
+			backgroundImage: {
+				'radial-gradient':
+					'radial-gradient(169.40% 89.55% at 94.76% 6.29%, rgba(0, 0, 0, 0.40) 0%, rgba(255, 255, 255, 0.00) 100%)',
+			},
 			borderRadius: {
 				lg: 'var(--radius)',
 				md: 'calc(var(--radius) - 2px)',
 				sm: 'calc(var(--radius) - 4px)',
 			},
 			keyframes: {
+				'spin-slow': {
+					'0%': { transform: 'rotate(0deg)' },
+					'50%': { transform: 'rotate(180deg)' },
+					'100%': { transform: 'rotate(360deg)' },
+				},
 				'accordion-down': {
 					from: { height: '0' },
 					to: { height: 'var(--radix-accordion-content-height)' },
@@ -133,6 +142,7 @@ const config = {
 				'hide-r': '1500ms hide-to-right',
 				'hide-l': '1500ms hide-to-left',
 				dropdawn: '300ms dropdawn',
+				'spin-slow': '1500ms spin-slow linear infinite',
 			},
 		},
 	},

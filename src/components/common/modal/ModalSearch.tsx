@@ -22,7 +22,7 @@ export function ModalSearch() {
 			</DialogTrigger>
 			<DialogContent
 				color='none'
-				className='w-[60vw] hidden_close_buttom top-56 scale-125 h-14 p-0 m-0 lg:max-w-[500px] border-none bg-none'
+				className='w-[60vw] hidden_close_buttom top-56 scale-125 h-9 p-0 m-0 lg:max-w-[500px] border-none bg-none'
 			>
 				<SearchBook className='w-full scale-125' />
 			</DialogContent>
