@@ -1,7 +1,8 @@
 import { Separator } from '@/components/ui/separator';
 import { Skeleton } from '@/components/ui/skeleton';
+import { FC } from 'react';
 
-export default function Loading() {
+const LoadingProfile: FC = () => {
 	return (
 		<article className='flex px-[10%] gap-4 mt-3'>
 			<section className='w-1/4'>
@@ -64,7 +65,10 @@ export default function Loading() {
 										(week, i) => (
 											<div className='flex flex-col gap-[1px] mb-1' key={i}>
 												{Array.from(Array(7).keys()).map((day, i) => (
-													<Skeleton className='w-[10px] rounded-[2px] h-[10px] bg-primary' />
+													<Skeleton
+														key={i}
+														className='w-[10px] rounded-[2px] h-[10px] bg-primary'
+													/>
 												))}
 											</div>
 										)
@@ -86,4 +90,8 @@ export default function Loading() {
 			</section>
 		</article>
 	);
-}
+};
+
+LoadingProfile.defaultProps = 'LoadingProfile';
+
+export default LoadingProfile;
