@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { Comment, PrismaClient, User } from '@prisma/client';
+import Pusher from 'pusher';
 
 export type CommentChapter = Comment & { user: User };
 
@@ -25,11 +26,17 @@ export async function GET(req: NextRequest) {
 	return NextResponse.json(comments);
 }
 
+export const pusher = new Pusher({
+	appId: process.env.PUSHER_APP_ID!,
+	key: process.env.PUSHER_KEY!,
+	secret: process.env.PUSHER_SECRET!,
+	cluster: process.env.PUSHER_CLUSTER!,
+	useTLS: true,
+});
+
 export async function POST(req: NextRequest) {
 	const { comment, chapter_id } = await req.json();
 	const COMMENTS = new PrismaClient().comment;
-
-	console.log(comment, chapter_id);
 
 	const commentNew = await COMMENTS.create({
 		data: {
@@ -52,6 +59,10 @@ export async function POST(req: NextRequest) {
 		// 		},
 		// 	},
 		// },
+	});
+
+	pusher.trigger(`chapter-${chapter_id}`, 'new_comment', {
+		comment: commentNew,
 	});
 
 	return NextResponse.json(commentNew);

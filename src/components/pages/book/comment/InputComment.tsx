@@ -7,6 +7,7 @@ import React, { FC, memo, useState } from 'react';
 import { storeComment } from '@/request/comment';
 import { io, Manager } from 'socket.io-client';
 import { useRouter } from 'next/navigation';
+import pusherJs from 'pusher-js';
 
 interface Props {
 	chapter_id: number;
@@ -25,23 +26,26 @@ export const InputComment: FC<Props> = ({ chapter_id }) => {
 			chapter_id,
 		});
 
-		refresh();
+		// refresh();
 
-		const socket = new WebSocket(
-			process.env.NEXT_PUBLIC_WEBSOCKET_PORT || 'ws://localhost:2020'
-		);
+		const pusher = new pusherJs(process.env.NEXT_PUSHER_PUBLIC_KEY!, {
+			cluster: 'eu',
+		});
 
-		sendMessage(
-			socket,
-			JSON.stringify({ type: 'send_comment', data: commentFetch })
-		);
+		const channel = pusher.subscribe(`chapter-${chapter_id}`);
+
+		channel.emit('new_comment');
+
+		return () => {
+			pusher.unsubscribe('chat');
+		};
 		setComment('');
 	};
 
 	const waitForOpenConnection = (socket: WebSocket) => {
 		return new Promise((resolve, reject) => {
 			const maxNumberOfAttempts = 10;
-			const intervalTime = 200; //ms
+			const intervalTime = 200;
 
 			let currentAttempt = 0;
 			const interval = setInterval(() => {

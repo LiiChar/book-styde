@@ -6,6 +6,7 @@ import { Comment, PrismaClient, User } from '@prisma/client';
 import { FC, memo, useEffect, useState } from 'react';
 import { ThumbsComment } from './ThumbsComment';
 import { io, Manager } from 'socket.io-client';
+import Pusher from 'pusher-js';
 
 export const ListComment = ({
 	comments: cms,
@@ -17,26 +18,20 @@ export const ListComment = ({
 	const [comments, setComments] = useState(cms);
 
 	useEffect(() => {
-		socketInitializer();
-	}, []);
+		const pusher = new Pusher(process.env.NEXT_PUSHER_PUBLIC_KEY!, {
+			cluster: 'eu',
+		});
 
-	const socketInitializer = async () => {
-		await fetch(`/api/socket/comment?chapter_id=${chapter_id}`);
+		const channel = pusher.subscribe(`chapter-${chapter_id}`);
 
-		const socket = new WebSocket(
-			process.env.NEXT_PUBLIC_WEBSOCKET_PORT || 'ws://localhost:2020'
-		);
+		channel.bind('new_comment', (data: any) => {
+			setComments(prevState => [...prevState, data.comment]);
+		});
 
-		socket.onopen = () => {};
-
-		socket.onmessage = ev => {
-			const data = JSON.parse(ev.data);
-
-			if (data.type == 'new_comment') {
-				setComments(data.data);
-			}
+		return () => {
+			pusher.unsubscribe('chat');
 		};
-	};
+	}, []);
 	return (
 		<div className='flex flex-col gap-4'>
 			{comments.length > 0 ? (
