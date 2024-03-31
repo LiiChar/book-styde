@@ -91,7 +91,6 @@ export async function POST(req: NextRequest) {
 	const CHAPTER = prisma.chapter;
 
 	const { title } = await req.json();
-	console.log(title);
 
 	const bookFind = await BOOK.findFirst({
 		where: {
@@ -144,6 +143,7 @@ export async function PUT(req: NextRequest) {
 			where: {
 				title: {
 					contains: search,
+					mode: 'insensitive',
 				},
 			},
 			select: {
@@ -153,15 +153,16 @@ export async function PUT(req: NextRequest) {
 		}))
 	);
 
-	if (result.length > 3) {
-		return NextResponse.json(result);
-	}
+	// if (result.length > 3) {
+	// 	return NextResponse.json(result);
+	// }
 
 	result.push(
 		...(await CHAPTER.findMany({
 			where: {
 				title: {
 					contains: search,
+					mode: 'insensitive',
 				},
 			},
 			select: {

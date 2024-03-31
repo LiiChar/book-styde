@@ -6,6 +6,7 @@ import { getCookie } from 'cookies-next';
 import React, { FC, memo, useState } from 'react';
 import { storeComment } from '@/request/comment';
 import { io, Manager } from 'socket.io-client';
+import { useRouter } from 'next/navigation';
 
 interface Props {
 	chapter_id: number;
@@ -14,6 +15,7 @@ interface Props {
 export const InputComment: FC<Props> = ({ chapter_id }) => {
 	const user = getCookie('user') ? JSON.parse(getCookie('user')!) : null;
 	const [comment, setComment] = useState('');
+	const { refresh } = useRouter();
 	const handleSendComment = async () => {
 		const commentFetch = await storeComment({
 			comment: {
@@ -22,6 +24,8 @@ export const InputComment: FC<Props> = ({ chapter_id }) => {
 			},
 			chapter_id,
 		});
+
+		refresh();
 
 		const socket = new WebSocket(
 			process.env.NEXT_PUBLIC_WEBSOCKET_PORT || 'ws://localhost:2020'

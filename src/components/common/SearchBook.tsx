@@ -37,6 +37,8 @@ const SearchBook = memo(({ className }: Props) => {
 				.finally(() => {
 					setLoading(false);
 				});
+		} else {
+			setBooks([]);
 		}
 
 		return () => controller.abort();
