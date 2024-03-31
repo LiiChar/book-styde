@@ -16,7 +16,7 @@ export async function GET(req: NextRequest) {
 			chapter_id: Number(chapter_id),
 		},
 		orderBy: {
-			rate: 'asc',
+			created_at: 'desc',
 		},
 		include: {
 			user: true,
@@ -37,7 +37,7 @@ export async function POST(req: NextRequest) {
 		useTLS: true,
 	});
 
-	const commentNew = await COMMENTS.create({
+	await COMMENTS.create({
 		data: {
 			content: comment.content,
 			user_id: comment.user_id,
@@ -46,21 +46,19 @@ export async function POST(req: NextRequest) {
 		include: {
 			user: true,
 		},
-		// select: {
-		// 	content: true,
-		// 	created_at: true,
-		// 	updated_at: true,
-		// 	id: true,
-		// 	user: {
-		// 		select: {
-		// 			id: true,
-		// 			name: true,
-		// 		},
-		// 	},
-		// },
 	});
+
+	const commentNew = COMMENTS.findMany({
+		where: {
+			chapter_id: chapter_id,
+		},
+		orderBy: {
+			created_at: 'desc',
+		},
+	});
+
 	try {
-		pusher.trigger(
+		await pusher.trigger(
 			`chapter-${chapter_id}`,
 			'new_comment',
 			JSON.stringify({

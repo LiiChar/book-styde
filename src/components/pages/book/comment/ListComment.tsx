@@ -25,7 +25,7 @@ export const ListComment = ({
 		const channel = pusher.subscribe(`chapter-${chapter_id}`);
 
 		channel.bind('new_comment', (data: any) => {
-			setComments(prevState => [...prevState, data.comment]);
+			setComments(data.comment);
 		});
 
 		return () => {
@@ -48,7 +48,9 @@ export const ListComment = ({
 
 								{com.user.name}
 							</div>
-							{/* <div className='hidden md:block'>{com.created_at.getTime()}</div> */}
+							<div className='hidden md:block'>
+								{com.created_at.toLocaleString()}
+							</div>
 						</div>
 						<div className='text-pretty break-words'>{com.content}</div>
 						<Separator className='my-2 bg-background' />
