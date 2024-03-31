@@ -59,10 +59,15 @@ export async function POST(req: NextRequest) {
 		// 	},
 		// },
 	});
-
-	pusher.trigger(`chapter-${chapter_id}`, 'new_comment', {
-		comment: commentNew,
-	});
+	try {
+		pusher.trigger(
+			`chapter-${chapter_id}`,
+			'new_comment',
+			JSON.stringify({
+				comment: commentNew,
+			})
+		);
+	} catch (error) {}
 
 	return NextResponse.json(commentNew);
 }
