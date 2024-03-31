@@ -26,17 +26,16 @@ export async function GET(req: NextRequest) {
 	return NextResponse.json(comments);
 }
 
-export const pusher = new Pusher({
-	appId: process.env.PUSHER_APP_ID!,
-	key: process.env.PUSHER_KEY!,
-	secret: process.env.PUSHER_SECRET!,
-	cluster: process.env.PUSHER_CLUSTER!,
-	useTLS: true,
-});
-
 export async function POST(req: NextRequest) {
 	const { comment, chapter_id } = await req.json();
 	const COMMENTS = new PrismaClient().comment;
+	const pusher = new Pusher({
+		appId: process.env.PUSHER_APP_ID!,
+		key: process.env.PUSHER_KEY!,
+		secret: process.env.PUSHER_SECRET!,
+		cluster: process.env.PUSHER_CLUSTER!,
+		useTLS: true,
+	});
 
 	const commentNew = await COMMENTS.create({
 		data: {
