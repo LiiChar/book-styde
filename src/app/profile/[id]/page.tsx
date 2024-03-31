@@ -19,12 +19,12 @@ export default async function Profile({ params }: { params: { id: string } }) {
 	}
 
 	return (
-		<article className='flex px-[10%] gap-4 mt-3'>
-			<section className='w-1/4'>
+		<article className='flex px-[10%] flex-wrap lg:flex-nowrap gap-4 mt-3'>
+			<section className='lg:w-1/4 w-full'>
 				<aside className='bg-accent rounded-md p-4'>
 					<div className='flex gap-2'>
 						<div className='flex justify-center items-center'>
-							<Avatar>
+							<Avatar className='w-[45px] h-[45px]'>
 								<AvatarImage
 									src={`https://ui-avatars.com/api/?name=${user.name}`}
 								/>
@@ -40,9 +40,9 @@ export default async function Profile({ params }: { params: { id: string } }) {
 					<div>Достижения</div>
 				</aside>
 			</section>
-			<section className='w-3/4'>
-				<div className='flex gap-4'>
-					<div className='w-1/2 bg-accent rounded-md p-4 flex gap-2'>
+			<section className='lg:w-3/4 w-full'>
+				<div className='flex flex-row flex-wrap md:flex-nowrap gap-4'>
+					<div className='md:w-1/2 w-full bg-accent rounded-md p-4 flex gap-2'>
 						<div className='w-1/3 flex justify-center shrink-1 relative items-center'>
 							<CircleChar
 								resolve={
@@ -72,7 +72,7 @@ export default async function Profile({ params }: { params: { id: string } }) {
 						</div>
 						<Resolve resolve={user.analitic.work} />
 					</div>
-					<div className='w-1/2 bg-accent rounded-md p-4 flex gap-2'>
+					<div className='md:w-1/2 w-full bg-accent rounded-md p-4 flex gap-2'>
 						<div className='w-1/3 flex justify-center shrink-1 relative items-center'>
 							<CircleChar
 								resolve={

@@ -42,7 +42,7 @@ const LoadingProfile: FC = () => {
 					</div>
 				</div>
 				<div className='my-4 bg-accent rounded-md h-[161px]'>
-					<section className='p-4'>
+					<section className='p-4 w-full h-full'>
 						<div className='flex overflow-auto scrollbar-sm gap-2 '>
 							<div className='flex flex-col gap-[10px] pb-[10px] pt-[24px]'>
 								<Skeleton className='w-[24px] h-[14px] bg-primary rounded-sm' />
@@ -51,7 +51,7 @@ const LoadingProfile: FC = () => {
 
 								<Skeleton className='w-[24px] h-[14px] bg-primary rounded-sm' />
 							</div>
-							<div>
+							<div className='w-full h-full'>
 								<div className='flex justify-around mb-2'>
 									{Array.from(Array(12).keys()).map(m => (
 										<Skeleton
@@ -60,19 +60,8 @@ const LoadingProfile: FC = () => {
 										/>
 									))}
 								</div>
-								<div className='flex gap-[1px] '>
-									{Array.from(Array(Math.floor(365 / 7)).keys()).map(
-										(week, i) => (
-											<div className='flex flex-col gap-[1px] mb-1' key={i}>
-												{Array.from(Array(7).keys()).map((day, i) => (
-													<Skeleton
-														key={i}
-														className='w-[10px] rounded-[2px] h-[10px] bg-primary'
-													/>
-												))}
-											</div>
-										)
-									)}
+								<div className='flex gap-[1px] w-full h-[75px]'>
+									<Skeleton className='h-[75px] w-full bg-primary' />
 								</div>
 							</div>
 						</div>
