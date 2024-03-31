@@ -18,7 +18,7 @@ export const ListComment = ({
 	const [comments, setComments] = useState(cms);
 
 	useEffect(() => {
-		const pusher = new Pusher(process.env.NEXT_PUSHER_PUBLIC_KEY!, {
+		const pusher = new Pusher(process.env.NEXT_PUBLIC_PUSHER_KEY!, {
 			cluster: 'eu',
 		});
 

@@ -26,9 +26,7 @@ export const InputComment: FC<Props> = ({ chapter_id }) => {
 			chapter_id,
 		});
 
-		// refresh();
-
-		const pusher = new pusherJs(process.env.NEXT_PUSHER_PUBLIC_KEY!, {
+		const pusher = new pusherJs(process.env.NEXT_PUBLIC_PUSHER_KEY!, {
 			cluster: 'eu',
 		});
 
@@ -36,9 +34,7 @@ export const InputComment: FC<Props> = ({ chapter_id }) => {
 
 		channel.emit('new_comment');
 
-		return () => {
-			pusher.unsubscribe('chat');
-		};
+		pusher.unsubscribe('chat');
 		setComment('');
 	};
 
