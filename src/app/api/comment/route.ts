@@ -48,12 +48,15 @@ export async function POST(req: NextRequest) {
 		},
 	});
 
-	const commentNew = COMMENTS.findMany({
+	const commentNew = await COMMENTS.findMany({
 		where: {
-			chapter_id: chapter_id,
+			chapter_id: Number(chapter_id),
 		},
 		orderBy: {
 			created_at: 'desc',
+		},
+		include: {
+			user: true,
 		},
 	});
 
