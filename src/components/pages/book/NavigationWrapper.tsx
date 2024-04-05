@@ -11,9 +11,8 @@ import React, {
 } from 'react';
 import { Button } from '@/components/ui/button';
 import { getCookie } from 'cookies-next';
-import { User, PrismaClient, Book, Chapter } from '@prisma/client';
-import { getNavigatePartByChapter } from '@/utils/bookUtils';
-import { getBooks, getPrevNextBookById } from '@/request/book';
+import { User, PrismaClient, Chapter } from '@prisma/client';
+import { getPrevNextBookByChapter } from '@/request/book';
 
 interface Props {
 	children?: ReactNode | undefined;
@@ -26,17 +25,13 @@ const NavigationWrapper: FC<Props> = async ({
 	className,
 	chapter,
 }) => {
-	const books = await getBooks();
-
 	const user: User | null = getCookie('user')
 		? JSON.parse(getCookie('user')!)
 		: null;
 	if (user) {
 		addReadableBook(String(user.id), String(chapter));
 	}
-	const [prev, next] = getNavigatePartByChapter(books, chapter);
-	// const [prev, next]: [Chapter | null, Chapter | null] =
-	// 	await getPrevNextBookById(chapter);
+	const [prev, next] = await getPrevNextBookByChapter(chapter);
 
 	return (
 		<div className='relative w-full flex'>

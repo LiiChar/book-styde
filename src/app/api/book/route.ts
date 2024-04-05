@@ -2,20 +2,16 @@ import { PrismaClient } from '@prisma/client';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(req: NextRequest) {
-	const BOOK = new PrismaClient().book;
-	const books = await BOOK.findMany({
+	const CHAPTER = new PrismaClient().chapter;
+	const books = await CHAPTER.findMany({
 		select: {
-			chapter: true,
+			book: true,
 			id: true,
 			title: true,
-			chapters: {
-				select: {
-					book_id: true,
-					chapter: true,
-					title: true,
-					id: true,
-				},
-			},
+			created_at: true,
+			content: true,
+			updated_at: true,
+			chapter: true,
 		},
 		orderBy: {
 			chapter: 'asc',

@@ -1,9 +1,7 @@
-import { BookChapterSearh, BookSearch } from '@/app/api/book/search/route';
-import { Chapter, Book } from '@prisma/client';
+import { BookChapterSearh, ChapterSearch } from '@/app/api/book/search/route';
+import { Chapter, Work } from '@prisma/client';
 
-export const getBooks = async (): Promise<
-	(Book & { chapters: Chapter[] })[]
-> => {
+export const getChapters = async (): Promise<Chapter[]> => {
 	const request = await fetch(process.env.NEXT_PUBLIC_URL_SITE + '/api/book');
 	return request.json();
 };
@@ -30,9 +28,9 @@ export const getBookSearch = async (
 	return request.json();
 };
 
-export const getBookOrChapterByTitle = async (
+export const getChapterByTitle = async (
 	title: string
-): Promise<BookSearch> => {
+): Promise<ChapterSearch> => {
 	const request = await fetch(
 		`${process.env.NEXT_PUBLIC_URL_SITE}/api/book/search`,
 		{
@@ -45,9 +43,9 @@ export const getBookOrChapterByTitle = async (
 	return request.json();
 };
 
-export const getPrevNextBookById = async (book_id: number) => {
+export const getPrevNextBookByChapter = async (chapter: number) => {
 	const request = await fetch(
-		`${process.env.BASE_RU}/api/book/search?book_id=${book_id}`
+		`${process.env.NEXT_PUBLIC_URL_SITE}/api/book/search?chapter=${chapter}`
 	);
 	return request.json();
 };

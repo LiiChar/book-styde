@@ -1,0 +1,25 @@
+import { Chapter, PrismaClient } from '@prisma/client';
+
+export const chaptersGroupByBook = (chapters: Chapter[]) => {
+	const result: {
+		title: string;
+		chapters: Chapter[];
+	}[] = [
+		{ title: 'HTML: Язык Гипертекстовой Разметки', chapters: [] },
+		{ title: 'CSS: Таблица Каскадных Стилей', chapters: [] },
+		{ title: 'JS: Язык веб-программирования', chapters: [] },
+	];
+
+	chapters.forEach(ch => {
+		if (ch.book == 'HTML') {
+			result[0].chapters.push(ch);
+		}
+		if (ch.book == 'CSS') {
+			result[1].chapters.push(ch);
+		}
+		if (ch.book == 'JS') {
+			result[2].chapters.push(ch);
+		}
+	});
+	return result;
+};

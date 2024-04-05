@@ -22,7 +22,7 @@ import {
 	transfoncCodeToValidCss,
 	transfoncCodeToValidHTML,
 	transformCodeToParse,
-} from '@/utils/parser';
+} from '@/lib/parser';
 import dedent from 'dedent';
 
 const Code = ({

@@ -1,5 +1,3 @@
-import { Book } from '@/types/Book';
-
 export const register = async (user: any): Promise<any> => {
 	const res = await fetch(process.env.NEXT_PUBLIC_URL_SITE + `/api/user`, {
 		body: JSON.stringify(user),

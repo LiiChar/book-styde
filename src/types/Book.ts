@@ -7,21 +7,13 @@ type language = 'javascript' | 'css' | 'html';
 type part = 'javascript' | 'css' | 'html' | 'дизайн';
 
 export type Books = {
-	book: Book[];
-};
-
-export type Book = {
-	title: string;
-	part: part;
-	chapter: number;
-	content: string;
-	parts: BookPart[];
+	book: BookPart[];
 };
 
 export type BookPart = {
 	[x: string]: any;
 	title: string;
-	chapter: number;
+	book: string;
 	content: string;
 	works: (CodeWork | QuestionWork)[];
 };

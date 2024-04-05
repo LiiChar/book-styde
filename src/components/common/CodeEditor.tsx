@@ -22,7 +22,7 @@ import {
 	transfoncCodeToValidCss,
 	transfoncCodeToValidHTML,
 	transformCodeToParse,
-} from '@/utils/parser';
+} from '@/lib/parser';
 import { Button } from '../ui/button';
 import { highlight, languages } from 'prismjs';
 import dedent from 'dedent';

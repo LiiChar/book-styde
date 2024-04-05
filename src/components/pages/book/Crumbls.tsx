@@ -11,7 +11,7 @@ import {
 import { BookSearch } from '@/app/api/book/search/route';
 import { CalendarDays, CalendarDaysIcon, HomeIcon } from 'lucide-react';
 import { Book, Chapter } from '@prisma/client';
-import { formatDate } from '@/utils/time';
+import { formatDate } from '@/lib/time';
 
 type Props = {
 	book: any;

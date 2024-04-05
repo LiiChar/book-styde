@@ -7,7 +7,7 @@ import { FC, memo, useEffect, useState } from 'react';
 import { ThumbsComment } from './ThumbsComment';
 import { io, Manager } from 'socket.io-client';
 import Pusher from 'pusher-js';
-import { getTimeAgo } from '@/utils/time';
+import { getTimeAgo } from '@/lib/time';
 
 export const ListComment = ({
 	comments: cms,

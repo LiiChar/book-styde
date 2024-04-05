@@ -1,4 +1,4 @@
-import { getDaysFromYear } from '@/utils/time';
+import { getDaysFromYear } from '@/lib/time';
 import {
 	Chapter,
 	PrismaClient,
@@ -7,7 +7,6 @@ import {
 	UserWork,
 	Work,
 	Comment,
-	Book,
 } from '@prisma/client';
 import { NextRequest, NextResponse } from 'next/server';
 
@@ -61,7 +60,6 @@ export async function GET(req: NextRequest) {
 	const prisma = new PrismaClient();
 	const CHAPTER = prisma.chapter;
 	const USER = prisma.user;
-	const BOOK = prisma.book;
 	const WORK = prisma.work;
 
 	const userFind: UserIncludes = await USER.findFirst({
@@ -95,34 +93,28 @@ export async function GET(req: NextRequest) {
 		return NextResponse.json({ type: 'error', data: 'User not find' });
 	}
 
-	const HTML = 1;
-	const CSS = 2;
-	const JS = 3;
+	const HTML = 'HTML';
+	const CSS = 'CSS';
+	const JS = 'JS';
 
 	const HTMLChapter = (
 		await CHAPTER.findMany({
 			where: {
-				book: {
-					chapter: HTML,
-				},
+				book: HTML,
 			},
 		})
 	).length;
 	const CSSChapter = (
 		await CHAPTER.findMany({
 			where: {
-				book: {
-					chapter: CSS,
-				},
+				book: CSS,
 			},
 		})
 	).length;
 	const JSChapter = (
 		await CHAPTER.findMany({
 			where: {
-				book: {
-					chapter: JS,
-				},
+				book: JS,
 			},
 		})
 	).length;
@@ -131,9 +123,7 @@ export async function GET(req: NextRequest) {
 		await WORK.findMany({
 			where: {
 				chapter: {
-					book: {
-						chapter: HTML,
-					},
+					book: HTML,
 				},
 			},
 		})
@@ -142,9 +132,7 @@ export async function GET(req: NextRequest) {
 		await WORK.findMany({
 			where: {
 				chapter: {
-					book: {
-						chapter: CSS,
-					},
+					book: CSS,
 				},
 			},
 		})
@@ -153,19 +141,17 @@ export async function GET(req: NextRequest) {
 		await WORK.findMany({
 			where: {
 				chapter: {
-					book: {
-						chapter: JS,
-					},
+					book: JS,
 				},
 			},
 		})
 	).length;
 
-	const allBook = await BOOK.count();
+	const allBook = 3;
 	const allCWork = await WORK.count();
 
 	const countChapter = await CHAPTER.count();
-	const countBook = await BOOK.count();
+	const countBook = 3;
 	const countWork = await WORK.count();
 
 	const UserChapter = userFind.UserBook;
@@ -175,23 +161,23 @@ export async function GET(req: NextRequest) {
 	const currentWork = UserWork.length;
 
 	const HTMLChapterRead = UserChapter.filter(
-		chap => Number(String(chap.chapter?.book_id).split('.')[1]) == HTML
+		chap => chap.chapter?.book == HTML
 	).length;
 	const CSSChapterRead = UserChapter.filter(
-		chap => Number(String(chap.chapter?.book_id).split('.')[1]) == CSS
+		chap => chap.chapter?.book == CSS
 	).length;
 	const JSChapterRead = UserChapter.filter(
-		chap => Number(String(chap.chapter?.book_id).split('.')[1]) == JS
+		chap => chap.chapter?.book == JS
 	).length;
 
 	const HTMLWorkResolve = UserWork.filter(
-		chap => Number(String(chap.work?.chapter?.book_id).split('.')[1]) == HTML
+		chap => chap.work?.chapter?.book == HTML
 	).length;
 	const CSSWorkResolve = UserWork.filter(
-		chap => Number(String(chap.work?.chapter?.book_id).split('.')[1]) == CSS
+		chap => chap.work?.chapter?.book == CSS
 	).length;
 	const JSWorkResolve = UserWork.filter(
-		chap => Number(String(chap.work?.chapter?.book_id).split('.')[1]) == JS
+		chap => chap.work?.chapter?.book == JS
 	).length;
 
 	const analitic: Analitic = {

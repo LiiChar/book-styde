@@ -6,7 +6,7 @@ import {
 	TooltipProvider,
 	TooltipTrigger,
 } from '@/components/ui/tooltip';
-import { getMonthDayFromDayOfYear } from '@/utils/time';
+import { getMonthDayFromDayOfYear } from '@/lib/time';
 
 type Props = {
 	visit: AnaliticVisit;

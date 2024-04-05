@@ -3,7 +3,7 @@ import React, { FC, memo } from 'react';
 import { likeComment } from '@/request/comment';
 import { ThumbsDown, ThumbsUp } from 'lucide-react';
 import { Comment } from '@prisma/client';
-import { getTimeAgo } from '@/utils/time';
+import { getTimeAgo } from '@/lib/time';
 
 interface Props {
 	chapter_id: number;

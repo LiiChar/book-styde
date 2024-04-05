@@ -49,23 +49,11 @@ CREATE TABLE "Comment" (
 );
 
 -- CreateTable
-CREATE TABLE "Book" (
-    "id" SERIAL NOT NULL,
-    "title" TEXT NOT NULL,
-    "chapter" DOUBLE PRECISION NOT NULL,
-    "content" TEXT NOT NULL,
-    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updated_at" TIMESTAMP(3) NOT NULL,
-
-    CONSTRAINT "Book_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
 CREATE TABLE "Chapter" (
     "id" SERIAL NOT NULL,
     "title" TEXT NOT NULL,
-    "book_id" INTEGER NOT NULL,
-    "chapter" DOUBLE PRECISION NOT NULL,
+    "chapter" INTEGER NOT NULL,
+    "book" TEXT NOT NULL,
     "content" TEXT NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
@@ -97,9 +85,6 @@ CREATE TABLE "Work" (
 CREATE UNIQUE INDEX "User_name_key" ON "User"("name");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Book_title_key" ON "Book"("title");
-
--- CreateIndex
 CREATE UNIQUE INDEX "Chapter_title_key" ON "Chapter"("title");
 
 -- AddForeignKey
@@ -119,9 +104,6 @@ ALTER TABLE "Comment" ADD CONSTRAINT "Comment_chapter_id_fkey" FOREIGN KEY ("cha
 
 -- AddForeignKey
 ALTER TABLE "Comment" ADD CONSTRAINT "Comment_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "Chapter" ADD CONSTRAINT "Chapter_book_id_fkey" FOREIGN KEY ("book_id") REFERENCES "Book"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Work" ADD CONSTRAINT "Work_chapter_id_fkey" FOREIGN KEY ("chapter_id") REFERENCES "Chapter"("id") ON DELETE CASCADE ON UPDATE CASCADE;

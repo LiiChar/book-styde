@@ -8,7 +8,7 @@ import { Separator } from '@/components/ui/separator';
 
 import { getReadableBook, getUser, getUserAnalitic } from '@/request/user';
 import { User } from '@/types/User';
-import { timer } from '@/utils/timer';
+import { timer } from '@/lib/timer';
 import { redirect } from 'next/navigation';
 
 export default async function Profile({ params }: { params: { id: string } }) {

@@ -27,5 +27,5 @@ export const questions = [
 ];
 
 export const data: Books = {
-	book: [html, css, js],
+	book: [...html, ...css, ...js],
 };
