@@ -155,13 +155,10 @@ export const ParicleConnectionBackground: FC = memo(() => {
 		}
 
 		init();
-	}, [
-		canvasRef,
-		window.getComputedStyle(document.body)!.getPropertyValue('--background'),
-	]);
+	}, [canvasRef]);
 	return (
 		<canvas
-			className='fixed top-0 z-[-100] opacity-30 left-0 w-full h-full'
+			className='fixed top-0 z-[-100] opacity-20 left-0 w-full h-full'
 			ref={canvasRef}
 		></canvas>
 	);

@@ -7,6 +7,7 @@ import { FC, memo, useEffect, useState } from 'react';
 import { ThumbsComment } from './ThumbsComment';
 import { io, Manager } from 'socket.io-client';
 import Pusher from 'pusher-js';
+import { getTimeAgo } from '@/utils/time';
 
 export const ListComment = ({
 	comments: cms,
@@ -48,8 +49,8 @@ export const ListComment = ({
 
 								{com.user.name}
 							</div>
-							<div className='hidden md:block'>
-								{com.created_at.toLocaleString()}
+							<div className='hidden md:block text-sm'>
+								{getTimeAgo(com.created_at)}
 							</div>
 						</div>
 						<div className='text-pretty break-words'>{com.content}</div>

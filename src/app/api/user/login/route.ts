@@ -7,6 +7,7 @@ import {
 	hasCookie,
 } from 'cookies-next';
 import { PrismaClient } from '@prisma/client';
+import { cookies } from 'next/headers';
 
 export async function POST(req: NextRequest) {
 	const { name, keyword } = await req.json();
@@ -20,14 +21,29 @@ export async function POST(req: NextRequest) {
 	});
 
 	if (!userFind) {
-		return NextResponse.json({ type: 'error', message: 'User not found' });
+		return NextResponse.json({
+			type: 'error',
+			message: 'Пользователь не найден',
+		});
 	}
 
 	if (userFind.key_word != keyword) {
-		return NextResponse.json({ type: 'error', message: 'Password not equel' });
+		return NextResponse.json({
+			type: 'error',
+			message: 'Слово не подходит. Попробуйте ещё раз!',
+		});
 	}
 
-	setCookie('user', userFind, { httpOnly: true, maxAge: 60 * 60 * 160 });
+	setCookie('user_private', JSON.stringify(userFind), {
+		httpOnly: true,
+		maxAge: 86400,
+	});
+	cookies().set({
+		name: 'user',
+		value: JSON.stringify(userFind),
+		// httpOnly: true,
+		maxAge: 86400,
+	});
 
 	return NextResponse.json({
 		type: 'succesfully',
@@ -43,7 +59,7 @@ export async function GET(req: NextRequest) {
 	if (!name) {
 		return NextResponse.json({
 			type: 'error',
-			message: 'Name params not request',
+			message: 'Параметр не пришёл',
 		});
 	}
 
@@ -54,7 +70,10 @@ export async function GET(req: NextRequest) {
 	});
 
 	if (!userFind) {
-		return;
+		return NextResponse.json({
+			type: 'error',
+			message: 'Пользователь не найден',
+		});
 	}
 
 	return NextResponse.json(userFind.question);

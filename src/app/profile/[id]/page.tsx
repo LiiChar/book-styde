@@ -19,7 +19,7 @@ export default async function Profile({ params }: { params: { id: string } }) {
 	}
 
 	return (
-		<article className='flex px-[10%] flex-wrap lg:flex-nowrap gap-4 mt-3'>
+		<article className='flex px-[10%] flex-wrap lg:flex-nowrap gap-4 my-3'>
 			<section className='lg:w-1/4 w-full'>
 				<aside className='bg-accent rounded-md p-4'>
 					<div className='flex gap-2'>

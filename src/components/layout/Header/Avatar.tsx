@@ -13,6 +13,7 @@ import { AlertDialogVerify } from '@/components/common/modal/AlertDialogVerify';
 import { Skeleton } from '@/components/ui/skeleton';
 import { User } from '@/types/User';
 import { useRouter } from 'next/navigation';
+import { User as UserSVG } from 'lucide-react';
 
 const Avatar = memo(() => {
 	const param = useSearchParams();
@@ -34,11 +35,6 @@ const Avatar = memo(() => {
 		}
 	}, []);
 
-	const handleSetUser = (user: User) => {
-		// setUser(user);
-		router.refresh();
-	};
-
 	return (
 		<>
 			{user ? (
@@ -51,22 +47,16 @@ const Avatar = memo(() => {
 					</Ava>
 				</a>
 			) : user == null ? (
-				<Button
-					type='button'
-					variant='ghost'
+				<UserSVG
+					className='hover:stroke-primary'
 					onClick={() => setOpenRegister(true)}
-				>
-					Зарегестрироваться
-				</Button>
+				/>
 			) : (
 				<Skeleton className='rounded-[50%] w-[35px] h-[35px]' />
 			)}
 
 			{openRegister && (
-				<DialogRegister
-					onClose={() => setOpenRegister(false)}
-					setUser={handleSetUser}
-				/>
+				<DialogRegister onClose={() => setOpenRegister(false)} />
 			)}
 			{(!getCookie('user') || openVerify) && (
 				<AlertDialogVerify

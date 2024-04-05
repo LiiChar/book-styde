@@ -3,6 +3,7 @@ import React, { FC, memo } from 'react';
 import { likeComment } from '@/request/comment';
 import { ThumbsDown, ThumbsUp } from 'lucide-react';
 import { Comment } from '@prisma/client';
+import { getTimeAgo } from '@/utils/time';
 
 interface Props {
 	chapter_id: number;
@@ -20,6 +21,9 @@ const ThumbsComment: FC<Props> = memo(({ chapter_id, comment }) => {
 
 	return (
 		<div className='flex gap-2 justify-between md:justify-end w-full items-center'>
+			<div className='sm:block hidden md:hidden w-2/3 text-sm'>
+				{getTimeAgo(comment.created_at)}
+			</div>
 			<ThumbsUp
 				onClick={() => handleLike(comment, comment.rate + 1)}
 				width={18}

@@ -18,7 +18,11 @@ export function ModalSearch() {
 	return (
 		<Dialog modal={false}>
 			<DialogTrigger asChild>
-				<SVGSearch className='stroke-1' width={24} height={24} />
+				<SVGSearch
+					className='stroke-2 hover:stroke-primary mr-2'
+					width={24}
+					height={24}
+				/>
 			</DialogTrigger>
 			<DialogContent
 				color='none'

@@ -50,7 +50,7 @@ export const addReadableBook = async (user_id: string, book_id: string) => {
 
 export const getReadableBook = async (user_id: string): Promise<number[]> => {
 	const books = await fetch(
-		`${process.env.NEXT_PUBLIC_URL_SITE}/api/user/book?user_id=${user_id}`,
+		`${process.env.NEXT_PUBLIC_URL_SITE}/api/user/book?name=${user_id}`,
 		{
 			method: 'GET',
 		}
@@ -59,8 +59,8 @@ export const getReadableBook = async (user_id: string): Promise<number[]> => {
 	return books.json();
 };
 
-export const getUserQuestion = async (user_id: string): Promise<string> => {
-	const books = await fetch(`/api/user/login?name=${user_id}`, {
+export const getUserQuestion = async (name: string): Promise<string | any> => {
+	const books = await fetch(`/api/user/login?name=${name}`, {
 		method: 'GET',
 	});
 

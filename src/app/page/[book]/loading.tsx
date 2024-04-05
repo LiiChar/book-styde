@@ -15,13 +15,13 @@ export default function Loading() {
 					</div>
 					<Skeleton className='w-[40%] h-4 my-3' />
 					<Skeleton className='w-[100%] h-14 mb-1' />
-					<Skeleton className='w-[80%] h-20 mb-1' />
-					<Skeleton className='w-[40%] h-4 my-3' />
-					<Skeleton className='w-[80%] h-8 mb-1' />
-					<Skeleton className='w-[60%] h-12 mb-1' />
-					<Skeleton className='w-[90%] h-26 mb-1' />
-					<Skeleton className='w-[80%] h-14 mb-1' />
+					<Skeleton className='w-[100%] h-20 mb-1' />
 					<Skeleton className='w-[70%] h-4 my-3' />
+					<Skeleton className='w-[95%] h-8 mb-1' />
+					<Skeleton className='w-[100%] h-12 mb-1' />
+					<Skeleton className='w-[90%] h-26 mb-1' />
+					<Skeleton className='w-[100%] h-14 mb-1' />
+					<Skeleton className='w-[100%] h-4 my-3' />
 					<Skeleton className='w-[80%] h-8 mb-1' />
 					<Skeleton className='w-[60%] h-12 mb-1' />
 					<Skeleton className='w-[90%] h-26 mb-1' />

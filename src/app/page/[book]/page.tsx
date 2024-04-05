@@ -25,7 +25,7 @@ export default async function Book({ params }: Props) {
 				<Aside chapter={book.title} className='overflow-y-auto' />
 				<NavigationWrapper
 					chapter={book.chapter}
-					className='md:w-[82vw] md:max-w-[82vw] w-full md:border-l-[1px] flex flex-col items-center'
+					className='md:w-[82vw] bg-background/60 md:max-w-[82vw] w-full md:border-l-[1px] flex flex-col items-center'
 				>
 					<div className='flex justify-between items-center mb-4 '>
 						<Button className='w-8 h-8 bg-background'>
