@@ -57,7 +57,7 @@ const Aside = ({ className, chapter }: Props) => {
 		<aside
 			className={cn(
 				!chapter && headings.length == 0 && 'hidden',
-				'h-full top-[48px] w-full bg-secondary/70 sticky py-4 p flex-col items-end hidden md:flex',
+				'h-full top-[48px] w-full  sticky py-4 p flex-col items-end hidden md:flex',
 				className
 			)}
 		>

@@ -9,7 +9,11 @@ export type ChapterReletion = Chapter & {
 	works: Work[];
 };
 
-export type BookSearch = BookReletion | ChapterReletion;
+export type ChapterBook = Chapter & {
+	book?: Book;
+};
+
+export type BookSearch = BookReletion | ChapterReletion | ChapterBook;
 
 export type NextPrevChapter = Book | Chapter | null;
 
@@ -113,8 +117,16 @@ export async function POST(req: NextRequest) {
 				equals: title,
 			},
 		},
-		include: {
+		select: {
+			book: true,
+			chapter: true,
+			book_id: true,
+			content: true,
+			id: true,
+			created_at: true,
 			works: true,
+			title: true,
+			updated_at: true,
 		},
 	});
 

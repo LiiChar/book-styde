@@ -46,3 +46,48 @@ export const getTimeAgo = (date: Date) => {
 		return 'меньше минуты назад';
 	}
 };
+
+export const formatDate = (inputDate: string) => {
+	// Создаем объект Date из входной строки
+	const date = new Date(inputDate);
+
+	// Определяем массивы с названиями месяцев и их сокращениями
+	const months = [
+		'января',
+		'февраля',
+		'марта',
+		'апреля',
+		'мая',
+		'июня',
+		'июля',
+		'августа',
+		'сентября',
+		'октября',
+		'ноября',
+		'декабря',
+	];
+	const shortMonths = [
+		'янв',
+		'фев',
+		'мар',
+		'апр',
+		'мая',
+		'июн',
+		'июл',
+		'авг',
+		'сен',
+		'окт',
+		'ноя',
+		'дек',
+	];
+
+	// Получаем день, месяц и год из объекта Date
+	const day = date.getDate();
+	const monthIndex = date.getMonth();
+	const year = date.getFullYear();
+
+	// Собираем строку в нужном формате
+	const formattedDate = day + ' ' + months[monthIndex] + ' ' + year + ' г.';
+
+	return formattedDate;
+};

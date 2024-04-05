@@ -18,13 +18,13 @@ export const Header = () => {
 				<ThemeChange />
 				<Separator className='w-2 h-full' orientation='vertical' />
 				<Link
-					className='w-[30px] h-[30px]'
+					className='w-[40px] scale-110 h-[40px] rounded-[50%] flex justify-center items-center hover:border-primary hover:border-[1px]'
 					path='/'
 					title={
 						<Owl
 							height={30}
 							wight={30}
-							className='fill-foreground hover:fill-primary hover:stroke-primary stroke-foreground'
+							className='fill-primary  stroke-primary'
 						/>
 					}
 				/>

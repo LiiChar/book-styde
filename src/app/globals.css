@@ -183,6 +183,16 @@ html {
 	-webkit-text-size-adjust: 100%;
 }
 
+.remove_stile_a {
+	ul {
+		li {
+			:hover {
+				background-color: none;
+			}
+		}
+	}
+}
+
 body {
 	min-height: 100vh;
 	line-height: 1;
