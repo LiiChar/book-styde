@@ -4,7 +4,7 @@ import { BookNavigation } from '@/components/pages/main/BookNavigation';
 
 export default function Home() {
 	return (
-		<main className='p-8'>
+		<main className='p-8 px-16'>
 			<header className='flex justify-center items-center mb-4'>
 				<h1 className='text-3xl'>Книга дизайна и программирования.</h1>
 				<Focus x={50} y={50} />

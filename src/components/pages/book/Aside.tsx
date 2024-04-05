@@ -57,11 +57,11 @@ const Aside = ({ className, chapter }: Props) => {
 		<aside
 			className={cn(
 				!chapter && headings.length == 0 && 'hidden',
-				'h-full top-[48px] w-full sticky py-4 p flex-col items-end hidden md:flex',
+				'h-full top-[48px] w-full bg-secondary/70 sticky py-4 p flex-col items-end hidden md:flex',
 				className
 			)}
 		>
-			<div className='w-[95%]'>
+			<div className='w-[95%] h-full'>
 				<div className='mb-4'>
 					{chapter && (
 						<div>
@@ -70,22 +70,22 @@ const Aside = ({ className, chapter }: Props) => {
 						</div>
 					)}
 				</div>
-				<div>
-					<h4>Навигация урока</h4>
+				<div className='h-full'>
+					<h4 className='mb-3'>Навигация урока</h4>
 					{headings.length == 0 ? (
 						<div>Нет</div>
 					) : (
 						<ul className=' text-sm'>
 							{headings.map(heading => (
 								<li
-									className={`w-full flex flex-col gap-1  ${
+									className={`w-full flex flex-col gap-2  ${
 										activeHead == heading.text &&
 										'bg-foreground text-background'
 									}`}
 									key={heading.id}
 								>
 									<button
-										className={`pl-4 text-left w-full h-full
+										className={`pl-4 text-left text-sm w-full h-full
 							`}
 										onClick={() => handleNavigation(heading.id)}
 									>
