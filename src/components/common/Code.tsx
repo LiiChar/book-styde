@@ -64,9 +64,14 @@ const Code = ({
 	const allowLang = ['js', 'markup', 'css'];
 
 	return (
-		<div className='relative flex flex-col min-h-10 max-h-64 overflow-auto my-4 w-full h-full'>
-			<ResizablePanelGroup direction='horizontal'>
-				<ResizablePanel minSize={15} defaultSize={50}>
+		<div className='relative flex flex-col min-h-10 max-h-64 overflow-hidden my-4 w-full h-full'>
+			<ResizablePanelGroup direction='horizontal' className='overflow-scroll'>
+				<ResizablePanel
+					minSize={15}
+					defaultSize={50}
+					maxSize={256}
+					className='!overflow-scroll bg-accent rounded-md'
+				>
 					<Tabs defaultValue='language'>
 						{(language == 'css' || language == 'js') && (
 							<TabsList>
@@ -89,10 +94,10 @@ const Code = ({
 								padding={10}
 								disabled={disable}
 								placeholder={String(children)}
-								className='w-full h-full min-h-10 bg-accent rounded-md'
+								className='w-full h-full min-h-10 bg-accent'
 							/>
 						</TabsContent>
-						<TabsContent value='html'>
+						<TabsContent value='html' className=''>
 							<Editor
 								value={html}
 								onValueChange={e => setHtml(e ?? '')}
@@ -100,7 +105,7 @@ const Code = ({
 								padding={10}
 								disabled={disable}
 								placeholder={'Enter your html code'}
-								className='w-full min-h-10 bg-accent rounded-md'
+								className='w-full min-h-10 '
 							/>
 						</TabsContent>
 						{language == 'js' && (
@@ -118,12 +123,16 @@ const Code = ({
 					<>
 						<ResizableHandle className='mx-1 w-[1px] h-full bg-green-700' />
 						<ResizablePanel
-							className='bg-accent rounded-md'
+							className='bg-accent !overflow-scroll rounded-md'
 							minSize={15}
-							maxSize={85}
+							maxSize={256}
 							defaultSize={50}
 						>
-							{parse(transfoncCodeToValidCss(code, html))}
+							<iframe
+								loading='lazy'
+								srcDoc={transfoncCodeToValidCss(code, html)}
+							></iframe>
+							{/* {parse(transfoncCodeToValidCss(code, html))} */}
 						</ResizablePanel>
 					</>
 				)}
@@ -131,12 +140,23 @@ const Code = ({
 					<>
 						<ResizableHandle className='mx-1 w-[1px] h-full bg-green-700' />
 						<ResizablePanel
-							className='bg-accent result_hmtl rounded-md mt-[7px] p-[10px]'
 							minSize={15}
-							maxSize={85}
+							maxSize={256}
 							defaultSize={50}
+							className='bg-accent !overflow-scroll result_hmtl rounded-md p-[6px] '
 						>
-							{parse(transfoncCodeToValidHTML(code))}
+							<iframe
+								className='h-min w-full'
+								onLoad={ev => {
+									ev!.currentTarget!.style.height =
+										ev!.currentTarget!.contentWindow!.document.body
+											.scrollHeight +
+										32 +
+										'px';
+								}}
+								srcDoc={transfoncCodeToValidHTML(code)}
+							></iframe>
+							{/* {parse(transfoncCodeToValidHTML(code))} */}
 						</ResizablePanel>
 					</>
 				)}

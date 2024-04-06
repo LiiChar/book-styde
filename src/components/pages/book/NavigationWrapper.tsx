@@ -13,17 +13,20 @@ import { Button } from '@/components/ui/button';
 import { getCookie } from 'cookies-next';
 import { User, PrismaClient, Chapter } from '@prisma/client';
 import { getPrevNextBookByChapter } from '@/request/book';
+import { Comments } from './Comments';
 
 interface Props {
 	children?: ReactNode | undefined;
 	className?: HTMLProps<HTMLElement>['className'];
 	chapter: number;
+	book: number;
 }
 
 const NavigationWrapper: FC<Props> = async ({
 	children,
 	className,
 	chapter,
+	book,
 }) => {
 	const user: User | null = getCookie('user')
 		? JSON.parse(getCookie('user')!)
@@ -49,36 +52,55 @@ const NavigationWrapper: FC<Props> = async ({
 				/>
 			)}
 			<div
-				className={cn('py-4 px-[22px] md:px-[48px] w-full h-full', className)}
+				className={cn('py-4 px-[22px] md:px-[48px] w-full h-min', className)}
 			>
 				{children}
-				<div className='w-full flex gap-4 justify-between'>
-					{prev && (
-						<Button className='block  md:hidden'>
-							<Link
-								path={'page/' + prev.title}
-								title={
-									<div className='flex'>
-										<ArrowLeft className='fill-black' width={15} height={15} />
-										{prev.title}
-									</div>
-								}
-							/>
-						</Button>
-					)}
-					{next && (
-						<Button className='block md:hidden '>
-							<Link
-								path={'page/' + next.title}
-								title={
-									<div className='flex'>
-										{next.title}
-										<ArrowRight className='fill-black' width={15} height={15} />
-									</div>
-								}
-							/>
-						</Button>
-					)}
+				<div className='hidden w-full h-full md:block'>
+					<Comments chapter_id={book} />
+				</div>
+
+				<div className='w-full block md:hidden h-full'>
+					<div className='w-full flex flex-wrap  gap-4 justify-between'>
+						{prev && (
+							<Button>
+								<Link
+									path={'page/' + prev.title}
+									title={
+										<div className='flex'>
+											<ArrowLeft
+												className='fill-black'
+												width={15}
+												height={15}
+											/>
+											{prev.title}
+										</div>
+									}
+								/>
+							</Button>
+						)}
+
+						{next && (
+							<Button>
+								<Link
+									path={'page/' + next.title}
+									title={
+										<div className='flex'>
+											{next.title}
+											<ArrowRight
+												className='fill-black'
+												width={15}
+												height={15}
+											/>
+										</div>
+									}
+								/>
+							</Button>
+						)}
+					</div>
+
+					<div className='block pb-4 w-full h-full'>
+						<Comments chapter_id={book} />
+					</div>
 				</div>
 			</div>
 			{next && (

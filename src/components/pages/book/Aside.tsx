@@ -75,18 +75,17 @@ const Aside = ({ className, chapter }: Props) => {
 					{headings.length == 0 ? (
 						<div>Нет</div>
 					) : (
-						<ul className=' text-sm'>
+						<ul className=' text-sm flex flex-col gap-1 '>
 							{headings.map(heading => (
 								<li
-									className={`w-full flex flex-col gap-2  ${
+									className={`w-full  ${
 										activeHead == heading.text &&
-										'bg-foreground text-background'
+										'text-primary	border-b-[1px] border-primary'
 									}`}
 									key={heading.id}
 								>
 									<button
-										className={`pl-4 text-left text-sm w-full h-full
-							`}
+										className={` leading-4 text-left text-sm w-full h-full`}
 										onClick={() => handleNavigation(heading.id)}
 									>
 										{heading.text}

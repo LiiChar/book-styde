@@ -7,6 +7,7 @@ import {
 	AccordionTrigger,
 } from '@/components/ui/accordion';
 import { chaptersGroupByBook } from '@/lib/bookUtils';
+import { Separator } from '@/components/ui/separator';
 
 type Props = {
 	accardion?: boolean;
@@ -23,13 +24,22 @@ export const BookNavigation = async ({ accardion }: Props) => {
 			<article className='my-4 hidden md:block'>
 				{group.map((book, i) => (
 					<div className='mb-3' key={book.title}>
-						<h3 className='mb-4'>{book.title}</h3>
+						<div className='p-0 flex h-min border-b-[1px] border-foreground items-end gap-2'>
+							<h3 className='text-nowrap'>{book.title}</h3>
+						</div>
 						<ul className='grid grid-cols-2 lg:grid-cols-3 gap-2 my-2'>
 							{book.chapters.map((part, j) => (
 								<li className='min-w-[175px]' key={part.chapter}>
 									<Link
 										path={'page/' + part.title}
-										title={i + 1 + '.' + (j + 1) + ': ' + part.title}
+										title={
+											<span>
+												<span className='w-10 inline-block'>
+													{i + 1 + '.' + (j + 1) + ': '}
+												</span>
+												<span>{part.title}</span>
+											</span>
+										}
 									/>
 								</li>
 							))}
@@ -41,7 +51,7 @@ export const BookNavigation = async ({ accardion }: Props) => {
 				<Accordion type='multiple' className='w-full block md:hidden'>
 					{group.map((book, i) => (
 						<AccordionItem key={book.title} value={book.title}>
-							<AccordionTrigger className='p-0'>
+							<AccordionTrigger className='p-0 '>
 								<h3 className=''>{book.title}</h3>
 							</AccordionTrigger>
 							<AccordionContent>
@@ -50,7 +60,14 @@ export const BookNavigation = async ({ accardion }: Props) => {
 										<li className='min-w-[175px]' key={part.id}>
 											<Link
 												path={'page/' + part.title}
-												title={i + 1 + '.' + (j + 1) + ': ' + part.title}
+												title={
+													<span>
+														<span className='w-4'>
+															{i + 1 + '.' + (j + 1) + ': '}
+														</span>
+														<span>{part.title}</span>
+													</span>
+												}
 											/>
 										</li>
 									))}

@@ -1,3 +1,5 @@
+import { hslToHex } from './colors';
+
 export const transformCodeToParse = (code: string): string => {
 	let result =
 		`const result = []; 
@@ -13,6 +15,8 @@ export const transformCodeToParse = (code: string): string => {
 };
 
 export const transfoncCodeToValidCss = (code: string, html: string): string => {
+	let bodyStyles = window.getComputedStyle(document.body);
+
 	let ht = html;
 	code = code.replaceAll('body', '.main_start');
 	code = code.replaceAll('*', '.main_start');
@@ -22,28 +26,46 @@ export const transfoncCodeToValidCss = (code: string, html: string): string => {
 	ht = ht.replaceAll('</body', '</div');
 	ht = ht.replaceAll('<html', '<div class="main_start"');
 	ht = ht.replaceAll('</html', '</div');
+	ht = ht.replaceAll('/<!-- (.*?) -->/gm', '');
+	ht = ht.replaceAll('/<-- (.*?) -->/gm', '');
 
 	ht = ht.replaceAll('<head', '<div');
 	ht = ht.replaceAll('</head', '</div');
 
 	let result = `
-	<style>${code}</style>
+		<style>
+	* {
+		background-color: background: rgba(0,0,0,0);
+		color: ${hslToHex(bodyStyles.getPropertyValue('--foreground'))};
+	}
+	${code}
+	</style>
 	${ht}`;
 	return result;
 };
 
 export const transfoncCodeToValidHTML = (code: string): string => {
+	let bodyStyles = window.getComputedStyle(document.body);
 	let ht = code;
 
 	ht = ht.replaceAll('<body', '<div class="main_start"');
 	ht = ht.replaceAll('</body', '</div');
 	ht = ht.replaceAll('<html', '<div class="main_start"');
 	ht = ht.replaceAll('</html', '</div');
+	ht = ht.replaceAll('/<!-- (.*?) -->/gm', '');
+	ht = ht.replaceAll('/<-- (.*?) -->/gm', '');
 
 	ht = ht.replaceAll('<head', '<div');
 	ht = ht.replaceAll('</head', '</div');
 
 	let result = `
-	${code}`;
+	${code}
+	<style>
+	* {
+		background-color: rgba(0,0,0,0) !important;
+		color: ${hslToHex(bodyStyles.getPropertyValue('--foreground'))};
+	}
+	</style>
+	`;
 	return result;
 };

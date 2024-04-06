@@ -4,13 +4,13 @@ import { CodeEditor } from '@/components/common/CodeEditor';
 import { Question } from '@/components/common/Question';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
-import { Book, BookPart, BookTypeWork } from '@/types/Book';
+import { BookPart, BookTypeWork } from '@/types/Book';
 
 export const Work = ({ works }: { works: WorkType[] }) => {
 	return (
 		<>
 			{works.length > 0 && (
-				<div>
+				<div className='w-full'>
 					<h3 className='text-2xl'>Задачи</h3>
 					{works.map((work, i) => (
 						<div key={work.answer + work.explain} className='w-full'>

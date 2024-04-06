@@ -19,7 +19,7 @@ const Search = memo(() => {
 	return (
 		<search
 			ref={ref}
-			className=' flex overflow-x-hidden z-40 bg-background overflow-y-visible'
+			className=' flex overflow-x-hidden z-40 overflow-y-visible'
 		>
 			<ModalSearch />
 		</search>

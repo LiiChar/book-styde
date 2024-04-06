@@ -150,7 +150,10 @@ const CodeEditor = ({
 							maxSize={85}
 							defaultSize={50}
 						>
-							{parse(transfoncCodeToValidCss(code, html))}
+							<iframe
+								loading='lazy'
+								srcDoc={transfoncCodeToValidCss(code, html)}
+							></iframe>
 						</ResizablePanel>
 					)}
 					{language == 'markup' && compile && (
@@ -160,7 +163,10 @@ const CodeEditor = ({
 							maxSize={85}
 							defaultSize={50}
 						>
-							{parse(transfoncCodeToValidHTML(code))}
+							<iframe
+								loading='lazy'
+								srcDoc={transfoncCodeToValidHTML(code)}
+							></iframe>
 						</ResizablePanel>
 					)}
 				</ResizablePanelGroup>
@@ -186,11 +192,11 @@ const CodeEditor = ({
 			</div>
 			<div className='flex justify-between items-center'>
 				<Button onClick={showResolve}>Решение</Button>
-				{/* {(help.length > 0 || resolve) && (
+				{help.length > 0 && (
 					<div className='text-xs overflow-auto text-wrap flex bg-accent justify-center h-[35px] rounded-sm items-center w-1/2'>
-						{(resolve && 'Задача решена') || help}
+						{help}
 					</div>
-				)} */}
+				)}
 				<Button onClick={verifyResolve}>Проверить</Button>
 			</div>
 		</div>

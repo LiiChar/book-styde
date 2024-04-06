@@ -1,9 +1,12 @@
-import { PrismaClient } from '@prisma/client';
+import { Chapter, PrismaClient } from '@prisma/client';
 
-const prisma = new PrismaClient();
+const prisma = new PrismaClient({
+	log: ['query', 'error'],
+});
 
 import { data } from '@/assets/book';
 import { BookTypeWork } from '@/types/Book';
+import { timer } from '@/lib/timer';
 const WORKS = prisma.work;
 const CHAPTER = prisma.chapter;
 
@@ -11,8 +14,11 @@ async function main() {
 	await WORKS.deleteMany();
 	await CHAPTER.deleteMany();
 
+	const chapters: Chapter[] = [];
 	data.book.forEach(async (book, i) => {
-		CHAPTER.create({
+		await timer(500);
+
+		await CHAPTER.create({
 			data: {
 				content: book.content,
 				title: book.title,
@@ -20,8 +26,9 @@ async function main() {
 				chapter: i + 1,
 			},
 		}).then(data => {
-			const chapters = data;
 			book.works.forEach(async work => {
+				await timer(500);
+
 				if (work.type == BookTypeWork.CODE) {
 					await WORKS.create({
 						data: {
@@ -31,7 +38,7 @@ async function main() {
 							type: 'CODE',
 							code: work.code,
 							language: work.language,
-							chapter_id: chapters.id,
+							chapter_id: data.id,
 						},
 					});
 				} else {
@@ -42,7 +49,7 @@ async function main() {
 							question: work.question,
 							type: 'QUESTION',
 							variant: work.variant.join('..'),
-							chapter_id: chapters.id,
+							chapter_id: data.id,
 						},
 					});
 				}

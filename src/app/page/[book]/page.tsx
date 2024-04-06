@@ -26,9 +26,10 @@ export default async function Book({ params }: Props) {
 				<Aside chapter={book.title} className='overflow-y-auto' />
 				<NavigationWrapper
 					chapter={book.chapter}
+					book={book.id}
 					className='md:w-[82vw] bg-background/60 md:max-w-[82vw] w-full md:border-l-[1px] flex flex-col items-center'
 				>
-					{/* <Crumbls book={book} /> */}
+					<Crumbls book={book} />
 					<div className='flex justify-between items-center mb-4 '>
 						<Button className='w-8 h-8 bg-background'>
 							<ArrowLeft className='fill-foreground' width={14} height={14} />
@@ -38,7 +39,6 @@ export default async function Book({ params }: Props) {
 					</div>
 					<Content book={book} />
 					{'works' in book && <Work works={book.works} />}
-					<Comments chapter_id={book.id} />
 				</NavigationWrapper>
 			</div>
 		</div>
