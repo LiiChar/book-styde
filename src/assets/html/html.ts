@@ -500,7 +500,7 @@ export const html: BookPart[] = [
    </div>
 </section>
 <section aria-labelledby="название_страницы_title">
-   <h3 id="название_страницы_title"><a>Название страницы (title)</a></h2>
+   <h3 id="название_страницы_title"><a>Название страницы (title)</a></h3>
    <div class="section-content">
       <p>Мы уже видели, как работает элемент <a><code>&lt;title&gt;</code></a>: его используют для добавления заголовка (названия страницы) в документ. Элемент <a class="only-in-en-us" title="Currently only available in English (US)"><code>&lt;h1&gt;</code> <small>(en-US)</small></a> тоже иногда называют заголовком страницы. Но это разные вещи!</p>
       \n

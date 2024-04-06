@@ -7,11 +7,11 @@ import React, {
 	useState,
 } from 'react';
 import { Input } from '../ui/input';
-import { Book, BookPart } from '@/types/Book';
+import { BookPart } from '@/types/Book';
 import { Loader, Search } from 'lucide-react';
 import { Separator } from '../ui/separator';
 import { Link } from './Link';
-import { BookChapterSearh, BookSearch } from '@/app/api/book/search/route';
+import { BookChapterSearh } from '@/app/api/book/search/route';
 import { useDebounce } from 'use-debounce';
 import { getBookSearch } from '@/request/book';
 

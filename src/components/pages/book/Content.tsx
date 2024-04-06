@@ -1,8 +1,8 @@
-import { BookSearch } from '@/app/api/book/search/route';
+import { ChapterSearch } from '@/app/api/book/search/route';
 import { Code } from '@/components/common/Code';
 import parse, { convertNodeToElement } from 'react-html-parser';
 
-export const Content = async ({ book }: { book: BookSearch }) => {
+export const Content = async ({ book }: { book: ChapterSearch }) => {
 	function NextToStringHTML(nodes: any[] | any): string {
 		let result = '';
 		if (

@@ -52,6 +52,6 @@ const Crumbls: FC<Props> = memo(({ book }) => {
 	);
 });
 
-// Crumbls.displayName = 'Crumbls';
+Crumbls.displayName = 'Crumbls';
 
 export { Crumbls };
