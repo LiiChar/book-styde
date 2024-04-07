@@ -14,7 +14,8 @@ import { v4 } from 'uuid';
 
 export async function POST(req: NextRequest) {
 	const user = await req.json();
-	const USER = new PrismaClient().user;
+	const prisma = new PrismaClient();
+	const USER = prisma.user;
 
 	const userFind = await USER.findFirst({
 		where: {
@@ -23,6 +24,7 @@ export async function POST(req: NextRequest) {
 	});
 
 	if (userFind) {
+		prisma.$disconnect();
 		return NextResponse.json({ type: 'error', message: 'User will created' });
 	}
 
@@ -42,13 +44,14 @@ export async function POST(req: NextRequest) {
 		// httpOnly: true,
 		maxAge: 86400,
 	});
-
+	prisma.$disconnect();
 	return NextResponse.json({ type: 'successfully', data: newUser });
 }
 
 export async function PUT(req: NextRequest) {
 	const { user_id, user } = await req.json();
-	const USER = new PrismaClient().user;
+	const prisma = new PrismaClient();
+	const USER = prisma.user;
 	// const user_idx = await updateUser(user_id, user);
 
 	const userFind = await USER.findFirst({
@@ -58,6 +61,7 @@ export async function PUT(req: NextRequest) {
 	});
 
 	if (!userFind) {
+		prisma.$disconnect();
 		return NextResponse.json({ type: 'error', message: 'User not found' });
 	}
 
@@ -69,13 +73,14 @@ export async function PUT(req: NextRequest) {
 			...user,
 		},
 	});
-
+	prisma.$disconnect();
 	return NextResponse.json(userUpdated);
 }
 
 export async function DELETE(req: NextRequest) {
 	const { user_id } = await req.json();
-	const USER = new PrismaClient().user;
+	const prisma = new PrismaClient();
+	const USER = prisma.user;
 
 	// const user_idx = await removeUser(user_id);
 
@@ -86,6 +91,7 @@ export async function DELETE(req: NextRequest) {
 	});
 
 	if (!userFind) {
+		prisma.$disconnect();
 		return NextResponse.json({ type: 'error', message: 'User not found' });
 	}
 	USER.delete({
@@ -93,7 +99,7 @@ export async function DELETE(req: NextRequest) {
 			id: userFind.id,
 		},
 	});
-
+	prisma.$disconnect();
 	return NextResponse.json({ type: 'successfully', message: 'User deleted' });
 }
 
@@ -114,7 +120,8 @@ export async function GET(req: NextRequest) {
 			data: 'Search params is user_id not request',
 		});
 	}
-	const USER = new PrismaClient().user;
+	const prisma = new PrismaClient();
+	const USER = prisma.user;
 	const userFind: UserAll = await USER.findFirst({
 		where: {
 			id: Number(user_id),
@@ -138,7 +145,9 @@ export async function GET(req: NextRequest) {
 		},
 	});
 	if (!userFind) {
+		prisma.$disconnect();
 		return NextResponse.json({ type: 'error', data: 'User not find' });
 	}
+	prisma.$disconnect();
 	return NextResponse.json(userFind);
 }

@@ -1,8 +1,8 @@
 -- CreateTable
 CREATE TABLE "UserBook" (
     "id" SERIAL NOT NULL,
-    "user_id" INTEGER,
-    "chapter_id" INTEGER,
+    "user_id" INTEGER NOT NULL,
+    "chapter_id" INTEGER NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
 
@@ -12,8 +12,8 @@ CREATE TABLE "UserBook" (
 -- CreateTable
 CREATE TABLE "UserWork" (
     "id" SERIAL NOT NULL,
-    "user_id" INTEGER,
-    "work_id" INTEGER,
+    "user_id" INTEGER NOT NULL,
+    "work_id" INTEGER NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
 

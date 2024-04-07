@@ -17,8 +17,6 @@ export const BookNavigation = async ({ accardion }: Props) => {
 	const books = await getChapters();
 	const group = chaptersGroupByBook(books);
 
-	console.log(books);
-
 	return (
 		<>
 			<article className='my-4 hidden md:block'>

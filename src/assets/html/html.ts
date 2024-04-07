@@ -1532,7 +1532,15 @@ export const html: BookPart[] = [
    </div>
 </section>
 `,
-		works: [],
+		works: [
+			{
+				answer: 'Различие только в виде',
+				explain: 'Различие только в виде',
+				question: 'Выбери верный ответ',
+				type: BookTypeWork.QUESTION,
+				variant: ['Различие только в виде', 'Нет различий'],
+			},
+		],
 	},
 	{
 		book: 'HTML',

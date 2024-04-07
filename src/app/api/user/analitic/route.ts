@@ -90,6 +90,8 @@ export async function GET(req: NextRequest) {
 	});
 
 	if (!userFind) {
+		prisma.$disconnect();
+
 		return NextResponse.json({ type: 'error', data: 'User not find' });
 	}
 
@@ -234,6 +236,7 @@ export async function GET(req: NextRequest) {
 			},
 		},
 	};
+	prisma.$disconnect();
 
 	return NextResponse.json(Object.assign(userFind, analitic));
 }

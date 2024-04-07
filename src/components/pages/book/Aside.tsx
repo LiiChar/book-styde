@@ -25,6 +25,10 @@ const Aside = ({ className, chapter }: Props) => {
 			const observer = new IntersectionObserver(([entry]) => {
 				if (entry.isIntersecting) {
 					setActiveHead(heading.id);
+					document
+						.querySelector('.aside-panel-chapter')!
+						.querySelector('.aside-scroll-toView')!
+						.scrollIntoView({ behavior: 'smooth' });
 				}
 			});
 			let a = 5;
@@ -57,7 +61,7 @@ const Aside = ({ className, chapter }: Props) => {
 		<aside
 			className={cn(
 				!chapter && headings.length == 0 && 'hidden',
-				'h-full top-[48px] w-full  sticky py-4 p flex-col items-end hidden md:flex',
+				'h-[calc(100vh-48px)] top-[48px] w-full overflow-y-auto sticky py-4 p flex-col items-end hidden md:flex aside-panel-chapter',
 				className
 			)}
 		>
@@ -65,7 +69,7 @@ const Aside = ({ className, chapter }: Props) => {
 				<div className='mb-4'>
 					{chapter && (
 						<div>
-							<h4>Каталог</h4>
+							<h4>Глава</h4>
 							<Link path={'page/' + String(chapter)} title={String(chapter)} />
 						</div>
 					)}
@@ -80,7 +84,7 @@ const Aside = ({ className, chapter }: Props) => {
 								<li
 									className={`w-full  ${
 										activeHead == heading.text &&
-										'text-primary	border-b-[1px] border-primary'
+										'text-primary	border-b-[1px] border-primary aside-scroll-toView'
 									}`}
 									key={heading.id}
 								>

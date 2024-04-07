@@ -23,6 +23,7 @@ export const Work = ({ works }: { works: WorkType[] }) => {
 										language={work.language!}
 										explain={work.explain}
 										question={work.question}
+										workId={work.id}
 									/>
 								</div>
 							)}
@@ -36,6 +37,7 @@ export const Work = ({ works }: { works: WorkType[] }) => {
 											type: BookTypeWork.QUESTION,
 											variant: work.variant!.split('..'),
 										}}
+										workId={work.id}
 									/>
 								</div>
 							)}

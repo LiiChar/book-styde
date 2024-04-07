@@ -4,10 +4,10 @@ import { FC } from 'react';
 
 const LoadingProfile: FC = () => {
 	return (
-		<article className='flex px-[10%] gap-4 mt-3'>
-			<section className='w-1/4'>
+		<article className='flex flex-wrap lg:flex-nowrap  px-[10%] gap-4 mt-3'>
+			<section className='lg:w-1/4 w-full'>
 				<aside className='bg-accent rounded-md p-4'>
-					<div className='flex gap-2'>
+					<div className='flex justify-between w-full gap-2'>
 						<Skeleton className='rounded-[50%] bg-primary w-[40px] h-[40px]' />
 						<div className='flex flex-col justify-between items-end w-2/3 h-[40px]'>
 							<Skeleton className='bg-primary w-full h-5' />
@@ -18,23 +18,23 @@ const LoadingProfile: FC = () => {
 					<Skeleton className='bg-primary w-full h-5' />
 				</aside>
 			</section>
-			<section className='w-3/4'>
-				<div className='flex gap-4 h-[105px]'>
-					<div className='w-1/2 bg-accent rounded-md h-full items-center p-4 flex gap-2'>
+			<section className='lg:w-3/4 w-full'>
+				<div className='flex flex-wrap md:flex-nowrap gap-4 '>
+					<div className='md:w-1/2 w-full bg-accent rounded-md justify-between h-full items-center p-4 flex gap-3'>
 						<Skeleton className='rounded-[50%] flex justify-center items-center bg-transparent border-primary border-[5px] h-[60px] w-[60px]'>
 							<Skeleton className='w-[28px] rounded-sm bg-primary h-[16px]' />
 						</Skeleton>
-						<div className='w-2/3 h-full flex flex-col justify-between'>
+						<div className='w-2/3 h-full flex gap-1 flex-col justify-between'>
 							<Skeleton className='w-full h-[21px] bg-primary' />
 							<Skeleton className='w-full h-[21px] bg-primary' />
 							<Skeleton className='w-full h-[21px] bg-primary' />
 						</div>
 					</div>
-					<div className='w-1/2 bg-accent rounded-md h-full items-center p-4 flex gap-2'>
+					<div className='md:w-1/2 w-full bg-accent rounded-md h-full items-center p-4 flex justify-between  gap-3'>
 						<Skeleton className='rounded-[50%] flex justify-center items-center bg-transparent border-primary border-[5px] h-[60px] w-[60px]'>
 							<Skeleton className='w-[28px] rounded-sm bg-primary h-[16px]' />
 						</Skeleton>
-						<div className='w-2/3 h-full flex flex-col justify-between'>
+						<div className='w-2/3 h-full gap-1 flex flex-col justify-between'>
 							<Skeleton className='w-full h-[21px] bg-primary' />
 							<Skeleton className='w-full h-[21px] bg-primary' />
 							<Skeleton className='w-full h-[21px] bg-primary' />

@@ -77,7 +77,8 @@ export default async function Profile({ params }: { params: { id: string } }) {
 							<CircleChar
 								resolve={
 									(360 / 100) *
-									(+user.analitic.work.current / +user.analitic.work.all) *
+									(+user.analitic.chapter.current /
+										+user.analitic.chapter.all) *
 									100
 								}
 								className='w-full'

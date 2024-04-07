@@ -5,10 +5,13 @@ import Pusher from 'pusher';
 export type CommentChapter = Comment & { user: User };
 
 export async function GET(req: NextRequest) {
-	const COMMENTS = new PrismaClient().comment;
+	const prisma = new PrismaClient();
+	const COMMENTS = prisma.comment;
 	const chapter_id = req.nextUrl.searchParams.get('chapter_id');
 
 	if (!chapter_id) {
+		prisma.$disconnect();
+
 		return NextResponse.json([]);
 	}
 	const comments = await COMMENTS.findMany({
@@ -22,13 +25,16 @@ export async function GET(req: NextRequest) {
 			user: true,
 		},
 	});
+	prisma.$disconnect();
 
 	return NextResponse.json(comments);
 }
 
 export async function POST(req: NextRequest) {
 	const { comment, chapter_id } = await req.json();
-	const COMMENTS = new PrismaClient().comment;
+	const prisma = new PrismaClient();
+
+	const COMMENTS = prisma.comment;
 	const pusher = new Pusher({
 		appId: process.env.PUSHER_APP_ID!,
 		key: process.env.PUSHER_KEY!,
@@ -69,13 +75,16 @@ export async function POST(req: NextRequest) {
 			})
 		);
 	} catch (error) {}
+	prisma.$disconnect();
 
 	return NextResponse.json(commentNew);
 }
 
 export async function PUT(req: NextRequest) {
 	const { comment, comment_id } = await req.json();
-	const COMMENTS = new PrismaClient().comment;
+	const prisma = new PrismaClient();
+
+	const COMMENTS = prisma.comment;
 
 	const commentFind = await COMMENTS.findFirst({
 		where: {
@@ -84,6 +93,8 @@ export async function PUT(req: NextRequest) {
 	});
 
 	if (!commentFind) {
+		prisma.$disconnect();
+
 		return NextResponse.json({
 			type: 'error',
 			message: 'Комментарий не найден',
@@ -111,15 +122,19 @@ export async function PUT(req: NextRequest) {
 			},
 		},
 	});
-
+	prisma.$disconnect();
 	return NextResponse.json(commentPut);
 }
 
 export async function DELETE(req: NextRequest) {
-	const COMMENTS = new PrismaClient().comment;
+	const prisma = new PrismaClient();
+
+	const COMMENTS = prisma.comment;
 	const comment_id = req.nextUrl.searchParams.get('id');
 
 	if (!comment_id) {
+		prisma.$disconnect();
+
 		return NextResponse.json({
 			type: 'error',
 			message: 'Параметр book_id не пришёл',
@@ -131,7 +146,7 @@ export async function DELETE(req: NextRequest) {
 			id: Number(comment_id),
 		},
 	});
-
+	prisma.$disconnect();
 	return NextResponse.json({
 		type: 'message',
 		message: 'Параметр book_id не пришёл',

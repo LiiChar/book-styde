@@ -9,8 +9,8 @@ datasource db {
 
 model UserBook {
   id         Int      @id @default(autoincrement())
-  user_id    Int?
-  chapter_id Int?
+  user_id    Int
+  chapter_id Int
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
   chapter    Chapter? @relation(fields: [chapter_id], references: [id], onDelete: Cascade)
@@ -19,8 +19,8 @@ model UserBook {
 
 model UserWork {
   id         Int      @id @default(autoincrement())
-  user_id    Int?
-  work_id    Int?
+  user_id    Int
+  work_id    Int
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
   user       User?    @relation(fields: [user_id], references: [id], onDelete: Cascade)

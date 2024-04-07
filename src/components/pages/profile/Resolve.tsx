@@ -19,7 +19,7 @@ export const Resolve = ({ resolve, className }: Props) => {
 					</div>
 					<div className='w-full h-[7px] bg-background rounded-sm flex items-center'>
 						<div
-							className='bg-foreground rounded-sm'
+							className='bg-primary rounded-sm'
 							style={{
 								width: `${(wr.resolve / wr.all) * 100}%`,
 								height: '7px',

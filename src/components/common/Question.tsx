@@ -5,22 +5,29 @@ import { Input } from '../ui/input';
 import { Checkbox } from '../ui/checkbox';
 import { Label } from '../ui/label';
 import { Button } from '../ui/button';
+import { addResolvedWork } from '@/request/work';
+import { getCookie, hasCookie } from 'cookies-next';
 
 interface Props {
 	question: QuestionWork;
+	workId: number;
 }
 
-const Question = memo(({ question }: Props) => {
+const Question = memo(({ question, workId }: Props) => {
 	const { answer: answ, explain, question: quest, variant } = question;
 	const [answer, setAnswer] = useState('');
 	const [help, setHelp] = useState('');
 
 	const showResolve = () => {
-		setHelp(explain + '\n' + `Ответ: ${answer}`);
+		setHelp(explain);
 	};
 
 	const verifyResolve = () => {
 		if (answer == answ) {
+			addResolvedWork(
+				hasCookie('user') && JSON.parse(getCookie('user')!).id,
+				workId
+			);
 			setHelp('Задача решена');
 		} else {
 			setHelp('Ответ неверный, попробуйте снова');
@@ -56,11 +63,11 @@ const Question = memo(({ question }: Props) => {
 			</div>
 			<div className='mt-2 flex justify-between items-center'>
 				<Button onClick={showResolve}>Решение</Button>
-				{/* {(help.length > 0 || resolve) && (
+				{help.length > 0 && (
 					<div className='text-xs overflow-auto text-wrap flex bg-accent justify-center h-[35px] rounded-sm items-center w-1/2'>
-						{(resolve && 'Задача решена') || help}
+						{help}
 					</div>
-				)} */}
+				)}
 				<Button onClick={verifyResolve}>Проверить</Button>
 			</div>
 		</div>

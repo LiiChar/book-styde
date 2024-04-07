@@ -9,10 +9,27 @@ import { BookTypeWork } from '@/types/Book';
 import { timer } from '@/lib/timer';
 const WORKS = prisma.work;
 const CHAPTER = prisma.chapter;
+const USER = prisma.user;
 
 async function main() {
 	await WORKS.deleteMany();
 	await CHAPTER.deleteMany();
+
+	await USER.upsert({
+		create: {
+			name: 'Kypator',
+			question: 'Имя',
+			key_word: 'Kypator',
+		},
+		update: {
+			name: 'Kypator',
+			question: 'Имя',
+			key_word: 'Kypator',
+		},
+		where: {
+			name: 'Kypator',
+		},
+	});
 
 	const chapters: Chapter[] = [];
 	data.book.forEach(async (book, i) => {

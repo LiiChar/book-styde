@@ -37,6 +37,7 @@ const CodeEditor = ({
 	answer,
 	explain,
 	question,
+	workId,
 }: {
 	code: string;
 	language: string;
@@ -45,6 +46,7 @@ const CodeEditor = ({
 	answer: string;
 	explain: string;
 	question: string;
+	workId: number;
 }) => {
 	const [coder, setCode] = useState(dedent`${code as string}`);
 	const [html, setHtml] = useState(`<body>

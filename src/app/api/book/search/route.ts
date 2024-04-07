@@ -13,6 +13,8 @@ export async function GET(req: NextRequest) {
 	const CHAPTER = prisma.chapter;
 
 	if (!chapter) {
+		prisma.$disconnect();
+
 		return NextResponse.json({ type: 'error', message: 'Параметр не пришёл' });
 	}
 
@@ -29,6 +31,7 @@ export async function GET(req: NextRequest) {
 			chapter: +chapter + 1,
 		},
 	});
+	prisma.$disconnect();
 
 	return NextResponse.json([prevBook, nextBook]);
 }
@@ -60,8 +63,11 @@ export async function POST(req: NextRequest) {
 	});
 
 	if (chapterFind != null) {
+		prisma.$disconnect();
+
 		return NextResponse.json(chapterFind);
 	}
+	prisma.$disconnect();
 
 	return NextResponse.json(null);
 }
@@ -88,6 +94,6 @@ export async function PUT(req: NextRequest) {
 			title: true,
 		},
 	});
-
+	prisma.$disconnect();
 	return NextResponse.json(chapters);
 }
