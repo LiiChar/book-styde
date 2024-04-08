@@ -38,6 +38,7 @@ export const getChapterByTitle = async (
 			body: JSON.stringify({
 				title: title,
 			}),
+			cache: 'no-cache',
 		}
 	);
 	return request.json();

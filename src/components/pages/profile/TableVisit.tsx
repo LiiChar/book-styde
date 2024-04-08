@@ -30,7 +30,7 @@ const TableVisit: FC<Props> = ({ visit, className }) => {
 	];
 
 	const normilizeVisit = (val: number) => {
-		return (val - 0) / (20 - 0);
+		return (val - 0) / (4 - 0);
 	};
 
 	return (

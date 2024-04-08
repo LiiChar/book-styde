@@ -4,6 +4,7 @@ export const addResolvedWork = async (user_id: number, work_id: number) => {
 		{
 			method: 'POST',
 			body: JSON.stringify({ user_id, work_id }),
+			cache: 'no-cache',
 		}
 	);
 };

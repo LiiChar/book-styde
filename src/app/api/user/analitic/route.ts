@@ -1,4 +1,4 @@
-import { getDaysFromYear } from '@/lib/time';
+import { getDayOfYear, getDaysFromYear } from '@/lib/time';
 import {
 	Chapter,
 	PrismaClient,
@@ -30,12 +30,14 @@ export type AnaliticResolve = {
 	current: number;
 };
 
+export type ActiveDay = {
+	day: number;
+	visit: number;
+};
+
 export type AnaliticVisit = {
 	all: number;
-	activeDay: {
-		day: number;
-		visit: number;
-	}[];
+	activeDay: ActiveDay[];
 };
 
 type Analitic = {
@@ -94,6 +96,37 @@ export async function GET(req: NextRequest) {
 
 		return NextResponse.json({ type: 'error', data: 'User not find' });
 	}
+
+	const visit: {
+		[key: string]: { day: number; visit: number };
+	} = {};
+
+	userFind.comment.forEach(com => {
+		const day = getDayOfYear(com.updated_at);
+		if (visit[day]) {
+			visit[day].visit = visit[day].visit + 1;
+		} else {
+			visit[day] = { day: day, visit: 1 };
+		}
+	});
+
+	userFind.UserBook.forEach(com => {
+		const day = getDayOfYear(com.updated_at);
+		if (visit[day]) {
+			visit[day].visit = visit[day].visit + 1;
+		} else {
+			visit[day] = { day: day, visit: 1 };
+		}
+	});
+
+	userFind.UserWork.forEach(com => {
+		const day = getDayOfYear(com.updated_at);
+		if (visit[day]) {
+			visit[day].visit = visit[day].visit + 1;
+		} else {
+			visit[day] = { day: day, visit: 1 };
+		}
+	});
 
 	const HTML = 'HTML';
 	const CSS = 'CSS';
@@ -182,6 +215,8 @@ export async function GET(req: NextRequest) {
 		chap => chap.work?.chapter?.book == JS
 	).length;
 
+	console.log('a', Object.values(visit));
+
 	const analitic: Analitic = {
 		analitic: {
 			chapter: {
@@ -227,11 +262,7 @@ export async function GET(req: NextRequest) {
 				current: currentWork,
 			},
 			visiting: {
-				activeDay: [
-					{ day: 5, visit: 16 },
-					{ day: 2, visit: 4 },
-					{ day: 10, visit: 40 },
-				],
+				activeDay: Object.values(visit),
 				all: getDaysFromYear(new Date().getFullYear()),
 			},
 		},

@@ -36,12 +36,16 @@ export const ListStats = ({ user, className }: Props) => {
 				</TabsList>
 				<TabsContent value='chapters'>
 					{user.UserBook.map(ub => (
-						<div key={ub.id}></div>
+						<div className='bg-background p-4 rounded-sm' key={ub.id}>
+							{ub.chapter?.title}
+						</div>
 					))}
 				</TabsContent>
-				<TabsContent value='work'>
+				<TabsContent className='flex flex-col gap-2' value='work'>
 					{user.UserWork.map(uw => (
-						<div key={uw.id}></div>
+						<div className='bg-background p-4 rounded-sm' key={uw.id}>
+							{uw.work?.question}
+						</div>
 					))}
 				</TabsContent>
 				<TabsContent value='comment'>

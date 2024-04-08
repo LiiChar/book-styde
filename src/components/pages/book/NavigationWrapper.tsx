@@ -19,21 +19,15 @@ import { cookies } from 'next/headers';
 interface Props {
 	children?: ReactNode | undefined;
 	className?: HTMLProps<HTMLElement>['className'];
-	chapter: number;
-	book: number;
+	book: Chapter;
 }
 
-const NavigationWrapper: FC<Props> = async ({
-	children,
-	className,
-	chapter,
-	book,
-}) => {
-	const [prev, next] = await getPrevNextBookByChapter(chapter);
+const NavigationWrapper: FC<Props> = async ({ children, className, book }) => {
+	const [prev, next] = await getPrevNextBookByChapter(book.chapter);
 
 	addReadableBook(
 		cookies().get('user') && JSON.parse(cookies().get('user')!.value).id,
-		String(chapter)
+		String(book.id)
 	);
 
 	return (
@@ -56,7 +50,7 @@ const NavigationWrapper: FC<Props> = async ({
 			>
 				{children}
 				<div className='hidden w-full h-full md:block'>
-					<Comments chapter_id={book} />
+					<Comments chapter_id={book.id} />
 				</div>
 
 				<div className='w-full block md:hidden h-full'>
@@ -99,7 +93,7 @@ const NavigationWrapper: FC<Props> = async ({
 					</div>
 
 					<div className='block pb-4 w-full h-full'>
-						<Comments chapter_id={book} />
+						<Comments chapter_id={book.id} />
 					</div>
 				</div>
 			</div>

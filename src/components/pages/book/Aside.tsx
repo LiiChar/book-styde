@@ -25,10 +25,14 @@ const Aside = ({ className, chapter }: Props) => {
 			const observer = new IntersectionObserver(([entry]) => {
 				if (entry.isIntersecting) {
 					setActiveHead(heading.id);
-					document
-						.querySelector('.aside-panel-chapter')!
-						.querySelector('.aside-scroll-toView')!
-						.scrollIntoView({ behavior: 'smooth' });
+					// document
+					// 	.querySelector('.aside-panel-chapter')!
+					// 	.querySelector('.aside-scroll-toView')!
+					// 	.scrollIntoView({
+					// 		behavior: 'smooth',
+					// 		block: 'center',
+					// 		inline: 'nearest',
+					// 	});
 				}
 			});
 			let a = 5;
@@ -61,7 +65,7 @@ const Aside = ({ className, chapter }: Props) => {
 		<aside
 			className={cn(
 				!chapter && headings.length == 0 && 'hidden',
-				'h-[calc(100vh-48px)] top-[48px] w-full overflow-y-auto sticky py-4 p flex-col items-end hidden md:flex aside-panel-chapter',
+				'h-[calc(100vh-96px)] top-[48px] w-full overflow-y-auto sticky py-4 p flex-col items-end hidden md:flex aside-panel-chapter',
 				className
 			)}
 		>

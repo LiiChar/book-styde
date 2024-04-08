@@ -25,8 +25,7 @@ export default async function Book({ params }: Props) {
 			<div className='flex relative'>
 				<Aside chapter={book.title} className='overflow-y-auto' />
 				<NavigationWrapper
-					chapter={book.chapter}
-					book={book.id}
+					book={book}
 					className='md:w-[82vw] bg-background/60 md:max-w-[82vw] w-full md:border-l-[1px] flex flex-col items-center'
 				>
 					<Crumbls book={book} />
