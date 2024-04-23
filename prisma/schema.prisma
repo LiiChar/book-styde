@@ -32,6 +32,7 @@ model User {
   name       String     @unique
   question   String
   key_word   String
+  description String?
   group      String?
   role       String     @default("user")
   is_verify  Boolean    @default(false)

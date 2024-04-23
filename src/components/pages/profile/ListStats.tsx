@@ -4,6 +4,8 @@ import { Separator } from '@/components/ui/separator';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { HTMLProps } from 'react';
 import { ThumbsComment } from '../book/comment/ThumbsComment';
+import { Link } from '@/components/common/Link';
+import { formatDate } from '@/lib/time';
 
 type Props = {
 	user: UserAnalitic;
@@ -34,10 +36,14 @@ export const ListStats = ({ user, className }: Props) => {
 						Комментарии
 					</TabsTrigger>
 				</TabsList>
-				<TabsContent value='chapters'>
+				<TabsContent className='flex flex-col gap-2' value='chapters'>
 					{user.UserBook.map(ub => (
 						<div className='bg-background p-4 rounded-sm' key={ub.id}>
-							{ub.chapter?.title}
+							<div className='flex justify-between w-full'>
+								<Link path={ub.chapter?.title!} />
+								{ub.chapter?.chapter}
+							</div>
+							<div>{formatDate(ub.created_at!.toString())}</div>
 						</div>
 					))}
 				</TabsContent>

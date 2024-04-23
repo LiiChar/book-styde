@@ -1,14 +1,13 @@
+'use server';
 import { UserAnalitic } from '@/app/api/user/analitic/route';
 import { CircleChar } from '@/components/pages/profile/CircleChar';
+import { Description } from '@/components/pages/profile/Description';
 import { ListStats } from '@/components/pages/profile/ListStats';
 import { Resolve } from '@/components/pages/profile/Resolve';
 import { TableVisit } from '@/components/pages/profile/TableVisit';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Separator } from '@/components/ui/separator';
-
-import { getReadableBook, getUser, getUserAnalitic } from '@/request/user';
-import { User } from '@/types/User';
-import { timer } from '@/lib/timer';
+import { getUserAnalitic } from '@/request/user';
 import { redirect } from 'next/navigation';
 
 export default async function Profile({ params }: { params: { id: string } }) {
@@ -33,11 +32,10 @@ export default async function Profile({ params }: { params: { id: string } }) {
 						</div>
 						<div className='flex flex-col w-full h-full justify-between items-end'>
 							<h3>{user.name}</h3>
-							<p>1000</p>
 						</div>
 					</div>
 					<Separator orientation='horizontal' className='bg-primary my-2' />
-					<div>Достижения</div>
+					<Description user={user} />
 				</aside>
 			</section>
 			<section className='lg:w-3/4 w-full'>

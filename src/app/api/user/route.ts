@@ -73,6 +73,16 @@ export async function PUT(req: NextRequest) {
 			...user,
 		},
 	});
+	setCookie('user_private', JSON.stringify(userUpdated), {
+		httpOnly: true,
+		maxAge: 86400,
+	});
+	cookies().set({
+		name: 'user',
+		value: JSON.stringify(userUpdated),
+		// httpOnly: true,
+		maxAge: 86400,
+	});
 	prisma.$disconnect();
 	return NextResponse.json(userUpdated);
 }

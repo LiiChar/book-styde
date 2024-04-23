@@ -26,6 +26,7 @@ CREATE TABLE "User" (
     "name" TEXT NOT NULL,
     "question" TEXT NOT NULL,
     "key_word" TEXT NOT NULL,
+    "description" TEXT,
     "group" TEXT,
     "role" TEXT NOT NULL DEFAULT 'user',
     "is_verify" BOOLEAN NOT NULL DEFAULT false,

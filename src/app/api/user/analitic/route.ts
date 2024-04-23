@@ -36,8 +36,10 @@ export type ActiveDay = {
 };
 
 export type AnaliticVisit = {
-	all: number;
-	activeDay: ActiveDay[];
+	[year: string]: {
+		all: number;
+		activeDay: ActiveDay[];
+	};
 };
 
 type Analitic = {
@@ -98,33 +100,45 @@ export async function GET(req: NextRequest) {
 	}
 
 	const visit: {
-		[key: string]: { day: number; visit: number };
+		[year: number]: { [key: string]: { day: number; visit: number } };
 	} = {};
 
 	userFind.comment.forEach(com => {
 		const day = getDayOfYear(com.updated_at);
-		if (visit[day]) {
-			visit[day].visit = visit[day].visit + 1;
+		const year = new Date(com.updated_at.toString()).getFullYear();
+		if (!visit[year]) {
+			visit[year] = {};
+		}
+		if (visit[year][day]) {
+			visit[year][day].visit = visit[year][day].visit + 1;
 		} else {
-			visit[day] = { day: day, visit: 1 };
+			visit[year][day] = { day: day, visit: 1 };
 		}
 	});
 
 	userFind.UserBook.forEach(com => {
 		const day = getDayOfYear(com.updated_at);
-		if (visit[day]) {
-			visit[day].visit = visit[day].visit + 1;
+		const year = new Date(com.updated_at.toString()).getFullYear();
+		if (!visit[year]) {
+			visit[year] = {};
+		}
+		if (visit[year][day]) {
+			visit[year][day].visit = visit[year][day].visit + 1;
 		} else {
-			visit[day] = { day: day, visit: 1 };
+			visit[year][day] = { day: day, visit: 1 };
 		}
 	});
 
 	userFind.UserWork.forEach(com => {
 		const day = getDayOfYear(com.updated_at);
-		if (visit[day]) {
-			visit[day].visit = visit[day].visit + 1;
+		const year = new Date(com.updated_at.toString()).getFullYear();
+		if (!visit[year]) {
+			visit[year] = {};
+		}
+		if (visit[year][day]) {
+			visit[year][day].visit = visit[year][day].visit + 1;
 		} else {
-			visit[day] = { day: day, visit: 1 };
+			visit[year][day] = { day: day, visit: 1 };
 		}
 	});
 
@@ -215,7 +229,15 @@ export async function GET(req: NextRequest) {
 		chap => chap.work?.chapter?.book == JS
 	).length;
 
-	console.log('a', Object.values(visit));
+	const visiting = Object.entries(visit).reduce<AnaliticVisit>((acc, el) => {
+		const year = el[0];
+		acc[year] = {
+			activeDay: Object.values(el[1]),
+			all: getDaysFromYear(+year),
+		};
+		return acc;
+	}, {});
+	console.log(visiting);
 
 	const analitic: Analitic = {
 		analitic: {
@@ -261,10 +283,11 @@ export async function GET(req: NextRequest) {
 				all: countWork,
 				current: currentWork,
 			},
-			visiting: {
-				activeDay: Object.values(visit),
-				all: getDaysFromYear(new Date().getFullYear()),
-			},
+			// visiting: {
+			// 	activeDay: Object.values(visit),
+			// 	all: getDaysFromYear(new Date().getFullYear()),
+			// },
+			visiting: visiting,
 		},
 	};
 	prisma.$disconnect();
