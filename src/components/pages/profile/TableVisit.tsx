@@ -51,7 +51,7 @@ const TableVisit: FC<Props> = ({ visit: visits, className }) => {
 				className='block lg:flex flex-wrap justify-between'
 			>
 				{Object.values(visits).map((visit, i) => (
-					<TabsContent value={`${Object.keys(visits)[i]}`}>
+					<TabsContent key={i} value={`${Object.keys(visits)[i]}`}>
 						<div className='flex overflow-auto scrollbar-sm gap-2 '>
 							<div className='flex flex-col gap-[10px] pb-[10px] pt-[24px]'>
 								<div>Вт</div>
@@ -142,6 +142,7 @@ const TableVisit: FC<Props> = ({ visit: visits, className }) => {
 				<TabsList className='bg-background flex justify-start lg:block w-min'>
 					{Object.keys(visits).map(year => (
 						<TabsTrigger
+							key={year}
 							className='hover:bg-accent h-min [state=active]:bg-accent data-[state=active]:bg-accent'
 							value={`${year}`}
 						>
