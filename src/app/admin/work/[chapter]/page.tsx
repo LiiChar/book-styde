@@ -1,4 +1,5 @@
-import { WorkEditor } from '@/components/pages/admin/work/WorkEditor';
+import { WorkList } from '@/components/pages/admin/work/WorkList';
+import { Button } from '@/components/ui/button';
 import { hasRoleOrRedirectMain } from '@/lib/authGuard';
 import { getChapterByTitle } from '@/request/book';
 import React from 'react';
@@ -17,11 +18,16 @@ export default async function Work({ params }: Props) {
 
 	return (
 		<div>
-			{book.works.map(work => (
-				<div key={work.id}>
-					<WorkEditor work={work} />
-				</div>
-			))}
+		<Button>
+
+		</Button>
+		<ul>
+		{book.works.map(work => (
+			<li key={work.id}>
+			<WorkList work={work} />
+			</li>
+		))}
+		</ul>
 		</div>
 	);
 }

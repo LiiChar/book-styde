@@ -40,7 +40,7 @@ export const isAdmin = () => {
 		? JSON.parse(cookies().get('user')?.value!)
 		: null;
 
-	if (user && user.role == 'user') {
+	if (user && user.role == 'admin') {
 		return true;
 	}
 

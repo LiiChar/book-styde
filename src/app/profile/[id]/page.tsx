@@ -6,8 +6,11 @@ import { ListStats } from '@/components/pages/profile/ListStats';
 import { Resolve } from '@/components/pages/profile/Resolve';
 import { TableVisit } from '@/components/pages/profile/TableVisit';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
+import { isAdmin } from '@/lib/authGuard';
 import { getUserAnalitic } from '@/request/user';
+import Link from 'next/link';
 import { redirect } from 'next/navigation';
 
 export default async function Profile({ params }: { params: { id: string } }) {
@@ -36,6 +39,11 @@ export default async function Profile({ params }: { params: { id: string } }) {
 					</div>
 					<Separator orientation='horizontal' className='bg-primary my-2' />
 					<Description user={user} />
+					{isAdmin() && <div className='mt-2'>
+						<Button className='w-full'>
+						<Link href={'/admin/page'}>Редактирование страниц</Link>
+						</Button>
+					</div>}
 				</aside>
 			</section>
 			<section className='lg:w-3/4 w-full'>

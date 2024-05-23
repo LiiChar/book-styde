@@ -1,17 +1,21 @@
+'use client'
 import { CodeEditor } from '@/components/common/CodeEditor';
+import { Link } from '@/components/common/Link';
 import { Question } from '@/components/common/Question';
 import { Label } from '@/components/ui/label';
 import { BookTypeWork } from '@/types/Book';
 import { Work } from '@prisma/client';
+import { usePathname } from 'next/navigation';
 import React from 'react';
 
 interface Props {
 	work: Work;
 }
 
-export const WorkEditor = ({ work }: Props) => {
+const WorkList = ({ work }: Props) => {
+	const pathname = usePathname();
 	return (
-		<div key={work.answer + work.explain} className='w-full'>
+		<section key={work.answer + work.explain} className='w-full'>
 			{work.type == 'CODE' && (
 				<div className='w-full h-full'>
 					<Label className='text-xl'>{work.question}</Label>
@@ -39,6 +43,15 @@ export const WorkEditor = ({ work }: Props) => {
 					/>
 				</div>
 			)}
-		</div>
+			<div className='flex justify-between'>
+			<Link path={`${pathname}/update/${work.id}`} title='Изменить'/>
+			</div>
+		</section>
 	);
 };
+
+WorkList.displayName = 'WorkList'
+
+export {
+	WorkList
+}
