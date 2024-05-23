@@ -1,5 +1,6 @@
 import { BookChapterSearh, ChapterSearch } from '@/app/api/book/search/route';
 import { Chapter, Work } from '@prisma/client';
+import { revalidateTag } from 'next/cache';
 
 export const getChapters = async (): Promise<Chapter[]> => {
 	const request = await fetch(process.env.NEXT_PUBLIC_URL_SITE + '/api/book');
@@ -38,15 +39,25 @@ export const getChapterByTitle = async (
 			body: JSON.stringify({
 				title: title,
 			}),
-			cache: 'no-cache',
+			next: {
+				tags: ['chapter'],
+			},
 		}
 	);
 	return request.json();
 };
 
 export const getPrevNextBookByChapter = async (chapter: number) => {
+	revalidateTag('analitic');
 	const request = await fetch(
 		`${process.env.NEXT_PUBLIC_URL_SITE}/api/book/search?chapter=${chapter}`
 	);
+	return request.json();
+};
+
+export const updateBookContent = async (id: number, conten: string) => {
+	const request = await fetch(`${process.env.NEXT_PUBLIC_URL_SITE}/api/book/`, {
+		method: 'POST',
+	});
 	return request.json();
 };

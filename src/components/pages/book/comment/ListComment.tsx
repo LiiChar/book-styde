@@ -2,12 +2,13 @@
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Separator } from '@/components/ui/separator';
-import { Comment, PrismaClient, User } from '@prisma/client';
-import { FC, memo, useEffect, useState } from 'react';
+import { Comment, User } from '@prisma/client';
+import { useEffect, useState } from 'react';
 import { ThumbsComment } from './ThumbsComment';
 import { io, Manager } from 'socket.io-client';
 import Pusher from 'pusher-js';
 import { getTimeAgo } from '@/lib/time';
+import { hasCookie } from 'cookies-next';
 
 export const ListComment = ({
 	comments: cms,

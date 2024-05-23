@@ -11,24 +11,29 @@ import React, {
 } from 'react';
 import { Button } from '@/components/ui/button';
 import { getCookie } from 'cookies-next';
-import { User, PrismaClient, Chapter } from '@prisma/client';
+import { User, PrismaClient, Chapter, Comment } from '@prisma/client';
 import { getPrevNextBookByChapter } from '@/request/book';
 import { Comments } from './Comments';
 import { cookies } from 'next/headers';
+import { ChapterSearch } from '@/app/api/book/search/route';
 
 interface Props {
 	children?: ReactNode | undefined;
 	className?: HTMLProps<HTMLElement>['className'];
-	book: Chapter;
+	book: ChapterSearch;
 }
 
 const NavigationWrapper: FC<Props> = async ({ children, className, book }) => {
 	const [prev, next] = await getPrevNextBookByChapter(book.chapter);
 
-	addReadableBook(
-		cookies().get('user') && JSON.parse(cookies().get('user')!.value).id,
-		String(book.id)
-	);
+	const userId =
+		cookies().get('user') && JSON.parse(cookies().get('user')!.value).id;
+	if (userId) {
+		addReadableBook(
+			cookies().get('user') && JSON.parse(cookies().get('user')!.value).id,
+			String(book.id)
+		);
+	}
 
 	return (
 		<div className='relative w-full flex'>
@@ -50,7 +55,7 @@ const NavigationWrapper: FC<Props> = async ({ children, className, book }) => {
 			>
 				{children}
 				<div className='hidden w-full h-full md:block'>
-					<Comments chapter_id={book.id} />
+					<Comments chapter_id={book.id} comments={book.comment!} />
 				</div>
 
 				<div className='w-full block md:hidden h-full'>
@@ -93,7 +98,7 @@ const NavigationWrapper: FC<Props> = async ({ children, className, book }) => {
 					</div>
 
 					<div className='block pb-4 w-full h-full'>
-						<Comments chapter_id={book.id} />
+						<Comments chapter_id={book.id} comments={book.comment!} />
 					</div>
 				</div>
 			</div>

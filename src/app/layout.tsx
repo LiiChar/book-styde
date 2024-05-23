@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { Gelasio } from 'next/font/google';
+import { Open_Sans } from 'next/font/google';
 import './globals.css';
 import { Header } from '@/components/layout/Header';
 import { SpeedInsights } from '@vercel/speed-insights/next';
@@ -7,9 +7,9 @@ import { cookies } from 'next/headers';
 import { ParicleConnectionBackground } from '@/components/common/background/ParicleConnectionBackground';
 import { Toaster } from '@/components/ui/toaster';
 
-const inter = Gelasio({
-	weight: ['400', '500', '600', '700'],
-	subsets: ['latin'],
+const inter = Open_Sans({
+	weight: ['300', '400', '500', '600', '700'],
+	subsets: ['latin', 'cyrillic'],
 });
 
 export const metadata: Metadata = {
@@ -29,7 +29,7 @@ export default function RootLayout({
 				<Header />
 				{children}
 				<SpeedInsights />
-				<ParicleConnectionBackground />
+				{/* <ParicleConnectionBackground /> */}
 				<Toaster />
 			</body>
 		</html>

@@ -1,4 +1,5 @@
 'use client';
+
 import React, {
 	ChangeEvent,
 	HTMLProps,
@@ -7,7 +8,6 @@ import React, {
 	useState,
 } from 'react';
 import { Input } from '../ui/input';
-import { BookPart } from '@/types/Book';
 import { Loader, Search } from 'lucide-react';
 import { Separator } from '../ui/separator';
 import { Link } from './Link';
@@ -17,9 +17,11 @@ import { getBookSearch } from '@/request/book';
 
 interface Props {
 	className?: HTMLProps<HTMLElement>['className'];
+	action?: (search: string) => void;
+	baseUrl?: string;
 }
 
-const SearchBook = memo(({ className }: Props) => {
+const SearchBook = memo(({ className, action, baseUrl = 'page/' }: Props) => {
 	const [search, setSearch] = useState('');
 	const [books, setBooks] = useState<BookChapterSearh>([]);
 	const [debounceValue] = useDebounce(search, 1000);
@@ -48,6 +50,18 @@ const SearchBook = memo(({ className }: Props) => {
 		setSearch(e.target.value);
 	};
 
+	const handleSearch = (
+		e: React.MouseEvent<HTMLAnchorElement, MouseEvent>,
+		search: string
+	) => {
+		if (!action) {
+			return;
+		}
+		e.preventDefault();
+		e.stopPropagation();
+		action(search);
+	};
+
 	return (
 		<article
 			className={`${className} relative px-2 h-9 w-full border-[1px] bg-background rounded-sm`}
@@ -57,7 +71,7 @@ const SearchBook = memo(({ className }: Props) => {
 				<Input
 					className='search-book outline-none border-none z-30 py-1 px-2 h-8'
 					value={search}
-					placeholder='Enter your chapter'
+					placeholder='Введите название главы'
 					onChange={handleInputSearch}
 				/>
 				{loading && (
@@ -72,8 +86,14 @@ const SearchBook = memo(({ className }: Props) => {
 			>
 				<Separator className='' />
 				{books.map(book => (
-					<li key={book.id} className='h-6 p-1 '>
-						<Link path={'page/' + book.title} title={book.title} />
+					<li key={book.id} className='h-6 p-1 min-h-min'>
+						<Link
+							attributes={{
+								onClick: e => handleSearch(e, book.title),
+							}}
+							path={baseUrl + book.title}
+							title={book.title}
+						/>
 					</li>
 				))}
 			</ul>

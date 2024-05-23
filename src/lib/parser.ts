@@ -1,3 +1,4 @@
+'use client';
 import { hslToHex } from './colors';
 
 export const transformCodeToParse = (code: string): string => {
@@ -15,7 +16,9 @@ export const transformCodeToParse = (code: string): string => {
 };
 
 export const transfoncCodeToValidCss = (code: string, html: string): string => {
-	let bodyStyles = window.getComputedStyle(document.body);
+	let bodyStyles = window
+		? window.getComputedStyle(document.body).getPropertyValue('--foreground')
+		: '0 0% 98%';
 
 	let ht = html;
 	code = code.replaceAll('body', '.main_start');
@@ -36,7 +39,7 @@ export const transfoncCodeToValidCss = (code: string, html: string): string => {
 		<style>
 	* {
 		background-color: background: rgba(0,0,0,0);
-		color: ${hslToHex(bodyStyles.getPropertyValue('--foreground'))};
+		color: ${hslToHex(bodyStyles)};
 	}
 	${code}
 	</style>
@@ -45,7 +48,9 @@ export const transfoncCodeToValidCss = (code: string, html: string): string => {
 };
 
 export const transfoncCodeToValidHTML = (code: string): string => {
-	let bodyStyles = window.getComputedStyle(document.body);
+	let bodyStyles = window
+		? window.getComputedStyle(document.body).getPropertyValue('--foreground')
+		: '0 0% 98%';
 	let ht = code;
 
 	ht = ht.replaceAll('<body', '<div class="main_start"');
@@ -63,7 +68,7 @@ export const transfoncCodeToValidHTML = (code: string): string => {
 	<style>
 	* {
 		background-color: rgba(0,0,0,0) !important;
-		color: ${hslToHex(bodyStyles.getPropertyValue('--foreground'))};
+		color: ${hslToHex(bodyStyles)};
 	}
 	</style>
 	`;

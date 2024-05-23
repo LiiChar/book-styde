@@ -15,6 +15,7 @@ type Props = {
 
 export const BookNavigation = async ({ accardion }: Props) => {
 	const books = await getChapters();
+
 	const group = chaptersGroupByBook(books);
 
 	return (

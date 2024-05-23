@@ -237,7 +237,6 @@ export async function GET(req: NextRequest) {
 		};
 		return acc;
 	}, {});
-	console.log(visiting);
 
 	const analitic: Analitic = {
 		analitic: {

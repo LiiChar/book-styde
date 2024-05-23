@@ -18,8 +18,8 @@ export default function Error({
 	}, [error]);
 
 	return (
-		<div className='flex justify-center items-center w-screen h-[calc(100vh-48px)]'>
-			<div className='border-[1px] rounded-md p-4'>
+		<div className='flex justify-center  items-center w-screen h-[calc(100vh-48px)]'>
+			<div className='border-[1px] bg-secondary rounded-md p-4'>
 				<h3>Что-то пошло не так.</h3>
 				<p>
 					Произошла ошибка сервера. В будущем это будет исправлено.

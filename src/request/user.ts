@@ -1,4 +1,5 @@
 import { getCookie } from 'cookies-next';
+import { revalidateTag } from 'next/cache';
 
 export const register = async (user: any): Promise<any> => {
 	const res = await fetch(process.env.NEXT_PUBLIC_URL_SITE + `/api/user`, {
@@ -26,13 +27,16 @@ export const getUserAnalitic = async (user_id: string) => {
 	const res = await fetch(
 		`${process.env.NEXT_PUBLIC_URL_SITE}/api/user/analitic?user_id=${user_id}`,
 		{
-			cache: 'no-store',
+			next: {
+				tags: ['analitic'],
+			},
 		}
 	);
 	return res.json();
 };
 
 export const updateUser = async (user_id: string, user: any) => {
+	revalidateTag('analitic');
 	await fetch(`${process.env.NEXT_PUBLIC_URL_SITE}/api/user`, {
 		body: JSON.stringify({ user_id, user }),
 		method: 'PUT',
@@ -40,6 +44,7 @@ export const updateUser = async (user_id: string, user: any) => {
 };
 
 export const addReadableBook = async (user_id: string, book_id: string) => {
+	revalidateTag('analitic');
 	await fetch(
 		`${process.env.NEXT_PUBLIC_URL_SITE}/api/user/book?user_id=${user_id}&chapter_id=${book_id}`,
 		{

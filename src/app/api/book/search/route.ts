@@ -1,8 +1,10 @@
-import { PrismaClient, Chapter, Work } from '@prisma/client';
+import { PrismaClient, Chapter, Work, Comment, User } from '@prisma/client';
 import { NextRequest, NextResponse } from 'next/server';
+import { CommentChapter } from '../../comment/route';
 
 export type ChapterSearch = Chapter & {
 	works: Work[];
+	comment: CommentChapter[];
 };
 
 export type NextPrevChapter = Chapter | null;
@@ -59,6 +61,11 @@ export async function POST(req: NextRequest) {
 			works: true,
 			title: true,
 			updated_at: true,
+			comment: {
+				include: {
+					user: true,
+				},
+			},
 		},
 	});
 

@@ -5,13 +5,16 @@ import { FC, Suspense } from 'react';
 import { getCommentsByChapterId } from '@/request/comment';
 import { CommentChapter } from '@/app/api/comment/route';
 import { ListComment } from './comment/ListComment';
+import { User, Comment } from '@prisma/client';
 
 interface Props {
 	chapter_id: number;
+	comments?: CommentChapter[];
 }
 
-const Comments: FC<Props> = async ({ chapter_id }) => {
-	const comments: CommentChapter[] = await getCommentsByChapterId(chapter_id);
+const Comments: FC<Props> = async ({ chapter_id, comments: com }) => {
+	const comments =
+		com || ((await getCommentsByChapterId(chapter_id)) as CommentChapter[]);
 
 	return (
 		<section className='my-4 w-full'>
