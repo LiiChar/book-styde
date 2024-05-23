@@ -86,7 +86,7 @@ const SearchBook = memo(({ className, action, baseUrl = 'page/' }: Props) => {
 			>
 				<Separator className='' />
 				{books.map(book => (
-					<li key={book.id} className='h-6 p-1 min-h-min'>
+					<li key={book.id} className='h-min flex justify-center item-center p-1 min-h-min'>
 						<Link
 							attributes={{
 								onClick: e => handleSearch(e, book.title),
