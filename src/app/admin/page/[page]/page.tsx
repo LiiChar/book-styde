@@ -1,5 +1,5 @@
 import { ContentEditable } from '@/components/pages/admin/page/ContentEditable';
-import { hasRoleOrRedirectMain } from '@/lib/authGuard';
+import { hasRoleOrRedirectMain } from '@/lib/authGuardServer';
 import { getChapterByTitle } from '@/request/book';
 import React from 'react';
 

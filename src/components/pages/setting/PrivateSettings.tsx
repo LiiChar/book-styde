@@ -1,7 +1,9 @@
-import React from 'react'
+import React from 'react';
 
 export const PrivateSettings = () => {
-  return (
-    <div>PrivateSettings</div>
-  )
-}
+	return (
+		<div>
+			<h2>Настройки приватности</h2>
+		</div>
+	);
+};

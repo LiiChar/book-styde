@@ -6,6 +6,7 @@ import { SpeedInsights } from '@vercel/speed-insights/next';
 import { cookies } from 'next/headers';
 import { ParicleConnectionBackground } from '@/components/common/background/ParicleConnectionBackground';
 import { Toaster } from '@/components/ui/toaster';
+import { Background } from '@/components/common/background/Background';
 
 const inter = Open_Sans({
 	weight: ['300', '400', '500', '600', '700'],
@@ -29,7 +30,7 @@ export default function RootLayout({
 				<Header />
 				{children}
 				<SpeedInsights />
-				{/* <ParicleConnectionBackground /> */}
+				<Background />
 				<Toaster />
 			</body>
 		</html>

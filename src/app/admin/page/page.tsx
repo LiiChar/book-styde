@@ -1,5 +1,5 @@
 import { SearchBook } from '@/components/common/SearchBook';
-import { hasRoleOrRedirectMain } from '@/lib/authGuard';
+import { hasRoleOrRedirectMain } from '@/lib/authGuardServer';
 
 export default async function BookInput() {
 	hasRoleOrRedirectMain('admin');
