@@ -13,7 +13,7 @@ export type config = {
 	account: {};
 };
 
-export const defaltConfig: config = {
+const defaltConfig: config = {
 	view: {
 		backgroundVisible: true,
 		background: 'particle-connector',
