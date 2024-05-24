@@ -1,3 +1,4 @@
+'use server';
 import { Backgrounds } from '@/components/common/background/Background';
 import { cookies } from 'next/headers';
 
