@@ -71,12 +71,8 @@ export const setAccount = (account: config['account']) => {
 export const getOrCreateSettingCookies = (): config => {
 	const exsist = hasCookie('setting');
 	if (exsist) {
-		console.log('exist');
-
 		return JSON.parse(getCookie('setting')!);
 	} else {
-		console.log('new');
-
 		setConfigSettings(defaltConfig);
 		return defaltConfig;
 	}

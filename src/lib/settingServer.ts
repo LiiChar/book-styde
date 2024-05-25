@@ -1,5 +1,6 @@
 'use server';
 import { Backgrounds } from '@/components/common/background/Background';
+import { setCookie } from 'cookies-next';
 import { cookies } from 'next/headers';
 
 export type config = {
@@ -80,7 +81,11 @@ export const getOrCreateSettingCookies = (): config => {
 };
 
 export const setConfigSettings = (setting: config) => {
-	cookies().set('setting', JSON.stringify(setting), {
+	'use server';
+	setCookie('setting', JSON.stringify(setting), {
 		sameSite: 'strict',
 	});
+	// cookies().set('setting', JSON.stringify(setting), {
+	// 	sameSite: 'strict',
+	// });
 };

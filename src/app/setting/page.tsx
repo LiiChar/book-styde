@@ -9,7 +9,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { hasRoleOrRedirectMain } from '@/lib/authGuardClient';
 
 export default function Setting() {
-	hasRoleOrRedirectMain('user');
+	hasRoleOrRedirectMain();
 	return (
 		<div className='flex w-full h-full py-9 justify-center items-center '>
 			<Tabs

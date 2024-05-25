@@ -2,7 +2,10 @@ import { User } from '@prisma/client';
 import { getCookie, hasCookie } from 'cookies-next';
 import { redirect } from 'next/navigation';
 
-export const hasRoleOrRedirectMain = (role: 'user' | 'admin') => {
+export const hasRoleOrRedirectMain = (role?: 'user' | 'admin') => {
+	if (!role) {
+		return;
+	}
 	const user: User = hasCookie('user') ? JSON.parse(getCookie('user')!) : null;
 
 	if (!user) {

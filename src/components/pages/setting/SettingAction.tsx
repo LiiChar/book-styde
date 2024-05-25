@@ -1,7 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/components/ui/use-toast';
-import { getOrCreateSettingCookies } from '@/lib/settings';
-import { setConfig } from 'next/config';
+import { getOrCreateSettingCookies, setConfigSettings } from '@/lib/settings';
 import { useRouter } from 'next/navigation';
 import React from 'react';
 
@@ -11,7 +10,7 @@ export const SettingAction = () => {
 	const router = useRouter();
 
 	const handleReject = () => {
-		setConfig(config);
+		setConfigSettings(config);
 		toast.toast({
 			title: 'Изменения отменены',
 		});
