@@ -1,4 +1,4 @@
-import { WorkList } from '@/components/pages/admin/work/WorkList';
+import { WorkElement } from '@/components/pages/admin/work/WorkElement';
 import { Button } from '@/components/ui/button';
 import { hasRoleOrRedirectMain } from '@/lib/authGuardServer';
 import { getChapterByTitle } from '@/request/book';
@@ -17,13 +17,10 @@ export default async function Work({ params }: Props) {
 	const book = await getChapterByTitle(title);
 
 	return (
-		<div>
-			<Button></Button>
-			<ul>
+		<div className='w-full h-full flex justify-center items-center'>
+			<ul className='h-4/6 w-2/3 flex flex-col gap-2'>
 				{book.works.map(work => (
-					<li key={work.id}>
-						<WorkList work={work} />
-					</li>
+					<WorkElement key={work.id} work={work} />
 				))}
 			</ul>
 		</div>

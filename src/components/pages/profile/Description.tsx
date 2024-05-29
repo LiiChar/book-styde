@@ -51,13 +51,13 @@ export const Description = ({ user, className }: Props) => {
 						<div>
 							Описание:{' '}
 							<div className='text-wrap text-pretty'>{user.description}</div>
-						</div>
+						</div>	
 					)
 				)}
 			</div>
-			<Button className='w-full mt-4' onClick={handleEditing}>
+			{user.id == userCookies.id && <Button className='w-full mt-4' onClick={handleEditing}>
 				{editing ? 'Сохранить' : 'Изменить'}
-			</Button>
+			</Button>}
 		</section>
 	);
 };

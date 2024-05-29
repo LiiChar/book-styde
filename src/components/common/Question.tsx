@@ -11,9 +11,10 @@ import { getCookie, hasCookie } from 'cookies-next';
 interface Props {
 	question: QuestionWork;
 	workId: number;
+	isScore?: boolean;
 }
 
-const Question = memo(({ question, workId }: Props) => {
+const Question = memo(({ question, workId, isScore }: Props) => {
 	const { answer: answ, explain, question: quest, variant } = question;
 	const [answer, setAnswer] = useState('');
 	const [help, setHelp] = useState('');
@@ -24,13 +25,16 @@ const Question = memo(({ question, workId }: Props) => {
 
 	const verifyResolve = () => {
 		if (answer == answ) {
+			setHelp('Задача решена');
+			if (!isScore) {
+				return;
+			}
 			addResolvedWork(
 				hasCookie('user') && JSON.parse(getCookie('user')!).id,
 				workId
 			);
-			setHelp('Задача решена');
 		} else {
-			setHelp('Ответ неверный, попробуйте снова');
+			setHelp('Ответ неве/Создание_гиперссылокрный, попробуйте снова');
 		}
 	};
 

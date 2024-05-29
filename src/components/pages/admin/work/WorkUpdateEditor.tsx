@@ -1,50 +1,44 @@
-'use client'
+'use client';
 
-import { CodeEditor } from "@/components/common/CodeEditor"
-import { Question } from "@/components/common/Question"
-import { Label } from "@/components/ui/label"
-import { BookTypeWork } from "@/types/Book"
-import { Work } from "@prisma/client"
+import { CodeEditor } from '@/components/common/CodeEditor';
+import { Question } from '@/components/common/Question';
+import { Label } from '@/components/ui/label';
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from '@/components/ui/select';
+
+import { BookTypeWork } from '@/types/Book';
+import { Work } from '@prisma/client';
+import { WorkCodeEditor } from './editor/WorkCodeEditor';
+import { WorkQuestionEditor } from './editor/WorkQuestionEditor';
 
 interface Props {
-  work: Work
+	work: Work;
 }
 
-const WorkUpdateEditor = ({work}: Props) => {
-  return (
-    <section key={work.answer + work.explain} className='w-full'>
-    {work.type == 'CODE' && (
-      <div className='w-full h-full'>
-        <Label className='text-xl'>{work.question}</Label>
-        <CodeEditor
-          answer={work.answer}
-          code={work.code!}
-          language={work.language!}
-          explain={work.explain}
-          question={work.question}
-          workId={work.id}
-        />
-      </div>
-    )}
-    {work.type == 'QUESTION' && (
-      <div className='w-full'>
-        <Question
-          question={{
-            answer: work.answer,
-            question: work.question,
-            explain: work.explain,
-            type: BookTypeWork.QUESTION,
-            variant: work.variant!.split('..'),
-          }}
-          workId={work.id}
-        />
-      </div>
-    )}
-  </section>
-  )
-}
+const WorkUpdateEditor = ({ work }: Props) => {
+	return (
+		<section key={work.answer + work.explain} className='w-full'>
+			<div>
+				{work.type == 'CODE' && (
+					<div>
+						<WorkCodeEditor work={work} />
+					</div>
+				)}
+				{work.type == 'QUESTION' && (
+					<div>
+						<WorkQuestionEditor work={work}/>
+					</div>
+				)}
+			</div>
+		</section>
+	);
+};
 
+WorkUpdateEditor.displayName = 'WorkList';
 
-WorkUpdateEditor.displayName = 'WorkList'
-
-export default WorkUpdateEditor
+export default WorkUpdateEditor;

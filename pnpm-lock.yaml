@@ -71,6 +71,9 @@ dependencies:
   clsx:
     specifier: ^2.1.0
     version: 2.1.0
+  components:
+    specifier: link:@types/prismjs/components
+    version: link:@types/prismjs/components
   cookies-next:
     specifier: ^4.1.1
     version: 4.1.1
@@ -86,6 +89,9 @@ dependencies:
   next:
     specifier: 14.1.0
     version: 14.1.0(@babel/core@7.24.4)(react-dom@18.2.0)(react@18.2.0)
+  prism-core:
+    specifier: link:@types/prismjs/components/prism-core
+    version: link:@types/prismjs/components/prism-core
   prismjs:
     specifier: ^1.29.0
     version: 1.29.0

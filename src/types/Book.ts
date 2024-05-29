@@ -3,6 +3,8 @@ export enum BookTypeWork {
 	QUESTION,
 }
 
+export type WorkType = 'CODE' | 'QUESTION';
+
 type language = 'javascript' | 'css' | 'html';
 type part = 'javascript' | 'css' | 'html' | 'дизайн';
 

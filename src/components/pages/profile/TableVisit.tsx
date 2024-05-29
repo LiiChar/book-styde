@@ -101,7 +101,10 @@ const TableVisit: FC<Props> = ({ visit: visits, className }) => {
 																{/* <p className='h-[18px]'> */}
 																{(
 																	visit.activeDay.find(
-																		act => act.day === week * 7 + day
+																		act => {
+																			console.log(act, week * 7 + day);
+																			
+																			return act.day === week * 7 + day}
 																	) ?? { visit: 0 }
 																).visit == 0
 																	? 'Нет'

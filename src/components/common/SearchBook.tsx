@@ -93,6 +93,7 @@ const SearchBook = memo(({ className, action, baseUrl = 'page/' }: Props) => {
 							}}
 							path={baseUrl + book.title}
 							title={book.title}
+							className='w-full h-full text-left'
 						/>
 					</li>
 				))}
