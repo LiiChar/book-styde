@@ -29,7 +29,7 @@ interface Props {
 	work?: Work;
 }
 
-export const WorkCodeEditor = memo(({ work }: Props) => {
+const WorkCodeEditor = memo(({ work }: Props) => {
 	const [question, setQuestion] = useState(work?.question ?? '');
 	const [description, setDescription] = useState(work?.description ?? '');
 	const [answer, setAnswer] = useState(work?.answer ?? '');
@@ -100,3 +100,7 @@ export const WorkCodeEditor = memo(({ work }: Props) => {
 		</div>
 	);
 });
+
+WorkCodeEditor.displayName = 'WorkCodeEditor';
+
+export { WorkCodeEditor };
