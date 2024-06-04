@@ -35,7 +35,9 @@ export const getTimeAgo = (date: Date) => {
 	} else if (months > 0) {
 		return `${months} ${months === 1 ? 'месяц' : 'месяца'} назад`;
 	} else if (days > 7) {
-		return messageTime.toLocaleDateString(); // Если прошло больше недели, показываем полную дату
+		return `${Math.floor(days / 7)} ${
+			Math.floor(days / 7) === 1 ? 'неделю' : 'недели'
+		} назад`; // Если прошло больше недели, показываем полную дату
 	} else if (days > 0) {
 		return `${days} ${days === 1 ? 'день' : 'дня'} назад`;
 	} else if (hours > 0) {

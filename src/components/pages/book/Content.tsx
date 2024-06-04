@@ -117,6 +117,7 @@ export const Content = ({ book }: { book: ChapterSearch }) => {
 										? true
 										: false) ?? true
 								}
+								metadata={node.attribs && node.attribs.metadata}
 							>
 								{child}
 							</Code>

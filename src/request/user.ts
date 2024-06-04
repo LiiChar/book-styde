@@ -80,3 +80,10 @@ export const login = async (name: string, keyword: string) => {
 	});
 	return res.json();
 };
+
+export const logout = async () => {
+	const res = await fetch(`/api/user/auth`, {
+		method: 'PUT',
+	});
+	return res.json();
+};

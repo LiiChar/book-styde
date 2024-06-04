@@ -55,7 +55,7 @@ export const Description = ({ user, className }: Props) => {
 					)
 				)}
 			</div>
-			{user.id == userCookies.id && <Button className='w-full mt-4' onClick={handleEditing}>
+			{userCookies && user.id == userCookies.id && <Button className='w-full mt-4' onClick={handleEditing}>
 				{editing ? 'Сохранить' : 'Изменить'}
 			</Button>}
 		</section>

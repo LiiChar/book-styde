@@ -65,7 +65,7 @@ const Aside = ({ className, chapter }: Props) => {
 		<aside
 			className={cn(
 				!chapter && headings.length == 0 && 'hidden',
-				'h-[calc(100vh-96px)] top-[48px] w-full overflow-y-auto sticky py-4 p flex-col items-end hidden md:flex aside-panel-chapter',
+				'h-full top-[48px] w-full overflow-y-auto sticky py-4 p flex-col items-end hidden md:flex aside-panel-chapter',
 				className
 			)}
 		>
@@ -85,15 +85,13 @@ const Aside = ({ className, chapter }: Props) => {
 					) : (
 						<ul className=' text-sm flex flex-col gap-1 '>
 							{headings.map(heading => (
-								<li
-									className={`w-full  ${
-										activeHead == heading.text &&
-										'text-primary	border-b-[1px] border-primary aside-scroll-toView'
-									}`}
-									key={heading.id}
-								>
+								<li className={`w-full `} key={heading.id}>
 									<button
-										className={` leading-4 text-left text-sm w-full h-full`}
+										className={`leading-4 w-full text-left text-sm  h-full ${
+											activeHead == heading.text &&
+											'table-of-contents__link--active'
+											// 'text-primary	border-b-[1px] border-primary aside-scroll-toView'
+										} table-of-contents__link`}
 										onClick={() => handleNavigation(heading.id)}
 									>
 										{heading.text}

@@ -8,6 +8,7 @@ import {
 } from '@/components/ui/accordion';
 import { chaptersGroupByBook } from '@/lib/bookUtils';
 import { Separator } from '@/components/ui/separator';
+import { Chapter, PrismaClient } from '@prisma/client';
 
 type Props = {
 	accardion?: boolean;
@@ -28,7 +29,7 @@ export const BookNavigation = async ({ accardion }: Props) => {
 						</div>
 						<ul className='grid grid-cols-2 lg:grid-cols-3 gap-2 my-2'>
 							{book.chapters.map((part, j) => (
-								<li className='min-w-[175px]' key={part.chapter}>
+								<li className='min-w-[175px] li__content' key={part.chapter}>
 									<Link
 										path={'page/' + part.title}
 										title={

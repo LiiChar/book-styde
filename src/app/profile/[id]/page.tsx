@@ -3,6 +3,7 @@ import { UserAnalitic } from '@/app/api/user/analitic/route';
 import { CircleChar } from '@/components/pages/profile/CircleChar';
 import { Description } from '@/components/pages/profile/Description';
 import { ListStats } from '@/components/pages/profile/ListStats';
+import { Logout } from '@/components/pages/profile/Logout';
 import { Resolve } from '@/components/pages/profile/Resolve';
 import { TableVisit } from '@/components/pages/profile/TableVisit';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -46,6 +47,7 @@ export default async function Profile({ params }: { params: { id: string } }) {
 							</Button>
 						</div>
 					)}
+					<Logout className='mt-2 w-full' />
 				</aside>
 			</section>
 			<section className='lg:w-3/4 w-full'>

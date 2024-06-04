@@ -1,7 +1,7 @@
 'use client';
 import { ChapterSearch } from '@/app/api/book/search/route';
 import { Textarea } from '@/components/ui/textarea';
-import { FC, memo, useMemo, useState } from 'react';
+import { FC, memo, useEffect, useMemo, useState } from 'react';
 import { Content } from '../../book/Content';
 // @ts-ignore
 import { highlight, languages } from 'prismjs/components/prism-core';
@@ -39,32 +39,46 @@ const ContentEditable: FC<Props> = memo(({ book }) => {
 		return newBook;
 	}, [debounceValue]);
 
+	useEffect(() => {
+		const intervalId = setInterval(() => {
+			if (!loading) {
+				action();
+			}
+		}, 60000);
+
+		return () => {
+			clearInterval(intervalId);
+		};
+	}, []);
+
 	return (
 		<section className='w-full h-full px-2 py-3'>
 			<div className='flex justify-between'>
-				<div className='flex justify-between'>
+				<div className='flex justify-between w-1/3'>
 					<div className='flex'>
 						<div>Редактор</div>
 						<ButtonLoader
-							onClick={() => updateBookContent(book.id, content)}
+							onClick={action}
 							loading={loading}
-							className='ml-2 h-6'
+							variant={'secondary'}
+							className='ml-2 h-6 p-1 rounded-b-none'
 						>
 							Сохранить
 						</ButtonLoader>
 					</div>
 				</div>
-				<div>
+				<div className='w-1/3 flex justify-center items-center'>
 					<Link
+						className='hover:border-b-2 border-blue-700 hover:text-blue-700'
 						path={`admin/work/${book.title}`}
 						title='Перейти к редактированию работ'
 					/>
 				</div>
-				<div className='flex h-6'>
+				<div className='flex h-6 w-1/3 justify-end'>
 					<div>
 						<InfoDialog />
 					</div>
-					<div>Вывод</div>
+					<div>Рендер</div>
 				</div>
 			</div>
 			<ResizablePanelGroup direction='horizontal' className='border-t-[4px]'>

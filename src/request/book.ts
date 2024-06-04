@@ -7,10 +7,14 @@ export const getChapters = async (): Promise<Chapter[]> => {
 	return request.json();
 };
 
-// const controller = new AbortController();
-// const signal = controller.signal;
-
-let fetching = false;
+const returnDataOrThrowError = async (response: Response) => {
+	const res = await response.json();
+	if (typeof res == 'object' && 'type' in res && res['type'] == 'error') {
+		throw Error(res['message']);
+	} else {
+		return res;
+	}
+};
 
 export const getBookSearch = async (
 	search: string,
@@ -55,9 +59,10 @@ export const getPrevNextBookByChapter = async (chapter: number) => {
 	return request.json();
 };
 
-export const updateBookContent = async (id: number, conten: string) => {
+export const updateBookContent = async (id: number, content: string) => {
 	const request = await fetch(`${process.env.NEXT_PUBLIC_URL_SITE}/api/book/`, {
 		method: 'POST',
+		body: JSON.stringify({ id, content }),
 	});
 	return request.json();
 };

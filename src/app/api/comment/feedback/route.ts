@@ -1,66 +1,85 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { Comment, LikesComment, User } from '@prisma/client';
-import { prisma } from '..';
+import { Comment, FeedbackComment, LikesComment, User } from '@prisma/client';
+import { prisma } from '../..';
 import Pusher from 'pusher';
 import { cookies } from 'next/headers';
 import { revalidateTag } from 'next/cache';
+import { Omit, Optional } from '@prisma/client/runtime/library';
 
-export type CommentChapter = Comment & { user: User } & {
-	LikesComment?: LikesComment[];
-};
+export type FeedbackChapter = FeedbackComment & { user: User };
 
 export async function GET(req: NextRequest) {
-	const COMMENTS = prisma.comment;
-	const chapter_id = req.nextUrl.searchParams.get('chapter_id');
+	const FEEDBACK = prisma.feedbackComment;
 
-	if (!chapter_id) {
+	const comment_id = req.nextUrl.searchParams.get('comment_id');
+	const feedback_id = req.nextUrl.searchParams.get('feedback_id');
+
+	if (feedback_id && feedback_id != 'undefined') {
+		const comments = await FEEDBACK.findMany({
+			where: {
+				feedback_id: +feedback_id,
+			},
+			orderBy: {
+				created_at: 'desc',
+			},
+			include: {
+				user: true,
+			},
+		});
 		prisma.$disconnect();
 
-		return NextResponse.json([]);
+		return NextResponse.json(comments);
 	}
-	const comments = await COMMENTS.findMany({
-		where: {
-			chapter_id: Number(chapter_id),
-		},
-		orderBy: {
-			created_at: 'desc',
-		},
-		include: {
-			user: true,
-			LikesComment: true,
-		},
-	});
+
+	if (comment_id && comment_id != 'undefined') {
+		const comments = await FEEDBACK.findMany({
+			where: {
+				comment_id: +comment_id,
+			},
+			orderBy: {
+				created_at: 'desc',
+			},
+			include: {
+				user: true,
+			},
+		});
+		prisma.$disconnect();
+
+		return NextResponse.json(comments);
+	}
 	prisma.$disconnect();
 
-	return NextResponse.json(comments);
+	return NextResponse.json([]);
 }
 
+export type FeedbackPostDTO = {
+	content: string;
+	feedback_id?: number;
+	comment_id?: number;
+	user_id: number;
+};
+
 export async function POST(req: NextRequest) {
-	const { comment, chapter_id } = await req.json();
+	const { content, feedback_id, comment_id, user_id } = await req.json();
 
-	const COMMENTS = prisma.comment;
-	const pusher = new Pusher({
-		appId: process.env.PUSHER_APP_ID!,
-		key: process.env.PUSHER_KEY!,
-		secret: process.env.PUSHER_SECRET!,
-		cluster: process.env.PUSHER_CLUSTER!,
-		useTLS: true,
-	});
+	const FEEDBACK = prisma.feedbackComment;
 
-	await COMMENTS.create({
+	await FEEDBACK.create({
 		data: {
-			content: comment.content,
-			user_id: comment.user_id,
-			chapter_id: chapter_id,
+			content,
+			comment_id,
+			feedback_id,
+			user_id,
 		},
 		include: {
 			user: true,
 		},
 	});
 
-	const commentNew = await COMMENTS.findMany({
+	const feedbacks = await FEEDBACK.findMany({
 		where: {
-			chapter_id: Number(chapter_id),
+			comment_id,
+			feedback_id,
 		},
 		orderBy: {
 			created_at: 'desc',
@@ -70,19 +89,9 @@ export async function POST(req: NextRequest) {
 		},
 	});
 
-	try {
-		await pusher.trigger(
-			`chapter-${chapter_id}`,
-			'new_comment',
-			JSON.stringify({
-				comment: commentNew,
-			})
-		);
-	} catch (error) {}
 	prisma.$disconnect();
-	revalidateTag('analitic');
-	revalidateTag('comment');
-	return NextResponse.json(commentNew);
+	revalidateTag('feedback');
+	return NextResponse.json(feedbacks);
 }
 
 export async function PUT(req: NextRequest) {

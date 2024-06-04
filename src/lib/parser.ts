@@ -1,6 +1,20 @@
 'use client';
 import { hslToHex } from './colors';
 
+const style = `
+	img {
+				width: 100%;
+		height: 100%;
+		object-fit: contain;
+	}
+
+	html,
+	body {
+		width: 100%;
+		height: min-content;
+	}
+`;
+
 export const transformCodeToParse = (code: string): string => {
 	let result =
 		`const result = []; 
@@ -16,9 +30,10 @@ export const transformCodeToParse = (code: string): string => {
 };
 
 export const transfoncCodeToValidCss = (code: string, html: string): string => {
-	let bodyStyles = window
-		? window.getComputedStyle(document.body).getPropertyValue('--foreground')
-		: '0 0% 98%';
+	let bodyStyles =
+		typeof window !== 'undefined'
+			? window.getComputedStyle(document.body).getPropertyValue('--foreground')
+			: '0 0% 98%';
 
 	let ht = html;
 	code = code.replaceAll('body', '.main_start');
@@ -41,6 +56,7 @@ export const transfoncCodeToValidCss = (code: string, html: string): string => {
 		background-color: background: rgba(0,0,0,0);
 		color: ${hslToHex(bodyStyles)};
 	}
+	${style}
 	${code}
 	</style>
 	${ht}`;
@@ -48,9 +64,10 @@ export const transfoncCodeToValidCss = (code: string, html: string): string => {
 };
 
 export const transfoncCodeToValidHTML = (code: string): string => {
-	let bodyStyles = window
-		? window.getComputedStyle(document.body).getPropertyValue('--foreground')
-		: '0 0% 98%';
+	let bodyStyles =
+		typeof window !== 'undefined'
+			? window.getComputedStyle(document.body).getPropertyValue('--foreground')
+			: '0 0% 98%';
 	let ht = code;
 
 	ht = ht.replaceAll('<body', '<div class="main_start"');
@@ -70,6 +87,7 @@ export const transfoncCodeToValidHTML = (code: string): string => {
 		background-color: rgba(0,0,0,0) !important;
 		color: ${hslToHex(bodyStyles)};
 	}
+${style}
 	</style>
 	`;
 	return result;

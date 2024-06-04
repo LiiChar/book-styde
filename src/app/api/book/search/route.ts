@@ -64,6 +64,7 @@ export async function POST(req: NextRequest) {
 			comment: {
 				include: {
 					user: true,
+					LikesComment: true,
 				},
 			},
 		},

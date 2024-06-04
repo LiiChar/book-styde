@@ -7,12 +7,16 @@ import {
 	UserWork,
 	Work,
 	Comment,
+	LikesComment,
 } from '@prisma/client';
 import { NextRequest, NextResponse } from 'next/server';
+import { CommentChapter } from '../../comment/route';
 
 type UserIncludes =
 	| (User & {
-			comment: (Comment & { chapter: Chapter | null })[];
+			comment: (CommentChapter & { chapter: Chapter | null } & {
+				LikesComment: LikesComment[];
+			})[];
 			UserBook: (UserBook & { chapter: Chapter | null })[];
 			UserWork: (UserWork & {
 				work: (Work & { chapter: Chapter | null }) | null;
@@ -66,7 +70,7 @@ export async function GET(req: NextRequest) {
 	const USER = prisma.user;
 	const WORK = prisma.work;
 
-	const userFind: UserIncludes = await USER.findFirst({
+	const userFind: any = await USER.findFirst({
 		where: {
 			id: Number(user_id),
 		},
@@ -74,6 +78,7 @@ export async function GET(req: NextRequest) {
 			comment: {
 				include: {
 					chapter: true,
+					LikesComment: true,
 				},
 			},
 			UserBook: {
@@ -103,7 +108,7 @@ export async function GET(req: NextRequest) {
 		[year: number]: { [key: string]: { day: number; visit: number } };
 	} = {};
 
-	userFind.comment.forEach(com => {
+	userFind.comment.forEach((com: any) => {
 		const day = getDayOfYear(com.updated_at);
 		const year = new Date(com.updated_at.toString()).getFullYear();
 		if (!visit[year]) {
@@ -116,7 +121,7 @@ export async function GET(req: NextRequest) {
 		}
 	});
 
-	userFind.UserBook.forEach(com => {
+	userFind.UserBook.forEach((com: any) => {
 		const day = getDayOfYear(com.updated_at);
 		const year = new Date(com.updated_at.toString()).getFullYear();
 		if (!visit[year]) {
@@ -129,7 +134,7 @@ export async function GET(req: NextRequest) {
 		}
 	});
 
-	userFind.UserWork.forEach(com => {
+	userFind.UserWork.forEach((com: any) => {
 		const day = getDayOfYear(com.updated_at);
 		const year = new Date(com.updated_at.toString()).getFullYear();
 		if (!visit[year]) {
@@ -210,23 +215,23 @@ export async function GET(req: NextRequest) {
 	const currentWork = UserWork.length;
 
 	const HTMLChapterRead = UserChapter.filter(
-		chap => chap.chapter?.book == HTML
+		(chap: any) => chap.chapter?.book == HTML
 	).length;
 	const CSSChapterRead = UserChapter.filter(
-		chap => chap.chapter?.book == CSS
+		(chap: any) => chap.chapter?.book == CSS
 	).length;
 	const JSChapterRead = UserChapter.filter(
-		chap => chap.chapter?.book == JS
+		(chap: any) => chap.chapter?.book == JS
 	).length;
 
 	const HTMLWorkResolve = UserWork.filter(
-		chap => chap.work?.chapter?.book == HTML
+		(chap: any) => chap.work?.chapter?.book == HTML
 	).length;
 	const CSSWorkResolve = UserWork.filter(
-		chap => chap.work?.chapter?.book == CSS
+		(chap: any) => chap.work?.chapter?.book == CSS
 	).length;
 	const JSWorkResolve = UserWork.filter(
-		chap => chap.work?.chapter?.book == JS
+		(chap: any) => chap.work?.chapter?.book == JS
 	).length;
 
 	const visiting = Object.entries(visit).reduce<AnaliticVisit>((acc, el) => {

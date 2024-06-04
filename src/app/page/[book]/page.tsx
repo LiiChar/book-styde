@@ -29,12 +29,12 @@ export default async function Book({ params }: Props) {
 					className='md:w-[82vw] bg-background/60 md:max-w-[82vw] w-full md:border-l-[1px] flex flex-col items-center'
 				>
 					<Crumbls book={book} />
-					<div className='flex justify-between items-center mb-4 '>
-						<Button className='w-8 h-8 bg-background'>
+					<div className='flex justify-between items-center my-4 '>
+						{/* <Button className='w-8 h-8 bg-background'>
 							<ArrowLeft className='fill-foreground' width={14} height={14} />
-						</Button>
+						</Button> */}
 						<h1 className='text-4xl text-center'>{book.title}</h1>
-						<div className='w-8'></div>
+						{/* <div className='w-8'></div> */}
 					</div>
 					<Content book={book} />
 					{'works' in book && <Work works={book.works} />}

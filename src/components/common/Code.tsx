@@ -28,16 +28,18 @@ import dedent from 'dedent';
 const Code = ({
 	children,
 	language,
+	metadata,
 	compile = true,
 	disable = false,
 }: PropsWithChildren & {
 	language: string;
+	metadata?: string;
 	compile?: boolean;
 	disable?: boolean;
 }) => {
 	const [code, setCode] = useState(dedent`${children as string}`);
 	const [html, setHtml] = useState(`<body>
-
+	${metadata ? metadata : ''}
 </body>`);
 
 	const [result, setResult] = useState<{

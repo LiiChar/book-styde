@@ -1,5 +1,8 @@
+import { FeedbackPostDTO } from '@/app/api/comment/feedback/route';
 import { CommentChapter } from '@/app/api/comment/route';
 import { Comment } from '@/types/Comment';
+import { FeedbackComment } from '@prisma/client';
+import { Optional } from '@prisma/client/runtime/library';
 import { revalidateTag } from 'next/cache';
 
 export const getCommentsByChapterId = async (
@@ -9,14 +12,13 @@ export const getCommentsByChapterId = async (
 		`${process.env.NEXT_PUBLIC_URL_SITE}/api/comment?chapter_id=${chapter_id}`,
 		{
 			next: { tags: ['comment'] },
+			cache: 'default',
 		}
 	);
 	return data.json();
 };
 
 export const storeComment = async (comment: any): Promise<CommentChapter> => {
-	revalidateTag('analitic');
-	revalidateTag('comment');
 	const responce = await fetch(
 		`${process.env.NEXT_PUBLIC_URL_SITE}/api/comment`,
 		{
@@ -27,8 +29,35 @@ export const storeComment = async (comment: any): Promise<CommentChapter> => {
 	return responce.json();
 };
 
+export const storeFeedback = async (feedback: FeedbackPostDTO) => {
+	const responce = await fetch(
+		`${process.env.NEXT_PUBLIC_URL_SITE}/api/comment/feedback`,
+		{
+			body: JSON.stringify(feedback),
+			method: 'POST',
+		}
+	);
+	return responce.json();
+};
+
+export const getFeedbackComment = async (
+	commentId?: number,
+	feedbackId?: number
+) => {
+	const responce = await fetch(
+		`${process.env.NEXT_PUBLIC_URL_SITE}/api/comment/feedback?comment_id=${
+			commentId ? commentId : ''
+		}&feedback_id=${feedbackId ? feedbackId : ''}`,
+		{
+			next: {
+				tags: ['feedback'],
+			},
+		}
+	);
+	return responce.json();
+};
+
 export const likeComment = async (comment: any) => {
-	revalidateTag('comment');
 	await fetch(`${process.env.NEXT_PUBLIC_URL_SITE}/api/comment`, {
 		body: JSON.stringify(comment),
 		method: 'PUT',

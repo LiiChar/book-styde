@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { Open_Sans } from 'next/font/google';
+import { Open_Sans, Roboto } from 'next/font/google';
 import './globals.css';
 import { Header } from '@/components/layout/Header';
 import { SpeedInsights } from '@vercel/speed-insights/next';
@@ -8,8 +8,13 @@ import { ParicleConnectionBackground } from '@/components/common/background/Pari
 import { Toaster } from '@/components/ui/toaster';
 import { Background } from '@/components/common/background/Background';
 
-const inter = Open_Sans({
-	weight: ['300', '400', '500', '600', '700'],
+// const inter = Open_Sans({
+// 	weight: ['300', '400', '500', '600', '700'],
+// 	subsets: ['latin', 'cyrillic'],
+// });
+
+const inter = Roboto({
+	weight: ['300', '400', '500', '900', '700'],
 	subsets: ['latin', 'cyrillic'],
 });
 

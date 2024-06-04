@@ -1,40 +1,77 @@
 'use client';
-import React, { FC, memo } from 'react';
+import React, { FC, memo, useState } from 'react';
 import { likeComment } from '@/request/comment';
-import { ThumbsDown, ThumbsUp } from 'lucide-react';
+import { HeartIcon, ThumbsDown, ThumbsUp } from 'lucide-react';
 import { Comment } from '@prisma/client';
 import { getTimeAgo } from '@/lib/time';
+import { CommentChapter } from '@/app/api/comment/route';
+import { getUser } from '@/lib/authGuardClient';
+import { useRouter } from 'next/navigation';
+import { useToast } from '@/components/ui/use-toast';
+import { InputFeedback } from './InputFeedback';
+import { Button } from '@/components/ui/button';
 
 interface Props {
 	chapter_id: number;
-	comment: Comment;
+	comment: CommentChapter;
 }
 
 const ThumbsComment: FC<Props> = memo(({ chapter_id, comment }) => {
-	const handleLike = async (com: Comment, like: number) => {
-		com.rate = like;
+	const user = getUser()!;
+	const router = useRouter();
+	const [isInput, setIsInput] = useState(false);
+	const { toast } = useToast();
+	const handleLike = async (com: Comment) => {
+		if (!user) {
+			toast({
+				title: 'Войдите, чтобы оставлять лайки',
+			});
+			return;
+		}
 		await likeComment({
 			comment: com,
-			chapter_id,
 		});
+		// router.refresh();
 	};
 
+	const isLike =
+		comment.LikesComment && user
+			? comment.LikesComment.some(like => like.user_id == user.id)
+			: false;
+
 	return (
-		<div className='flex gap-2 justify-between md:justify-end w-full items-center'>
-			<div className='sm:block hidden md:hidden w-2/3 text-sm'>
-				{getTimeAgo(comment.created_at)}
+		<div className='w-full'>
+			<div className='flex gap-2 justify-between md:justify-start w-full items-center'>
+				<div className='sm:block hidden md:hidden text-muted-foreground w-2/3 text-sm'>
+					{getTimeAgo(comment.created_at)}
+				</div>
+				<div className='flex justify-start items-center gap-1'>
+					<HeartIcon
+						onClick={() => handleLike(comment)}
+						width={16}
+						height={16}
+						className={`${isLike && 'fill-primary stroke-primary'}`}
+					/>
+					<div>{comment.LikesComment ? comment.LikesComment.length : 0}</div>
+					{user && (
+						<div>
+							<Button
+								className='px-1 py-1 hover:text-foreground text-foreground'
+								variant={'link'}
+								onClick={() => setIsInput(prev => !prev)}
+							>
+								Ответить
+							</Button>
+						</div>
+					)}
+				</div>
 			</div>
-			<ThumbsUp
-				onClick={() => handleLike(comment, comment.rate + 1)}
-				width={18}
-				height={18}
-			/>
-			{comment.rate}
-			<ThumbsDown
-				onClick={() => handleLike(comment, comment.rate - 1)}
-				width={18}
-				height={18}
-			/>
+			{isInput && (
+				<InputFeedback
+					handle={() => setIsInput(false)}
+					commentId={comment.id}
+				/>
+			)}
 		</div>
 	);
 });

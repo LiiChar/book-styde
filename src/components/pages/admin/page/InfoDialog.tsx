@@ -16,7 +16,9 @@ export function InfoDialog() {
 	return (
 		<Dialog>
 			<DialogTrigger asChild>
-				<Button className='h-6 w-6 mr-2'>i</Button>
+				<Button variant={'secondary'} className='h-6 w-6 mr-2 rounded-b-none'>
+					i
+				</Button>
 			</DialogTrigger>
 			<DialogContent className='w-1/3'>
 				<DialogHeader>

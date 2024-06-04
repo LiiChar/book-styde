@@ -1,6 +1,7 @@
 'use client'; // Error components must be Client Components
 
 import { Button } from '@/components/ui/button';
+import { useToast } from '@/components/ui/use-toast';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 
@@ -12,13 +13,16 @@ export default function Error({
 	reset: () => void;
 }) {
 	const router = useRouter();
+	const { toast } = useToast();
 	useEffect(() => {
-		// Log the error to an error reporting service
-		console.error(error);
-	}, [error]);
+		toast({
+			title: 'Название ошибки: ' + error.name,
+			description: 'Описание ошибки: ' + error.message,
+		});
+	}, []);
 
 	return (
-		<div className='flex justify-center  items-center w-screen h-[calc(100vh-48px)]'>
+		<div className='flex justify-center absolute top-0 left-0 items-center w-screen h-[calc(100vh-48px)]'>
 			<div className='border-[1px] bg-secondary rounded-md p-4'>
 				<h3>Что-то пошло не так.</h3>
 				<p>

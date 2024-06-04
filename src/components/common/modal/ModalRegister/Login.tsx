@@ -76,6 +76,7 @@ export const Login = () => {
 				<Input
 					id='link1'
 					value={name}
+					autoFocus
 					onChange={e => setName(e.target.value)}
 				/>
 			</div>
@@ -89,6 +90,7 @@ export const Login = () => {
 						<Input
 							id='link2'
 							value={keyword}
+							autoFocus
 							onChange={e => setKeyword(e.target.value)}
 						/>
 					</div>

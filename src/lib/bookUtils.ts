@@ -1,6 +1,6 @@
 import { Chapter, PrismaClient } from '@prisma/client';
 
-export const chaptersGroupByBook = (chapters: Chapter[]) => {
+export const chaptersGroupByBook = (chapters: any) => {
 	const result: {
 		title: string;
 		chapters: Chapter[];
@@ -10,7 +10,7 @@ export const chaptersGroupByBook = (chapters: Chapter[]) => {
 		{ title: 'JS: Язык веб-программирования', chapters: [] },
 	];
 
-	chapters.forEach(ch => {
+	chapters.forEach((ch: any) => {
 		if (ch.book == 'HTML') {
 			result[0].chapters.push(ch);
 		}
