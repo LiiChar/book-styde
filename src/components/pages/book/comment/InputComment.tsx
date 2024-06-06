@@ -25,6 +25,7 @@ export const InputComment: FC<Props> = ({ chapter_id }) => {
 	const editableDiv = useRef<HTMLDivElement>(null);
 	const { refresh } = useRouter();
 	const handleSendComment = async () => {
+		// TODO - сделать перенос строки https://ru.stackoverflow.com/questions/1443694/contenteditable-%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B8%D1%82%D1%8C-%D1%82%D0%BE-%D1%87%D1%82%D0%BE-%D0%B2%D0%B8%D0%B6%D1%83
 		await storeComment({
 			comment: {
 				user_id: user!.id,

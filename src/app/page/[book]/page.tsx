@@ -8,6 +8,7 @@ import { Work } from '@/components/pages/book/Work';
 import { Button } from '@/components/ui/button';
 import { getChapterByTitle } from '@/request/book';
 import { ArrowLeft } from 'lucide-react';
+import { NextSeo } from 'next-seo';
 
 interface Props {
 	params: {
@@ -22,6 +23,16 @@ export default async function Book({ params }: Props) {
 
 	return (
 		<div className=''>
+			<NextSeo
+				title={book.title}
+				description={book.content.slice(0, 50)}
+				openGraph={{
+					url: `https://book-styde.vercel.app/page/${params.book}`,
+					title: book.title,
+					description: book.content.slice(0, 50),
+					siteName: 'book-styde',
+				}}
+			/>
 			<div className='flex relative'>
 				<Aside chapter={book.title} className='overflow-y-auto' />
 				<NavigationWrapper
