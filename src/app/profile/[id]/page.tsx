@@ -20,7 +20,7 @@ export async function generateMetadata({ params }: { params: { id: string } }) {
 	return {
 		title: user.name,
 		description: user.description ?? '',
-		openGraph = {
+		openGraph: {
 			url: `https://book-styde.vercel.app/profile/${params.id}`,
 			title: user.name,
 			description: user.description ?? '',
