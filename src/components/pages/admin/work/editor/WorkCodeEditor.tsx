@@ -18,15 +18,15 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from '@/components/ui/select';
-import { Work } from '@prisma/client';
 import { Label } from '@/components/ui/label';
 import { CodeEditor } from '@/components/common/CodeEditor';
 import { Button } from '@/components/ui/button';
+import { WorkType } from '@/drizzle/db';
 
 type LanguageCode = 'js' | 'markup' | 'css';
 
 interface Props {
-	work?: Work;
+	work?: WorkType;
 }
 
 const WorkCodeEditor = memo(({ work }: Props) => {

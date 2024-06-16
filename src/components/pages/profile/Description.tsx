@@ -49,15 +49,16 @@ export const Description = ({ user, className }: Props) => {
 				) : (
 					user.description && (
 						<div>
-							Описание:{' '}
-							<div className='text-wrap text-pretty'>{user.description}</div>
-						</div>	
+							Описание: <div className='text-pretty'>{user.description}</div>
+						</div>
 					)
 				)}
 			</div>
-			{userCookies && user.id == userCookies.id && <Button className='w-full mt-4' onClick={handleEditing}>
-				{editing ? 'Сохранить' : 'Изменить'}
-			</Button>}
+			{userCookies && user.id == userCookies.id && (
+				<Button className='w-full mt-4' onClick={handleEditing}>
+					{editing ? 'Сохранить' : 'Изменить'}
+				</Button>
+			)}
 		</section>
 	);
 };

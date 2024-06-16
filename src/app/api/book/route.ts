@@ -1,42 +1,33 @@
-import { PrismaClient } from '@prisma/client';
+import { db } from '@/drizzle/db';
+import { Chapter } from '@/drizzle/schema';
+import { asc, eq } from 'drizzle-orm';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(req: NextRequest) {
-	const prisma = new PrismaClient();
-	const CHAPTER = prisma.chapter;
-	const books = await CHAPTER.findMany({
-		select: {
+	const books = await db.query.Chapter.findMany({
+		columns: {
 			book: true,
 			id: true,
 			title: true,
 			created_at: true,
-			content: true,
 			updated_at: true,
 			chapter: true,
 		},
-		orderBy: {
-			chapter: 'asc',
-		},
+		orderBy: [asc(Chapter.chapter)],
 	});
-	prisma.$disconnect();
 	return NextResponse.json(books);
 }
 
 export async function POST(req: NextRequest) {
-	const prisma = new PrismaClient();
-	const CHAPTER = prisma.chapter;
-
 	const { id, content }: { id: number; content: string } = await req.json();
 
 	try {
-		await CHAPTER.update({
-			where: {
-				id,
-			},
-			data: {
+		await db
+			.update(Chapter)
+			.set({
 				content,
-			},
-		});
+			})
+			.where(eq(Chapter.id, id));
 	} catch (error) {
 		return NextResponse.json({
 			type: 'error',

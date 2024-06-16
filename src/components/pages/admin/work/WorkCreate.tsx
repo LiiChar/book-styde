@@ -1,31 +1,23 @@
-import { PrismaClient, Work } from "@prisma/client"
+import { WorkType, db } from '@/drizzle/db';
+import { Work } from '@/drizzle/schema';
 
-
-// 
-const createWork = async (chapterId: number, work: Omit<Work, 'id' | 'updated_at' | 'created_at'>) => {
-    'use client'
-    const prisma = new PrismaClient();
-    const WORK = prisma.work
-  
-    try {
-        WORK.create({
-            data: {
-                ...work
-            }
-        })
-    } catch (error) {
-      console.log(error)
-    } finally {
-      prisma.$disconnect()
-    }
-}
+const createWork = async (
+	chapterId: number,
+	work: Omit<WorkType, 'id' | 'updated_at' | 'created_at'>
+) => {
+	try {
+		await db.insert(Work).values({
+			...work,
+		});
+	} catch (error) {
+		console.log(error);
+	}
+};
 
 interface Props {
-    chapterId: number
+	chapterId: number;
 }
 
 export const WorkCreate = ({}: Props) => {
-  return (
-    <div>WorkCreate</div>
-  )
-}
+	return <div>WorkCreate</div>;
+};

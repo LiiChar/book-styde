@@ -1,102 +1,75 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { Comment, FeedbackComment, LikesComment, User } from '@prisma/client';
-import { prisma } from '../..';
 import Pusher from 'pusher';
 import { cookies } from 'next/headers';
 import { revalidateTag } from 'next/cache';
-import { Omit, Optional } from '@prisma/client/runtime/library';
+import { Comment, FeedbackComment, LikesComment } from '@/drizzle/schema';
+import { and, desc, eq } from 'drizzle-orm';
+import { db } from '@/drizzle/db';
+import type {
+	FeedbackCommentType,
+	UserType,
+	LikesCommentType,
+} from '@/drizzle/db';
 
-export type FeedbackChapter = FeedbackComment & { user: User };
+export type FeedbackChapter = FeedbackCommentType & {
+	user: UserType;
+};
 
 export async function GET(req: NextRequest) {
-	const FEEDBACK = prisma.feedbackComment;
-
 	const comment_id = req.nextUrl.searchParams.get('comment_id');
 	const feedback_id = req.nextUrl.searchParams.get('feedback_id');
 
 	if (feedback_id && feedback_id != 'undefined') {
-		const comments = await FEEDBACK.findMany({
-			where: {
-				feedback_id: +feedback_id,
-			},
-			orderBy: {
-				created_at: 'desc',
-			},
-			include: {
-				user: true,
+		const comments = await db.query.FeedbackComment.findMany({
+			where: eq(FeedbackComment.feedback_id, +feedback_id),
+			orderBy: [desc(FeedbackComment.created_at)],
+			with: {
+				User: true,
 			},
 		});
-		prisma.$disconnect();
 
 		return NextResponse.json(comments);
 	}
 
 	if (comment_id && comment_id != 'undefined') {
-		const comments = await FEEDBACK.findMany({
-			where: {
-				comment_id: +comment_id,
-			},
-			orderBy: {
-				created_at: 'desc',
-			},
-			include: {
-				user: true,
+		const comments = await db.query.FeedbackComment.findMany({
+			where: eq(FeedbackComment.comment_id, +comment_id),
+			orderBy: [desc(FeedbackComment.created_at)],
+			with: {
+				User: true,
 			},
 		});
-		prisma.$disconnect();
 
 		return NextResponse.json(comments);
 	}
-	prisma.$disconnect();
 
 	return NextResponse.json([]);
 }
 
-export type FeedbackPostDTO = {
-	content: string;
-	feedback_id?: number;
-	comment_id?: number;
-	user_id: number;
-};
+export type FeedbackPostDTO = typeof FeedbackComment.$inferInsert;
 
 export async function POST(req: NextRequest) {
 	const { content, feedback_id, comment_id, user_id } = await req.json();
 
-	const FEEDBACK = prisma.feedbackComment;
-
-	await FEEDBACK.create({
-		data: {
-			content,
-			comment_id,
-			feedback_id,
-			user_id,
-		},
-		include: {
-			user: true,
-		},
+	await db.insert(FeedbackComment).values({
+		content,
+		comment_id,
+		feedback_id,
+		user_id,
 	});
 
-	const feedbacks = await FEEDBACK.findMany({
-		where: {
-			comment_id,
-			feedback_id,
-		},
-		orderBy: {
-			created_at: 'desc',
-		},
-		include: {
-			user: true,
-		},
-	});
-
-	prisma.$disconnect();
 	revalidateTag('feedback');
-	return NextResponse.json(feedbacks);
+	revalidateTag('chapter');
+
+	return NextResponse.json({
+		type: 'success',
+		message: 'Ответ на комментарий успешно создан',
+	});
 }
 
 export async function PUT(req: NextRequest) {
 	const { comment } = await req.json();
-	const user: User =
+	const user: UserType =
 		cookies().has('user') && JSON.parse(cookies().get('user')!.value);
 
 	if (!user) {
@@ -106,14 +79,9 @@ export async function PUT(req: NextRequest) {
 		});
 	}
 
-	const COMMENTS = prisma.comment;
-	const LIKES = prisma.likesComment;
-
-	const commentFind = await COMMENTS.findFirst({
-		where: {
-			id: comment.id,
-		},
-		include: {
+	const commentFind = await db.query.Comment.findFirst({
+		where: eq(Comment.id, comment.id),
+		with: {
 			LikesComment: true,
 		},
 	});
@@ -125,13 +93,11 @@ export async function PUT(req: NextRequest) {
 		});
 	}
 
-	const likes = commentFind.LikesComment;
-	if (likes.length == 0) {
-		await LIKES.create({
-			data: {
-				comment_id: commentFind.id,
-				user_id: user.id,
-			},
+	const likes: LikesCommentType[] = commentFind.LikesComment;
+	if (likes && likes.length == 0) {
+		await db.insert(LikesComment).values({
+			comment_id: +commentFind.id,
+			user_id: +user.id,
 		});
 		revalidateTag('chapter');
 		revalidateTag('comment');
@@ -141,13 +107,12 @@ export async function PUT(req: NextRequest) {
 		});
 	}
 
-	if (likes.length > 0) {
-		LIKES.delete({
-			where: {
-				id: likes[0].id,
-				user_id: user.id,
-			},
-		});
+	if (likes && likes.length > 0) {
+		await db
+			.delete(LikesComment)
+			.where(
+				and(eq(LikesComment.id, likes[0].id), eq(LikesComment.user_id, user.id))
+			);
 		revalidateTag('chapter');
 		revalidateTag('comment');
 
@@ -164,7 +129,6 @@ export async function PUT(req: NextRequest) {
 }
 
 export async function DELETE(req: NextRequest) {
-	const COMMENTS = prisma.comment;
 	const comment_id = req.nextUrl.searchParams.get('id');
 
 	if (!comment_id) {
@@ -174,11 +138,7 @@ export async function DELETE(req: NextRequest) {
 		});
 	}
 
-	await COMMENTS.delete({
-		where: {
-			id: Number(comment_id),
-		},
-	});
+	await db.delete(FeedbackComment).where(eq(FeedbackComment.id, +comment_id));
 
 	return NextResponse.json({
 		type: 'message',

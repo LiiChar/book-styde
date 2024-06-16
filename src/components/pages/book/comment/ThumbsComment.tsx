@@ -2,7 +2,6 @@
 import React, { FC, memo, useState } from 'react';
 import { likeComment } from '@/request/comment';
 import { HeartIcon, ThumbsDown, ThumbsUp } from 'lucide-react';
-import { Comment } from '@prisma/client';
 import { getTimeAgo } from '@/lib/time';
 import { CommentChapter } from '@/app/api/comment/route';
 import { getUser } from '@/lib/authGuardClient';
@@ -10,6 +9,7 @@ import { useRouter } from 'next/navigation';
 import { useToast } from '@/components/ui/use-toast';
 import { InputFeedback } from './InputFeedback';
 import { Button } from '@/components/ui/button';
+import { CommentType } from '@/drizzle/db';
 
 interface Props {
 	chapter_id: number;
@@ -21,7 +21,7 @@ const ThumbsComment: FC<Props> = memo(({ chapter_id, comment }) => {
 	const router = useRouter();
 	const [isInput, setIsInput] = useState(false);
 	const { toast } = useToast();
-	const handleLike = async (com: Comment) => {
+	const handleLike = async (com: CommentType) => {
 		if (!user) {
 			toast({
 				title: 'Войдите, чтобы оставлять лайки',
@@ -35,8 +35,8 @@ const ThumbsComment: FC<Props> = memo(({ chapter_id, comment }) => {
 	};
 
 	const isLike =
-		comment.LikesComment && user
-			? comment.LikesComment.some(like => like.user_id == user.id)
+		comment.likesComment && user
+			? comment.likesComment.some(like => like.user_id == user.id)
 			: false;
 
 	return (
@@ -52,7 +52,7 @@ const ThumbsComment: FC<Props> = memo(({ chapter_id, comment }) => {
 						height={16}
 						className={`${isLike && 'fill-primary stroke-primary'}`}
 					/>
-					<div>{comment.LikesComment ? comment.LikesComment.length : 0}</div>
+					<div>{comment.likesComment ? comment.likesComment.length : 0}</div>
 					{user && (
 						<div>
 							<Button

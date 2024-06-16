@@ -11,7 +11,6 @@ import React, {
 } from 'react';
 import { Button } from '@/components/ui/button';
 import { getCookie } from 'cookies-next';
-import { User, PrismaClient, Chapter, Comment } from '@prisma/client';
 import { getPrevNextBookByChapter } from '@/request/book';
 import { Comments } from './Comments';
 import { cookies } from 'next/headers';

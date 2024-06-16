@@ -1,4 +1,4 @@
-import { User } from '@prisma/client';
+import { UserType } from '@/drizzle/db';
 import { getCookie, hasCookie } from 'cookies-next';
 import { redirect } from 'next/navigation';
 
@@ -6,7 +6,9 @@ export const hasRoleOrRedirectMain = (role?: 'user' | 'admin') => {
 	if (!role) {
 		return;
 	}
-	const user: User = hasCookie('user') ? JSON.parse(getCookie('user')!) : null;
+	const user: UserType = hasCookie('user')
+		? JSON.parse(getCookie('user')!)
+		: null;
 
 	if (!user) {
 		return redirect('/');
@@ -17,12 +19,14 @@ export const hasRoleOrRedirectMain = (role?: 'user' | 'admin') => {
 	}
 };
 
-export const getUser = (): User | null => {
+export const getUser = (): UserType | null => {
 	return hasCookie('user') ? JSON.parse(getCookie('user')!) : null;
 };
 
 export const isAuth = () => {
-	const user: User = hasCookie('user') ? JSON.parse(getCookie('user')!) : null;
+	const user: UserType = hasCookie('user')
+		? JSON.parse(getCookie('user')!)
+		: null;
 
 	if (user) {
 		return true;
@@ -32,7 +36,9 @@ export const isAuth = () => {
 };
 
 export const isAdmin = () => {
-	const user: User = hasCookie('user') ? JSON.parse(getCookie('user')!) : null;
+	const user: UserType = hasCookie('user')
+		? JSON.parse(getCookie('user')!)
+		: null;
 
 	if (user && user.role == 'admin') {
 		return true;
@@ -42,7 +48,9 @@ export const isAdmin = () => {
 };
 
 export const isUser = () => {
-	const user: User = hasCookie('user') ? JSON.parse(getCookie('user')!) : null;
+	const user: UserType = hasCookie('user')
+		? JSON.parse(getCookie('user')!)
+		: null;
 
 	if (user && user.role == 'user') {
 		return true;

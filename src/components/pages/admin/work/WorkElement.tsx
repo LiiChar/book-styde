@@ -3,14 +3,14 @@
 import { Question } from '@/components/common/Question';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
+import { WorkType } from '@/drizzle/db';
 import { BookTypeWork } from '@/types/Book';
-import { Work } from '@prisma/client';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import React from 'react';
 
 interface Props {
-	work: Work;
+	work: WorkType;
 }
 
 const WorkElement = ({ work }: Props) => {
@@ -53,9 +53,10 @@ const WorkElement = ({ work }: Props) => {
 			<Button variant={'outline'} className='flex justify-between p-0'>
 				<Link
 					href={`${pathname}/update/${work.id}`}
-					className='w-full h-full p-2'>
-						Изменить
-					</Link>
+					className='w-full h-full p-2'
+				>
+					Изменить
+				</Link>
 			</Button>
 		</section>
 	);

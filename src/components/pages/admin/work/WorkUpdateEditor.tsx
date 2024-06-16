@@ -1,23 +1,9 @@
-'use client';
-
-import { CodeEditor } from '@/components/common/CodeEditor';
-import { Question } from '@/components/common/Question';
-import { Label } from '@/components/ui/label';
-import {
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
-} from '@/components/ui/select';
-
-import { BookTypeWork } from '@/types/Book';
-import { Work } from '@prisma/client';
+import { WorkType } from '@/drizzle/db';
 import { WorkCodeEditor } from './editor/WorkCodeEditor';
 import { WorkQuestionEditor } from './editor/WorkQuestionEditor';
 
 interface Props {
-	work: Work;
+	work: WorkType;
 }
 
 const WorkUpdateEditor = ({ work }: Props) => {
@@ -31,7 +17,7 @@ const WorkUpdateEditor = ({ work }: Props) => {
 				)}
 				{work.type == 'QUESTION' && (
 					<div>
-						<WorkQuestionEditor work={work}/>
+						<WorkQuestionEditor work={work} />
 					</div>
 				)}
 			</div>

@@ -7,8 +7,8 @@ import {
 	Room,
 } from '@/app/api/socket/conference/route';
 import { LOCAL_VIDEO, useWebRTC } from '@/hooks/useWebRTC';
+import { getUser } from '@/lib/authGuardClient';
 import { EVENTS_CONFERENSE } from '@/types/User';
-import { User } from '@prisma/client';
 import { getCookie } from 'cookies-next';
 import { useEffect, useState } from 'react';
 
@@ -20,9 +20,7 @@ type Props = {
 
 export default function Page({ params }: Props) {
 	const room_id = params.room;
-	const user: User | null = getCookie('user')
-		? JSON.parse(getCookie('user')!)
-		: null;
+	const user = getUser();
 	const [room, setRoom] = useState<Room>();
 	const { clients, provideMediaRef } = useWebRTC(room_id);
 

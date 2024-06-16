@@ -18,7 +18,7 @@ export const getMonthDayFromDayOfYear = (year: number, dayOfYear: number) => {
 	return [month, day];
 };
 
-export const getTimeAgo = (date: Date) => {
+export const getTimeAgo = (date: Date | string) => {
 	const now = new Date();
 	const messageTime = new Date(date);
 
@@ -49,7 +49,9 @@ export const getTimeAgo = (date: Date) => {
 	}
 };
 
-export const getDayOfYear = (date: Date) => {
+export const getDayOfYear = (dates: Date | string) => {
+	const date = new Date(dates);
+
 	const start = new Date(date.getFullYear(), 0, 0);
 	const diff = date.getTime() - start.getTime();
 	const oneDay = 1000 * 60 * 60 * 24;

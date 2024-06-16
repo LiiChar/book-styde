@@ -1,83 +1,62 @@
-import { PrismaClient, Chapter, Work, Comment, User } from '@prisma/client';
 import { NextRequest, NextResponse } from 'next/server';
 import { CommentChapter } from '../../comment/route';
+import { db } from '@/drizzle/db';
+import { eq, ilike, like } from 'drizzle-orm';
+import { Chapter, Comment, LikesComment, User, Work } from '@/drizzle/schema';
 
-export type ChapterSearch = Chapter & {
-	works: Work[];
-	comment: CommentChapter[];
-};
-
-export type NextPrevChapter = Chapter | null;
+export type NextPrevChapter = typeof Chapter | null;
 
 export async function GET(req: NextRequest) {
 	const chapter = req.nextUrl.searchParams.get('chapter');
-	const prisma = new PrismaClient();
-	const CHAPTER = prisma.chapter;
 
 	if (!chapter) {
-		prisma.$disconnect();
-
 		return NextResponse.json({ type: 'error', message: 'Параметр не пришёл' });
 	}
 
 	console.log(`ch-${chapter}; p-${+chapter - 1}; n-${+chapter + 1}`);
 
-	const prevBook = await CHAPTER.findFirst({
-		where: {
-			chapter: +chapter - 1,
-		},
-	});
+	try {
+		const prevBook = await db.query.Chapter.findFirst({
+			where: eq(Chapter.chapter, +chapter - 1),
+		});
 
-	const nextBook = await CHAPTER.findFirst({
-		where: {
-			chapter: +chapter + 1,
-		},
-	});
-	prisma.$disconnect();
+		const nextBook = await db.query.Chapter.findFirst({
+			where: eq(Chapter.chapter, +chapter + 1),
+		});
 
-	return NextResponse.json([prevBook, nextBook]);
+		return NextResponse.json([prevBook, nextBook]);
+	} catch (error) {
+		return NextResponse.json({ type: 'error', message: error });
+	}
 }
 
-export async function POST(req: NextRequest) {
-	const prisma = new PrismaClient();
-	const CHAPTER = prisma.chapter;
+export type ChapterSearch = typeof Chapter.$inferSelect & {
+	works: (typeof Work.$inferSelect)[];
+	comment: CommentChapter[];
+};
 
+export async function POST(req: NextRequest) {
 	const { title } = await req.json();
 
 	console.log(`Поиск части по именя - ${title}`);
-
-	const chapterFind = await CHAPTER.findFirst({
-		where: {
-			title: {
-				equals: title,
+	try {
+		const chapterFind = await db.query.Chapter.findFirst({
+			where: ilike(Chapter.title, `%${title}%`),
+			with: {
+				works: true,
+				comments: true,
 			},
-		},
-		select: {
-			book: true,
-			chapter: true,
-			content: true,
-			id: true,
-			created_at: true,
-			works: true,
-			title: true,
-			updated_at: true,
-			comment: {
-				include: {
-					user: true,
-					LikesComment: true,
-				},
-			},
-		},
-	});
-
-	if (chapterFind != null) {
-		prisma.$disconnect();
-
-		return NextResponse.json(chapterFind);
+		});
+		if (chapterFind != null) {
+			return NextResponse.json(chapterFind);
+		}
+		return NextResponse.json(null);
+	} catch (error) {
+		return NextResponse.json({
+			type: 'error',
+			message: JSON.stringify(error),
+		});
 	}
-	prisma.$disconnect();
-
-	return NextResponse.json(null);
 }
 
 export type BookChapterSearh = {
@@ -87,21 +66,12 @@ export type BookChapterSearh = {
 
 export async function PUT(req: NextRequest) {
 	const { search } = await req.json();
-	const prisma = new PrismaClient();
-	const CHAPTER = prisma.chapter;
-
-	const chapters = await CHAPTER.findMany({
-		where: {
-			title: {
-				contains: search,
-				mode: 'insensitive',
-			},
-		},
-		select: {
+	const chapters = await db.query.Chapter.findMany({
+		where: (chapter, { ilike }) => ilike(chapter.title, `%${search}%`),
+		columns: {
 			id: true,
 			title: true,
 		},
 	});
-	prisma.$disconnect();
 	return NextResponse.json(chapters);
 }

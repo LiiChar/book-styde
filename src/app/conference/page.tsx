@@ -1,15 +1,13 @@
 'use client';
 
-import { User } from '@prisma/client';
 import { getCookie } from 'cookies-next';
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { EVENTS_CONFERENSE } from '@/types/User';
+import { getUser } from '@/lib/authGuardClient';
 
 export default function Page() {
-	const user: User | null = getCookie('user')
-		? JSON.parse(getCookie('user')!)
-		: null;
+	const user = getUser();
 	const [rooms, setRooms] = useState<string[]>([]);
 
 	useEffect(() => {

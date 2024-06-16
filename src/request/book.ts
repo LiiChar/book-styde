@@ -1,13 +1,13 @@
 import { BookChapterSearh, ChapterSearch } from '@/app/api/book/search/route';
-import { Chapter, Work } from '@prisma/client';
+import { ChapterType } from '@/drizzle/db';
 import { revalidateTag } from 'next/cache';
 
-export const getChapters = async (): Promise<Chapter[]> => {
+export const getChapters = async (): Promise<ChapterType[]> => {
 	const request = await fetch(process.env.NEXT_PUBLIC_URL_SITE + '/api/book');
 	return request.json();
 };
 
-const returnDataOrThrowError = async (response: Response) => {
+export const returnDataOrThrowError = async (response: Response) => {
 	const res = await response.json();
 	if (typeof res == 'object' && 'type' in res && res['type'] == 'error') {
 		throw Error(res['message']);

@@ -1,55 +1,55 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { WebSocket, WebSocketServer } from 'ws';
-import { PrismaClient, User } from '@prisma/client';
 import { edgeServerAppPaths } from 'next/dist/build/webpack/plugins/pages-manifest-plugin';
 import { EVENTS_CONFERENSE } from '@/types/User';
+import { UserType } from '@/drizzle/db';
 
 let wss: null | WebSocketServer = null;
 export type Room = {
 	id: number;
 	users: ({ ws: WebSocket } & {
-		user: User;
+		user: UserType;
 	})[];
 };
 
 export type EventDataInfo = { room: Room };
 export type EventDataJoin = {
 	room: number;
-	user: User;
+	user: UserType;
 };
 export type EventDataLeave = {
 	room: number;
-	user: User;
+	user: UserType;
 };
 
 export type EventDataRemovePeer = {
-	user: User;
+	user: UserType;
 };
 
 export type EventDataAddPeer = {
-	user: User;
+	user: UserType;
 	create_offer: Boolean;
 };
 
 export type EventDataSessionDescription = {
-	user: User;
+	user: UserType;
 	sessionDescription: RTCSessionDescriptionInit;
 };
 
 export type EventDataRelaySDP = {
-	user: User;
+	user: UserType;
 	sessionDescription: RTCSessionDescriptionInit;
 	roomId: number;
 };
 
 export type EventDataRelayICE = {
-	user: User;
+	user: UserType;
 	iceCandidate: RTCIceCandidate;
 	roomId: number;
 };
 
 export type EventDataIceCandidate = {
-	user: User;
+	user: UserType;
 	iceCandidate: RTCIceCandidate;
 };
 

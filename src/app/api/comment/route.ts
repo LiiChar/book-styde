@@ -1,36 +1,29 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { Comment, LikesComment, User } from '@prisma/client';
-import { prisma } from '..';
 import Pusher from 'pusher';
 import { cookies } from 'next/headers';
 import { revalidateTag } from 'next/cache';
+import { db, CommentType, UserType, LikesCommentType } from '@/drizzle/db';
+import { Comment, LikesComment, User } from '@/drizzle/schema';
+import { and, desc, eq } from 'drizzle-orm';
 
-export type CommentChapter = Comment & { user: User } & {
-	LikesComment?: LikesComment[];
+export type CommentChapter = CommentType & { user: UserType } & {
+	likesComment?: LikesCommentType[];
 };
 
 export async function GET(req: NextRequest) {
-	const COMMENTS = prisma.comment;
 	const chapter_id = req.nextUrl.searchParams.get('chapter_id');
 
 	if (!chapter_id) {
-		prisma.$disconnect();
-
 		return NextResponse.json([]);
 	}
-	const comments = await COMMENTS.findMany({
-		where: {
-			chapter_id: Number(chapter_id),
-		},
-		orderBy: {
-			created_at: 'desc',
-		},
-		include: {
+
+	const comments = await db.query.Comment.findMany({
+		where: eq(Comment.chapter_id, +chapter_id),
+		with: {
 			user: true,
-			LikesComment: true,
+			likesComments: true,
 		},
 	});
-	prisma.$disconnect();
 
 	return NextResponse.json(comments);
 }
@@ -38,7 +31,6 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
 	const { comment, chapter_id } = await req.json();
 
-	const COMMENTS = prisma.comment;
 	const pusher = new Pusher({
 		appId: process.env.PUSHER_APP_ID!,
 		key: process.env.PUSHER_KEY!,
@@ -46,48 +38,30 @@ export async function POST(req: NextRequest) {
 		cluster: process.env.PUSHER_CLUSTER!,
 		useTLS: true,
 	});
-
-	await COMMENTS.create({
-		data: {
+	try {
+		await db.insert(Comment).values({
 			content: comment.content,
-			user_id: comment.user_id,
-			chapter_id: chapter_id,
-		},
-		include: {
-			user: true,
-		},
-	});
-
-	const commentNew = await COMMENTS.findMany({
-		where: {
-			chapter_id: Number(chapter_id),
-		},
-		orderBy: {
-			created_at: 'desc',
-		},
-		include: {
-			user: true,
-		},
-	});
+			user_id: +comment.user_id,
+			chapter_id: +chapter_id,
+		});
+	} catch (error) {
+		return NextResponse.json({
+			type: 'error',
+			message: error,
+		});
+	}
 
 	try {
-		await pusher.trigger(
-			`chapter-${chapter_id}`,
-			'new_comment',
-			JSON.stringify({
-				comment: commentNew,
-			})
-		);
+		await pusher.trigger(`chapter-${chapter_id}`, 'new_comment', 'refetch');
 	} catch (error) {}
-	prisma.$disconnect();
 	revalidateTag('analitic');
 	revalidateTag('comment');
-	return NextResponse.json(commentNew);
+	return NextResponse.json(null);
 }
 
 export async function PUT(req: NextRequest) {
 	const { comment } = await req.json();
-	const user: User =
+	const user: typeof User =
 		cookies().has('user') && JSON.parse(cookies().get('user')!.value);
 
 	if (!user) {
@@ -97,15 +71,11 @@ export async function PUT(req: NextRequest) {
 		});
 	}
 
-	const COMMENTS = prisma.comment;
-	const LIKES = prisma.likesComment;
-
-	const commentFind = await COMMENTS.findFirst({
-		where: {
-			id: comment.id,
-		},
-		include: {
-			LikesComment: true,
+	const commentFind: any = await db.query.Comment.findFirst({
+		where: eq(Comment.id, +comment.id),
+		with: {
+			user: true,
+			likesComments: true,
 		},
 	});
 
@@ -116,13 +86,11 @@ export async function PUT(req: NextRequest) {
 		});
 	}
 
-	const likes = commentFind.LikesComment;
-	if (likes.length == 0) {
-		await LIKES.create({
-			data: {
-				comment_id: commentFind.id,
-				user_id: user.id,
-			},
+	const likes = commentFind.likesComments;
+	if (likes && likes.length == 0) {
+		await db.insert(LikesComment).values({
+			comment_id: +commentFind.id,
+			user_id: +user.id,
 		});
 		revalidateTag('chapter');
 		revalidateTag('comment');
@@ -132,13 +100,12 @@ export async function PUT(req: NextRequest) {
 		});
 	}
 
-	if (likes.length > 0) {
-		LIKES.delete({
-			where: {
-				id: likes[0].id,
-				user_id: user.id,
-			},
-		});
+	if (likes && likes.length > 0) {
+		await db
+			.delete(LikesComment)
+			.where(
+				and(eq(LikesComment.id, likes[0].id), eq(LikesComment.user_id, user.id))
+			);
 		revalidateTag('chapter');
 		revalidateTag('comment');
 
@@ -155,7 +122,6 @@ export async function PUT(req: NextRequest) {
 }
 
 export async function DELETE(req: NextRequest) {
-	const COMMENTS = prisma.comment;
 	const comment_id = req.nextUrl.searchParams.get('id');
 
 	if (!comment_id) {
@@ -165,11 +131,7 @@ export async function DELETE(req: NextRequest) {
 		});
 	}
 
-	await COMMENTS.delete({
-		where: {
-			id: Number(comment_id),
-		},
-	});
+	await db.delete(Comment).where(eq(Comment.id, +comment_id));
 
 	return NextResponse.json({
 		type: 'message',

@@ -1,12 +1,13 @@
+import { db } from '@/drizzle/db';
+import { Comment } from '@/drizzle/schema';
+import { asc } from 'drizzle-orm';
 import { NextRequest, NextResponse } from 'next/server';
 import { WebSocketServer } from 'ws';
-import { PrismaClient } from '@prisma/client';
 
 let wss: null | WebSocketServer = null;
 
 export async function GET(req: NextRequest) {
 	const chapter_id = req.nextUrl.searchParams.get('chapter_id');
-	const COMMENTS = new PrismaClient().comment;
 
 	if (!wss) {
 		wss = new WebSocketServer({
@@ -18,14 +19,11 @@ export async function GET(req: NextRequest) {
 			ws.on('message', async req => {
 				const data: { type: string; data: any } = JSON.parse(req.toString());
 				if (data.type == 'send_comment') {
-					const comments = await COMMENTS.findMany({
-						where: {
-							chapter_id: Number(data.data.chapter_id),
-						},
-						orderBy: {
-							rate: 'asc',
-						},
-						include: {
+					const comments = await db.query.Comment.findMany({
+						where: (comment, { eq }) =>
+							eq(comment.chapter_id, Number(data.data.chapter_id)),
+						orderBy: [asc(Comment.rate)],
+						with: {
 							user: true,
 						},
 					});

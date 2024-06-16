@@ -37,7 +37,7 @@ export const ListStats = ({ user, className }: Props) => {
 					</TabsTrigger>
 				</TabsList>
 				<TabsContent className='flex flex-col gap-2' value='chapters'>
-					{user.UserBook.map(ub => (
+					{user.userBooks.map(ub => (
 						<div className='bg-background p-4 rounded-sm' key={ub.id}>
 							<div className='flex justify-between w-full'>
 								<Link path={ub.chapter?.title!} />
@@ -48,14 +48,14 @@ export const ListStats = ({ user, className }: Props) => {
 					))}
 				</TabsContent>
 				<TabsContent className='flex flex-col gap-2' value='work'>
-					{user.UserWork.map(uw => (
+					{user.userWorks.map(uw => (
 						<div className='bg-background p-4 rounded-sm' key={uw.id}>
 							{uw.work?.question}
 						</div>
 					))}
 				</TabsContent>
 				<TabsContent value='comment'>
-					{user.comment.map(com => (
+					{user.comments.map(com => (
 						<div className='bg-accent p-2 rounded-sm' key={com.id}>
 							<div className='flex md:justify-between mb-3 items-center'>
 								<div className='flex w-full justify-between md:justify-normal md:gap-4 items-center'>

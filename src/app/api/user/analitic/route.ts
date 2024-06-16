@@ -1,25 +1,26 @@
 import { getDayOfYear, getDaysFromYear } from '@/lib/time';
-import {
-	Chapter,
-	PrismaClient,
-	User,
-	UserBook,
-	UserWork,
-	Work,
-	Comment,
-	LikesComment,
-} from '@prisma/client';
 import { NextRequest, NextResponse } from 'next/server';
 import { CommentChapter } from '../../comment/route';
+import {
+	ChapterType,
+	LikesCommentType,
+	UserBookType,
+	UserType,
+	UserWorkType,
+	WorkType,
+	db,
+} from '@/drizzle/db';
+import { Chapter, User } from '@/drizzle/schema';
+import { eq } from 'drizzle-orm';
 
 type UserIncludes =
-	| (User & {
-			comment: (CommentChapter & { chapter: Chapter | null } & {
-				LikesComment: LikesComment[];
+	| (UserType & {
+			comments: (CommentChapter & { chapter: ChapterType | null } & {
+				likesComments: LikesCommentType[];
 			})[];
-			UserBook: (UserBook & { chapter: Chapter | null })[];
-			UserWork: (UserWork & {
-				work: (Work & { chapter: Chapter | null }) | null;
+			userBooks: (UserBookType & { chapter: ChapterType | null })[];
+			userWorks: (UserWorkType & {
+				work: (WorkType & { chapter: ChapterType | null }) | null;
 			})[];
 	  })
 	| null;
@@ -62,34 +63,28 @@ export async function GET(req: NextRequest) {
 	if (!user_id) {
 		return NextResponse.json({
 			type: 'error',
-			data: 'Search params is user_id not request',
+			data: 'Не пришёл параметр user_id',
 		});
 	}
-	const prisma = new PrismaClient();
-	const CHAPTER = prisma.chapter;
-	const USER = prisma.user;
-	const WORK = prisma.work;
 
-	const userFind: any = await USER.findFirst({
-		where: {
-			id: Number(user_id),
-		},
-		include: {
-			comment: {
-				include: {
+	const userFind = await db.query.User.findFirst({
+		where: eq(User.id, +user_id),
+		with: {
+			comments: {
+				with: {
 					chapter: true,
-					LikesComment: true,
+					likesComments: true,
 				},
 			},
-			UserBook: {
-				include: {
+			userBooks: {
+				with: {
 					chapter: true,
 				},
 			},
-			UserWork: {
-				include: {
+			userWorks: {
+				with: {
 					work: {
-						include: {
+						with: {
 							chapter: true,
 						},
 					},
@@ -99,16 +94,14 @@ export async function GET(req: NextRequest) {
 	});
 
 	if (!userFind) {
-		prisma.$disconnect();
-
-		return NextResponse.json({ type: 'error', data: 'User not find' });
+		return NextResponse.json({ type: 'error', data: 'пользователь не найден' });
 	}
 
 	const visit: {
 		[year: number]: { [key: string]: { day: number; visit: number } };
 	} = {};
 
-	userFind.comment.forEach((com: any) => {
+	userFind.comments.forEach((com: any) => {
 		const day = getDayOfYear(com.updated_at);
 		const year = new Date(com.updated_at.toString()).getFullYear();
 		if (!visit[year]) {
@@ -121,7 +114,7 @@ export async function GET(req: NextRequest) {
 		}
 	});
 
-	userFind.UserBook.forEach((com: any) => {
+	userFind.userBooks.forEach((com: any) => {
 		const day = getDayOfYear(com.updated_at);
 		const year = new Date(com.updated_at.toString()).getFullYear();
 		if (!visit[year]) {
@@ -134,7 +127,7 @@ export async function GET(req: NextRequest) {
 		}
 	});
 
-	userFind.UserWork.forEach((com: any) => {
+	userFind.userWorks.forEach((com: any) => {
 		const day = getDayOfYear(com.updated_at);
 		const year = new Date(com.updated_at.toString()).getFullYear();
 		if (!visit[year]) {
@@ -151,65 +144,46 @@ export async function GET(req: NextRequest) {
 	const CSS = 'CSS';
 	const JS = 'JS';
 
-	const HTMLChapter = (
-		await CHAPTER.findMany({
-			where: {
-				book: HTML,
-			},
-		})
-	).length;
-	const CSSChapter = (
-		await CHAPTER.findMany({
-			where: {
-				book: CSS,
-			},
-		})
-	).length;
-	const JSChapter = (
-		await CHAPTER.findMany({
-			where: {
-				book: JS,
-			},
-		})
-	).length;
+	const HTMLC = await db.query.Chapter.findMany({
+		where: eq(Chapter.book, HTML),
+		with: {
+			works: true,
+		},
+	});
+	const CSSC = await db.query.Chapter.findMany({
+		where: eq(Chapter.book, CSS),
+		with: {
+			works: true,
+		},
+	});
+	const JSC = await db.query.Chapter.findMany({
+		where: eq(Chapter.book, JS),
+		with: {
+			works: true,
+		},
+	});
 
-	const HTMLWork = (
-		await WORK.findMany({
-			where: {
-				chapter: {
-					book: HTML,
-				},
-			},
-		})
-	).length;
-	const CSSWork = (
-		await WORK.findMany({
-			where: {
-				chapter: {
-					book: CSS,
-				},
-			},
-		})
-	).length;
-	const JSWork = (
-		await WORK.findMany({
-			where: {
-				chapter: {
-					book: JS,
-				},
-			},
-		})
-	).length;
+	// _____
+	const HTMLChapter = HTMLC.length;
+	const CSSChapter = CSSC.length;
+	const JSChapter = JSC.length;
+
+	const HTMLWork = HTMLC.reduce<number>(
+		(acc, el) => (acc += el.works.length),
+		0
+	);
+	const CSSWork = CSSC.reduce<number>((acc, el) => (acc += el.works.length), 0);
+	const JSWork = JSC.reduce<number>((acc, el) => (acc += el.works.length), 0);
 
 	const allBook = 3;
-	const allCWork = await WORK.count();
+	const allCWork = HTMLWork + CSSWork + JSWork;
 
-	const countChapter = await CHAPTER.count();
+	const countChapter = HTMLChapter + CSSChapter + JSChapter;
 	const countBook = 3;
-	const countWork = await WORK.count();
+	const countWork = HTMLWork + CSSWork + JSWork;
 
-	const UserChapter = userFind.UserBook;
-	const UserWork = userFind.UserWork;
+	const UserChapter = userFind.userBooks;
+	const UserWork = userFind.userWorks;
 
 	const currentChapter = UserChapter.length;
 	const currentWork = UserWork.length;
@@ -294,7 +268,6 @@ export async function GET(req: NextRequest) {
 			visiting: visiting,
 		},
 	};
-	prisma.$disconnect();
 
 	return NextResponse.json(Object.assign(userFind, analitic));
 }

@@ -1,8 +1,5 @@
 import { FeedbackPostDTO } from '@/app/api/comment/feedback/route';
 import { CommentChapter } from '@/app/api/comment/route';
-import { Comment } from '@/types/Comment';
-import { FeedbackComment } from '@prisma/client';
-import { Optional } from '@prisma/client/runtime/library';
 import { revalidateTag } from 'next/cache';
 
 export const getCommentsByChapterId = async (

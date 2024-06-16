@@ -36,7 +36,6 @@ export const getUserAnalitic = async (user_id: string) => {
 };
 
 export const updateUser = async (user_id: string, user: any) => {
-	revalidateTag('analitic');
 	await fetch(`${process.env.NEXT_PUBLIC_URL_SITE}/api/user`, {
 		body: JSON.stringify({ user_id, user }),
 		method: 'PUT',
@@ -44,7 +43,6 @@ export const updateUser = async (user_id: string, user: any) => {
 };
 
 export const addReadableBook = async (user_id: string, book_id: string) => {
-	revalidateTag('analitic');
 	await fetch(
 		`${process.env.NEXT_PUBLIC_URL_SITE}/api/user/book?user_id=${user_id}&chapter_id=${book_id}`,
 		{

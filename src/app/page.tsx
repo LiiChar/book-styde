@@ -6,7 +6,7 @@ import { Separator } from '@/components/ui/separator';
 
 export default function Home() {
 	return (
-		<main className='p-8 px-16'>
+		<main className='p-8 px-12 md:px-24'>
 			<header className='flex justify-between w-full items-center mb-4'>
 				<div className='w-full min-[750px]:w-[70%] h-[220px] flex flex-col justify-between'>
 					<div>
@@ -34,7 +34,7 @@ export default function Home() {
 			/>
 			<section>
 				<h2 className='text-2xl '>Содержание:</h2>
-				<article className='w-[70%]'>
+				<article className='w-[100%]'>
 					<p>
 						В первой главе вы найдёте базовые занания о создании структуры
 						сайта. Во второй главе вы научитесть стилизовать страницы и

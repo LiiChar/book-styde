@@ -9,7 +9,6 @@ import {
 	BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
 import { CalendarDays, CalendarDaysIcon, HomeIcon } from 'lucide-react';
-import { Chapter } from '@prisma/client';
 import { formatDate } from '@/lib/time';
 import { ChapterSearch } from '@/app/api/book/search/route';
 
@@ -46,7 +45,7 @@ const Crumbls: FC<Props> = memo(({ book }) => {
 			</Breadcrumb>
 			<div className='text-nowrap flex gap-2'>
 				<CalendarDays width={16} height={16} />
-				<div>{formatDate(book.updated_at.toString())}</div>
+				{book.updated_at && <div>{formatDate(book.updated_at.toString())}</div>}
 			</div>
 		</div>
 	);

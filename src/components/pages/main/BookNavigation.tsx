@@ -7,8 +7,6 @@ import {
 	AccordionTrigger,
 } from '@/components/ui/accordion';
 import { chaptersGroupByBook } from '@/lib/bookUtils';
-import { Separator } from '@/components/ui/separator';
-import { Chapter, PrismaClient } from '@prisma/client';
 
 type Props = {
 	accardion?: boolean;

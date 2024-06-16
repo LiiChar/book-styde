@@ -25,7 +25,7 @@ export const Register = () => {
 			question: questionNew,
 			key_word: keyword,
 		});
-		if (response.type == 'successfully') {
+		if (response.type == 'success') {
 			router.refresh();
 			return;
 		}
@@ -41,10 +41,7 @@ export const Register = () => {
 				/>
 			</div>
 			<div className=''>
-				<Label htmlFor='link2'>
-					Ответьте на вопрос: <br />
-					{questionNew}
-				</Label>
+				<Label htmlFor='link2'>Введите пароль</Label>
 				<Input
 					id='link2'
 					value={keyword}

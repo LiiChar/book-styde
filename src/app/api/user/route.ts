@@ -2,124 +2,164 @@ import { getCookie, setCookie } from 'cookies-next';
 import { cookies } from 'next/headers';
 import { NextRequest, NextResponse } from 'next/server';
 import {
-	Chapter,
-	Comment,
-	PrismaClient,
-	User,
-	UserBook,
-	UserWork,
-	Work,
-} from '@prisma/client';
-import { v4 } from 'uuid';
+	ChapterType,
+	CommentType,
+	UserBookType,
+	UserType,
+	UserWorkType,
+	WorkType,
+	db,
+} from '@/drizzle/db';
+import { eq } from 'drizzle-orm';
+import { User } from '@/drizzle/schema';
+import { getUser } from '@/lib/authGuardServer';
+import { hash, genSalt } from 'bcrypt';
+import { revalidateTag } from 'next/cache';
 
 export async function POST(req: NextRequest) {
-	const user = await req.json();
-	const prisma = new PrismaClient();
-	const USER = prisma.user;
+	const user: typeof User.$inferInsert = await req.json();
 
-	const userFind = await USER.findFirst({
-		where: {
-			name: user.name,
-		},
+	const userFind = await db.query.User.findFirst({
+		where: eq(User.name, user.name),
+	}).catch(error => {
+		return NextResponse.json({ type: 'error', data: error });
 	});
 
 	if (userFind) {
-		prisma.$disconnect();
 		return NextResponse.json({ type: 'error', message: 'User will created' });
 	}
+	const salt = await genSalt(5);
+	const hashPassword = await hash(user.key_word, salt);
 
-	const newUser = await USER.create({
-		data: {
-			...user,
-		},
-	});
+	try {
+		const newUser = await db
+			.insert(User)
+			.values({
+				...user,
+				key_word: hashPassword,
+			})
+			.returning();
 
-	setCookie('user_private', JSON.stringify(newUser), {
-		httpOnly: true,
-		maxAge: 86400,
-	});
-	cookies().set({
-		name: 'user',
-		value: JSON.stringify(newUser),
-		// httpOnly: true,
-		maxAge: 86400,
-	});
-	prisma.$disconnect();
-	return NextResponse.json({ type: 'successfully', data: newUser });
+		cookies().set({
+			name: 'user',
+			value: JSON.stringify({
+				id: newUser[0].id,
+				name: newUser[0].name,
+				role: newUser[0].role,
+				group: newUser[0].group,
+			}),
+			sameSite: 'strict',
+			maxAge: 86400,
+		});
+		cookies().set({
+			name: 'user_private',
+			value: JSON.stringify({
+				id: newUser[0].id,
+				name: newUser[0].name,
+				role: newUser[0].role,
+				group: newUser[0].group,
+			}),
+			sameSite: 'strict',
+			maxAge: 86400,
+			httpOnly: true,
+		});
+		return NextResponse.json({ type: 'success', data: newUser });
+	} catch (error) {
+		return NextResponse.json({ type: 'error', data: error });
+	}
 }
 
 export async function PUT(req: NextRequest) {
 	const { user_id, user } = await req.json();
-	const prisma = new PrismaClient();
-	const USER = prisma.user;
-	// const user_idx = await updateUser(user_id, user);
+	const userCookies = getUser('user_private');
+	if (userCookies && user_id != userCookies.id) {
+		return NextResponse.json({
+			type: 'error',
+			message: 'Вы не вошли в аккаунт',
+		});
+	}
 
-	const userFind = await USER.findFirst({
-		where: {
-			id: user_id,
-		},
+	const userFind = await db.query.User.findFirst({
+		where: eq(User.id, user_id),
 	});
 
 	if (!userFind) {
-		prisma.$disconnect();
-		return NextResponse.json({ type: 'error', message: 'User not found' });
+		return NextResponse.json({
+			type: 'error',
+			message: 'Пользователь не найден',
+		});
 	}
 
-	const userUpdated = await USER.update({
-		where: {
-			id: userFind.id,
-		},
-		data: {
+	const userUpdated = await db
+		.update(User)
+		.set({
 			...user,
-		},
-	});
-	setCookie('user_private', JSON.stringify(userUpdated), {
-		httpOnly: true,
+		})
+		.where(eq(User.id, userFind.id))
+		.returning();
+	cookies().set({
+		name: 'user',
+		value: JSON.stringify({
+			id: userUpdated[0].id,
+			name: userUpdated[0].name,
+			role: userUpdated[0].role,
+			group: userUpdated[0].group,
+		}),
+		sameSite: 'strict',
 		maxAge: 86400,
 	});
 	cookies().set({
-		name: 'user',
-		value: JSON.stringify(userUpdated),
-		// httpOnly: true,
+		name: 'user_private',
+		value: JSON.stringify({
+			id: userUpdated[0].id,
+			name: userUpdated[0].name,
+			role: userUpdated[0].role,
+			group: userUpdated[0].group,
+		}),
+		sameSite: 'strict',
 		maxAge: 86400,
+		httpOnly: true,
 	});
-	prisma.$disconnect();
+	revalidateTag('analitic');
+
 	return NextResponse.json(userUpdated);
 }
 
 export async function DELETE(req: NextRequest) {
 	const { user_id } = await req.json();
-	const prisma = new PrismaClient();
-	const USER = prisma.user;
-
+	const userCookies = getUser('user_private');
+	if (
+		userCookies &&
+		(user_id != userCookies.id || userCookies.role == 'admin')
+	) {
+		return NextResponse.json({
+			type: 'error',
+			message: 'Вы не вошли в аккаунт',
+		});
+	}
 	// const user_idx = await removeUser(user_id);
 
-	const userFind = await USER.findFirst({
-		where: {
-			id: user_id,
-		},
+	const userFind = await db.query.User.findFirst({
+		where: eq(User.id, user_id),
 	});
 
 	if (!userFind) {
-		prisma.$disconnect();
-		return NextResponse.json({ type: 'error', message: 'User not found' });
+		return NextResponse.json({
+			type: 'error',
+			message: 'Пользователь не найден',
+		});
 	}
-	USER.delete({
-		where: {
-			id: userFind.id,
-		},
-	});
-	prisma.$disconnect();
+	await db.delete(User).where(eq(User.id, userFind.id));
 	return NextResponse.json({ type: 'successfully', message: 'User deleted' });
 }
 
 export type UserAll =
-	| (User & {
-			comment: (Comment & { chapter: Chapter | null })[];
-			UserBook: (UserBook & { chapter: Chapter | null })[];
-			UserWork: (UserWork & { work: Work | null })[];
+	| (UserType & {
+			comment: (Comment & { chapter: ChapterType | null })[];
+			UserBook: (UserBookType & { chapter: ChapterType | null })[];
+			UserWork: (UserWorkType & { work: WorkType | null })[];
 	  })
-	| null;
+	| undefined;
 
 export async function GET(req: NextRequest) {
 	const user_id = req.nextUrl.searchParams.get('user_id');
@@ -127,37 +167,31 @@ export async function GET(req: NextRequest) {
 	if (!user_id) {
 		return NextResponse.json({
 			type: 'error',
-			data: 'Search params is user_id not request',
+			data: 'Параметр не пришёл',
 		});
 	}
-	const prisma = new PrismaClient();
-	const USER = prisma.user;
-	const userFind: UserAll = await USER.findFirst({
-		where: {
-			id: Number(user_id),
-		},
-		include: {
-			comment: {
-				include: {
+	const userFind = await db.query.User.findFirst({
+		where: eq(User.id, +user_id),
+		with: {
+			comments: {
+				with: {
 					chapter: true,
 				},
 			},
-			UserBook: {
-				include: {
+			userBooks: {
+				with: {
 					chapter: true,
 				},
 			},
-			UserWork: {
-				include: {
+			userWorks: {
+				with: {
 					work: true,
 				},
 			},
 		},
 	});
 	if (!userFind) {
-		prisma.$disconnect();
-		return NextResponse.json({ type: 'error', data: 'User not find' });
+		return NextResponse.json({ type: 'error', data: 'Пользователь не найден' });
 	}
-	prisma.$disconnect();
 	return NextResponse.json(userFind);
 }

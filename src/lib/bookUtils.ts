@@ -1,9 +1,9 @@
-import { Chapter, PrismaClient } from '@prisma/client';
+import { ChapterType } from '@/drizzle/db';
 
 export const chaptersGroupByBook = (chapters: any) => {
 	const result: {
 		title: string;
-		chapters: Chapter[];
+		chapters: ChapterType[];
 	}[] = [
 		{ title: 'HTML: Язык Гипертекстовой Разметки', chapters: [] },
 		{ title: 'CSS: Таблица Каскадных Стилей', chapters: [] },

@@ -2,7 +2,6 @@
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Separator } from '@/components/ui/separator';
-import { Comment, User } from '@prisma/client';
 import { useEffect, useState } from 'react';
 import { ThumbsComment } from './ThumbsComment';
 import { io, Manager } from 'socket.io-client';

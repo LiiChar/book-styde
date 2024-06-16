@@ -1,7 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { PrismaClient } from '@prisma/client';
 import { getCookie } from 'cookies-next';
 import { cookies } from 'next/headers';
+import { db } from '@/drizzle/db';
+import { eq } from 'drizzle-orm';
+import { Chapter, User, UserBook } from '@/drizzle/schema';
+import { revalidateTag } from 'next/cache';
 
 export async function POST(req: NextRequest) {
 	// const { user_id, chapter_id } = await req.json();
@@ -22,9 +25,6 @@ export async function POST(req: NextRequest) {
 			message: 'Не пришёл параметр chapter_id',
 		});
 	}
-	const prisma = new PrismaClient();
-	const USER = prisma.user;
-	const UserBook = prisma.userBook;
 
 	console.log(
 		'Прочитаная глава - пользователь - ',
@@ -33,45 +33,36 @@ export async function POST(req: NextRequest) {
 		chapter_id
 	);
 
-	const findUserBook = await UserBook.findFirst({
-		where: {
-			chapter: {
-				id: parseInt(chapter_id),
+	const findUserBook = (
+		await db.query.Chapter.findFirst({
+			where: eq(Chapter.id, parseInt(chapter_id)),
+			with: {
+				userBooks: true,
 			},
-			user_id: +user_id,
-		},
-	});
-
+		})
+	)?.userBooks.find(el => el.user_id == +user_id);
 	console.log('Существующая глава, ', findUserBook);
 
 	if (findUserBook) {
-		prisma.$disconnect();
-
 		return NextResponse.json({ type: 'info', message: 'Глава уже добавлена' });
 	}
 
-	const newPost = await UserBook.create({
-		data: {
+	const newPost = await db
+		.insert(UserBook)
+		.values({
 			chapter_id: +chapter_id,
 			user_id: +user_id,
-		},
-		select: {
-			id: true,
-		},
-	});
-	prisma.$disconnect();
+		})
+		.returning();
+	revalidateTag('analitic');
 
-	return NextResponse.json(newPost.id);
+	return NextResponse.json(newPost[0].id);
 }
 
 export async function GET(req: NextRequest) {
 	const user_id = req.nextUrl.searchParams.get('user_id');
-	const prisma = new PrismaClient();
-	const USER = prisma.user;
-	const UserBook = prisma.userBook;
 
 	if (!user_id) {
-		prisma.$disconnect();
 		return NextResponse.json({
 			type: 'error',
 			data: 'Не пришел идентификатор пользователя',
@@ -80,25 +71,19 @@ export async function GET(req: NextRequest) {
 
 	// const pages = await getReadableBook(user_id, repo);
 
-	const userFind = await USER.findFirst({
-		where: {
-			id: Number(user_id),
-		},
+	const userFind = await db.query.User.findFirst({
+		where: eq(User.id, +user_id),
 	});
 
 	if (!userFind) {
-		prisma.$disconnect();
 		return NextResponse.json({
 			type: 'error',
 			data: 'Пользователь не найдет',
 		});
 	}
 
-	const readable_page = UserBook.findMany({
-		where: {
-			user_id: userFind.id,
-		},
+	const readable_page = await db.query.UserBook.findMany({
+		where: eq(UserBook.user_id, +user_id),
 	});
-	prisma.$disconnect();
 	return NextResponse.json(readable_page);
 }

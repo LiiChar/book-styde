@@ -1,4 +1,6 @@
-import { PrismaClient } from '@prisma/client';
+import { db } from '@/drizzle/db';
+import { UserWork, Work } from '@/drizzle/schema';
+import { eq } from 'drizzle-orm';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(req: NextRequest) {
@@ -20,47 +22,37 @@ export async function POST(req: NextRequest) {
 			message: 'Не пришёл параметр work_id',
 		});
 	}
-	const prisma = new PrismaClient();
-	const USER = prisma.user;
-	const UserWork = prisma.userWork;
-
 	console.log(
 		'Решённая задача - пользователь - ',
 		user_id,
 		', задача - ',
 		work_id
 	);
-
-	const findUserBook = await UserWork.findFirst({
-		where: {
-			work: {
-				id: parseInt(work_id),
+	const findUserBook = (
+		await db.query.Work.findFirst({
+			where: eq(Work.id, parseInt(work_id)),
+			with: {
+				userWorks: true,
 			},
-			user_id: +user_id,
-		},
-	});
+		})
+	)?.userWorks.find(el => el.user_id == +user_id);
 
 	console.log('Существующая решённая задача пользователя, ', findUserBook);
 
 	if (findUserBook) {
-		prisma.$disconnect();
-
 		return NextResponse.json({
 			type: 'info',
 			message: 'Задача уже добавлена пользователю',
 		});
 	}
 
-	const newPost = await UserWork.create({
-		data: {
+	const newPost = await db
+		.insert(UserWork)
+		.values({
 			work_id: +work_id,
 			user_id: +user_id,
-		},
-		select: {
-			id: true,
-		},
-	});
-	prisma.$disconnect();
+		})
+		.returning();
 
-	return NextResponse.json(newPost.id);
+	return NextResponse.json(newPost[0].id);
 }

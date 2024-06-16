@@ -21,6 +21,7 @@ export default function Setting() {
 					<TabsTrigger value='account'>Профиль</TabsTrigger>
 					<TabsTrigger value='private'>Приватность</TabsTrigger>
 				</TabsList>
+				4е
 				<section className='h-full w-full'>
 					<div className='flex flex-col justify-between'>
 						<TabsContent value='view'>

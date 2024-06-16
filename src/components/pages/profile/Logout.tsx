@@ -16,7 +16,7 @@ export const Logout = ({ ...attr }: ButtonProps) => {
 
 	return (
 		<Button onClick={handleLogout} {...attr}>
-			<LogOutIcon /> Выйти
+			<span className='mr-1'>Выйти</span> <LogOutIcon width={16} />
 		</Button>
 	);
 };

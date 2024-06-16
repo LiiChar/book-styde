@@ -1,10 +1,10 @@
-import { Work as WorkType } from '@prisma/client';
 import React from 'react';
 import { CodeEditor } from '@/components/common/CodeEditor';
 import { Question } from '@/components/common/Question';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 import { BookPart, BookTypeWork } from '@/types/Book';
+import { WorkType } from '@/drizzle/db';
 
 export const Work = ({ works }: { works: WorkType[] }) => {
 	return (

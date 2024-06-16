@@ -1,12 +1,12 @@
 import { Question } from '@/components/common/Question';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
+import { WorkType } from '@/drizzle/db';
 import { BookTypeWork } from '@/types/Book';
-import { Work } from '@prisma/client';
 import { useState } from 'react';
 
 interface Props {
-	work?: Work;
+	work?: WorkType;
 }
 
 export const WorkQuestionEditor = ({ work }: Props) => {

@@ -100,12 +100,9 @@ const TableVisit: FC<Props> = ({ visit: visits, className }) => {
 															<TooltipContent className='h-[20px] p-[1px] px-[2px]'>
 																{/* <p className='h-[18px]'> */}
 																{(
-																	visit.activeDay.find(
-																		act => {
-																			console.log(act, week * 7 + day);
-																			
-																			return act.day === week * 7 + day}
-																	) ?? { visit: 0 }
+																	visit.activeDay.find(act => {
+																		return act.day === week * 7 + day;
+																	}) ?? { visit: 0 }
 																).visit == 0
 																	? 'Нет'
 																	: (

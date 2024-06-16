@@ -5,7 +5,6 @@ import { FC, Suspense } from 'react';
 import { getCommentsByChapterId } from '@/request/comment';
 import { CommentChapter } from '@/app/api/comment/route';
 import { ListComment } from './comment/ListComment';
-import { User, Comment } from '@prisma/client';
 
 interface Props {
 	chapter_id: number;
