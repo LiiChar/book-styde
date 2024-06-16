@@ -24,7 +24,7 @@ export async function GET(req: NextRequest) {
 			where: eq(FeedbackComment.feedback_id, +feedback_id),
 			orderBy: [desc(FeedbackComment.created_at)],
 			with: {
-				User: true,
+				user: true,
 			},
 		});
 
@@ -36,7 +36,7 @@ export async function GET(req: NextRequest) {
 			where: eq(FeedbackComment.comment_id, +comment_id),
 			orderBy: [desc(FeedbackComment.created_at)],
 			with: {
-				User: true,
+				user: true,
 			},
 		});
 
@@ -82,7 +82,7 @@ export async function PUT(req: NextRequest) {
 	const commentFind = await db.query.Comment.findFirst({
 		where: eq(Comment.id, comment.id),
 		with: {
-			LikesComment: true,
+			likesComments: true,
 		},
 	});
 
@@ -93,7 +93,7 @@ export async function PUT(req: NextRequest) {
 		});
 	}
 
-	const likes: LikesCommentType[] = commentFind.LikesComment;
+	const likes: LikesCommentType[] = commentFind.likesComments;
 	if (likes && likes.length == 0) {
 		await db.insert(LikesComment).values({
 			comment_id: +commentFind.id,

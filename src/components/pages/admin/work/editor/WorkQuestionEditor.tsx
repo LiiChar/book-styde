@@ -1,3 +1,4 @@
+'use client';
 import { Question } from '@/components/common/Question';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
