@@ -24,7 +24,7 @@ export const getTimeAgo = (date: Date | string) => {
 
 	const timeDifference = now.getTime() - messageTime.getTime();
 	const seconds = Math.floor(timeDifference / 1000);
-	const minutes = Math.floor(seconds / 60);
+	const minutes = Math.floor(seconds / 60) + new Date().getTimezoneOffset();
 	const hours = Math.floor(minutes / 60);
 	const days = Math.floor(hours / 24);
 	const months = Math.floor(days / 30);

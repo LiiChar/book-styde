@@ -2,6 +2,8 @@ import { db } from '@/drizzle/db';
 import { UserWork, Work } from '@/drizzle/schema';
 import { eq } from 'drizzle-orm';
 import { NextRequest, NextResponse } from 'next/server';
+import { userCompletedTask } from '../../helper/verifyHelper';
+import { complateTask } from '../../helper/complateTask';
 
 export async function POST(req: NextRequest) {
 	// const { user_id, chapter_id } = await req.json();
@@ -53,6 +55,26 @@ export async function POST(req: NextRequest) {
 			user_id: +user_id,
 		})
 		.returning();
+
+	const chapter = (await db.query.Work.findFirst({
+		where: (work, { eq }) => eq(work.id, +work_id),
+		with: {
+			chapter: true,
+		},
+	}))!.chapter;
+
+	try {
+		const res = await complateTask(+user_id, chapter.id);
+		if (res) {
+			console.log(`Пользователь ${user_id} выполнил задание ${chapter.id}`);
+		}
+	} catch (error) {
+		if (typeof error == 'string') {
+			console.log(error);
+		} else if (error instanceof Error) {
+			console.log(error.message);
+		}
+	}
 
 	return NextResponse.json(newPost[0].id);
 }

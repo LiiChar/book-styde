@@ -5,6 +5,7 @@ import { db } from '@/drizzle/db';
 import { eq } from 'drizzle-orm';
 import { Chapter, User, UserBook } from '@/drizzle/schema';
 import { revalidateTag } from 'next/cache';
+import { complateTask } from '../../helper/complateTask';
 
 export async function POST(req: NextRequest) {
 	// const { user_id, chapter_id } = await req.json();
@@ -54,6 +55,19 @@ export async function POST(req: NextRequest) {
 			user_id: +user_id,
 		})
 		.returning();
+
+	try {
+		const res = await complateTask(+user_id, +chapter_id);
+		if (res) {
+			console.log(`Пользователь ${user_id} выполнил задание ${chapter_id}`);
+		}
+	} catch (error) {
+		if (typeof error == 'string') {
+			console.log(error);
+		} else if (error instanceof Error) {
+			console.log(error.message);
+		}
+	}
 	revalidateTag('analitic');
 
 	return NextResponse.json(newPost[0].id);

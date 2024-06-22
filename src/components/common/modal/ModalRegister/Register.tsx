@@ -16,13 +16,9 @@ export const Register = () => {
 	const [keyword, setKeyword] = useState('');
 	const [name, setName] = useState('');
 	const router = useRouter();
-	const questionNew = useMemo(() => {
-		return getRandomQuestion();
-	}, []);
 	const handleRegister = async () => {
 		const response: { type: string; data: string } = await register({
 			name,
-			question: questionNew,
 			key_word: keyword,
 		});
 		if (response.type == 'success') {

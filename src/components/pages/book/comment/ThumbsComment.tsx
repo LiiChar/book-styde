@@ -35,8 +35,8 @@ const ThumbsComment: FC<Props> = memo(({ chapter_id, comment }) => {
 	};
 
 	const isLike =
-		comment.likesComment && user
-			? comment.likesComment.some(like => like.user_id == user.id)
+		comment.likesComments && user
+			? comment.likesComments.some(like => like.user_id == user.id)
 			: false;
 
 	return (
@@ -52,7 +52,7 @@ const ThumbsComment: FC<Props> = memo(({ chapter_id, comment }) => {
 						height={16}
 						className={`${isLike && 'fill-primary stroke-primary'}`}
 					/>
-					<div>{comment.likesComment ? comment.likesComment.length : 0}</div>
+					<div>{comment.likesComments ? comment.likesComments.length : 0}</div>
 					{user && (
 						<div>
 							<Button

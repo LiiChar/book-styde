@@ -13,8 +13,8 @@
 		--popover: 0 0% 100%;
 		--popover-foreground: 0 0% 3.9%;
 
-		--primary: 0 0% 9%;
-		--primary-foreground: 0 0% 98%;
+		--primary: 177, 50%, 46%;
+		--primary-foreground: 201, 30%, 13%;
 
 		--secondary: 0 0% 96.1%;
 		--secondary-foreground: 0 0% 9%;
@@ -46,8 +46,8 @@
 		--popover: 0 0% 3.9%;
 		--popover-foreground: 0 0% 98%;
 
-		--primary: 0 0% 98%;
-		--primary-foreground: 0 0% 9%;
+		--primary: 177, 50%, 46%;
+		--primary-foreground: 173, 41%, 91%;
 
 		--secondary: 0 0% 14.9%;
 		--secondary-foreground: 0 0% 98%;
@@ -257,14 +257,14 @@ object {
 	max-width: 100%;
 }
 
+svg {
+	@apply stroke-primary-foreground self-center;
+}
+
 iframe {
 	& > img {
 		object-fit: cover;
 	}
-}
-
-svg {
-	stroke: hsl(var(--foreground));
 }
 
 .table-of-contents__link--active {
@@ -315,6 +315,12 @@ button,
 	cursor: pointer;
 	&:focus {
 		outline: 0;
+	}
+}
+
+button:hover {
+	svg {
+		@apply stroke-primary;
 	}
 }
 
@@ -369,6 +375,13 @@ aside {
 	::-webkit-scrollbar-thumb {
 		background-color: hsl(var(--foreground)); /* color of the scroll thumb */
 		border-radius: 2px; /* roundness of the scroll thumb */
+	}
+}
+
+.disable_h3 {
+	h3 {
+		padding: 0;
+		margin: 0;
 	}
 }
 
@@ -749,7 +762,7 @@ textarea::-webkit-scrollbar-thumb {
 	color: rgb(90, 90, 214);
 }
 .token.attr-name {
-	color: rgb(90, 90, 214);
+	color: rgb(72, 72, 168);
 }
 .token.selector,
 .token.string,

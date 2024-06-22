@@ -4,6 +4,7 @@ import { db } from '@/drizzle/db';
 import { eq } from 'drizzle-orm';
 import { User } from '@/drizzle/schema';
 import { compare } from 'bcrypt';
+import { setUserCookies } from '@/lib/authGuardServer';
 
 export async function POST(req: NextRequest) {
 	const { name, keyword } = await req.json();
@@ -19,7 +20,7 @@ export async function POST(req: NextRequest) {
 		});
 	}
 
-	const isCompare = await compare(userFind.key_word, keyword);
+	const isCompare = await compare(keyword, userFind.key_word);
 
 	if (!isCompare) {
 		return NextResponse.json({
@@ -28,31 +29,9 @@ export async function POST(req: NextRequest) {
 		});
 	}
 
-	cookies().set({
-		name: 'user',
-		value: JSON.stringify({
-			id: userFind.id,
-			name: userFind.name,
-			role: userFind.role,
-			group: userFind.group,
-		}),
-		sameSite: 'strict',
-		maxAge: 86400,
-	});
-	cookies().set({
-		name: 'user_private',
-		value: JSON.stringify({
-			id: userFind.id,
-			name: userFind.name,
-			role: userFind.role,
-			group: userFind.group,
-		}),
-		sameSite: 'strict',
-		maxAge: 86400,
-		httpOnly: true,
-	});
+	setUserCookies(userFind);
 	return NextResponse.json({
-		type: 'succesfully',
+		type: 'success',
 		message: 'Верификация прошла успешно',
 	});
 }

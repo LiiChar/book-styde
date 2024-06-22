@@ -5,12 +5,11 @@ import { Textarea } from '@/components/ui/textarea';
 import { getCookie } from 'cookies-next';
 import React, { FC, memo, useRef, useState } from 'react';
 import { storeComment, storeFeedback } from '@/request/comment';
-import { io, Manager } from 'socket.io-client';
 import { useRouter } from 'next/navigation';
-import pusherJs from 'pusher-js';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useFetch } from '@/hooks/useFetch';
 import { ButtonLoader } from '@/components/common/ButtonLoader';
+import { getTextFromRef } from '@/lib/text';
 
 type Props = {
 	commentId?: number;
@@ -32,7 +31,7 @@ export const InputFeedback = ({
 	const handleSendComment = async () => {
 		await storeFeedback({
 			comment_id: commentId,
-			content: editableDiv.current!.innerText,
+			content: getTextFromRef(editableDiv),
 			feedback_id: feedbackId,
 			user_id: user.id,
 		});

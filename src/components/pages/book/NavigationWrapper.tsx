@@ -46,7 +46,7 @@ const NavigationWrapper: FC<Props> = async ({ children, className, book }) => {
 							height={48}
 						/>
 					}
-					className='hidden  h-18 w-18 md:block fixed translate-y-[calc(50%)] top-1/2 '
+					className='hidden h-18  w-18 md:block fixed -translate-y-[24px] top-1/2 '
 				/>
 			)}
 			<div
@@ -54,7 +54,7 @@ const NavigationWrapper: FC<Props> = async ({ children, className, book }) => {
 			>
 				{children}
 				<div className='hidden w-full h-full md:block'>
-					<Comments chapter_id={book.id} />
+					<Comments chapter_id={book.id} comments={book.comments} />
 				</div>
 
 				<div className='w-full block md:hidden h-full'>
@@ -97,7 +97,7 @@ const NavigationWrapper: FC<Props> = async ({ children, className, book }) => {
 					</div>
 
 					<div className='block pb-4 w-full h-full'>
-						<Comments chapter_id={book.id} />
+						<Comments chapter_id={book.id} comments={book.comments} />
 					</div>
 				</div>
 			</div>
@@ -111,7 +111,7 @@ const NavigationWrapper: FC<Props> = async ({ children, className, book }) => {
 							height={48}
 						/>
 					}
-					className='hidden   h-18 w-18 md:block fixed translate-y-[calc(50%)] right-0 top-1/2'
+					className='hidden   h-18 w-18 md:block fixed -translate-y-[24px] right-0 top-1/2'
 				/>
 			)}
 		</div>

@@ -33,12 +33,12 @@ const Avatar = memo(() => {
 		if (param.has('register') && param.get('register') == 'true') {
 			setOpenRegister(true);
 		}
-	}, []);
+	}, [param]);
 
 	return (
 		<>
 			{user ? (
-				<a href={`/profile/${user.id}`}>
+				<a className='cursor-pointer' href={`/profile/${user.id}`}>
 					<Ava>
 						<AvatarImage
 							src={`https://ui-avatars.com/api/?name=${user.name}`}
@@ -48,7 +48,7 @@ const Avatar = memo(() => {
 				</a>
 			) : user == null ? (
 				<UserSVG
-					className='hover:stroke-primary'
+					className='hover:stroke-primary cursor-pointer'
 					onClick={() => setOpenRegister(true)}
 				/>
 			) : (

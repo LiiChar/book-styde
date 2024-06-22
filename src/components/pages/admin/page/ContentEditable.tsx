@@ -37,7 +37,7 @@ const ContentEditable: FC<Props> = memo(({ book }) => {
 		const newBook = Object.assign({}, book);
 		newBook.content = content;
 		return newBook;
-	}, [debounceValue]);
+	}, [debounceValue, book, content]);
 
 	useEffect(() => {
 		const intervalId = setInterval(() => {
@@ -49,7 +49,7 @@ const ContentEditable: FC<Props> = memo(({ book }) => {
 		return () => {
 			clearInterval(intervalId);
 		};
-	}, []);
+	}, [action, loading]);
 
 	return (
 		<section className='w-full h-full px-2 py-3'>

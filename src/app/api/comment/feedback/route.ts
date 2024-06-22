@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server';
-import Pusher from 'pusher';
 import { cookies } from 'next/headers';
 import { revalidateTag } from 'next/cache';
 import { Comment, FeedbackComment, LikesComment } from '@/drizzle/schema';

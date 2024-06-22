@@ -10,7 +10,7 @@ import {
 	varchar,
 	primaryKey,
 } from 'drizzle-orm/pg-core';
-import { relations } from 'drizzle-orm/relations';
+import { Many, relations } from 'drizzle-orm/relations';
 
 import { sql } from 'drizzle-orm';
 
@@ -55,59 +55,47 @@ export const UserBook = pgTable('UserBook', {
 	}).defaultNow(),
 });
 
-export const TeacherChapter = pgTable(
-	'TeacherChapter',
-	{
-		id: serial('id').primaryKey().notNull(),
-		student_id: integer('student_id')
-			.notNull()
-			.references(() => User.id, { onDelete: 'cascade', onUpdate: 'cascade' }),
-		teacher_id: integer('chapter_id')
-			.notNull()
-			.references(() => User.id, { onDelete: 'cascade', onUpdate: 'cascade' }),
-		chapter_id: integer('chapter_id').references(() => Chapter.id, {
-			onDelete: 'cascade',
-			onUpdate: 'cascade',
-		}),
-		description: text('description'),
-		created_at: timestamp('created_at', {
-			precision: 3,
-			mode: 'string',
-		}).defaultNow(),
-		completed: boolean('completed').default(false).notNull(),
-		updated_at: timestamp('updated_at', {
-			precision: 3,
-			mode: 'string',
-		}).defaultNow(),
-	},
-	t => ({
-		pk: primaryKey({ columns: [t.student_id, t.teacher_id, t.chapter_id] }),
-	})
-);
+export const TeacherChapter = pgTable('TeacherChapter', {
+	id: serial('id').primaryKey().notNull(),
+	student_id: integer('student_id')
+		.notNull()
+		.references(() => User.id, { onDelete: 'cascade', onUpdate: 'cascade' }),
+	teacher_id: integer('teacher_id')
+		.notNull()
+		.references(() => User.id, { onDelete: 'cascade', onUpdate: 'cascade' }),
+	chapter_id: integer('chapter_id').references(() => Chapter.id, {
+		onDelete: 'cascade',
+		onUpdate: 'cascade',
+	}),
+	description: text('description'),
+	created_at: timestamp('created_at', {
+		precision: 3,
+		mode: 'string',
+	}).defaultNow(),
+	completed: boolean('completed').default(false).notNull(),
+	updated_at: timestamp('updated_at', {
+		precision: 3,
+		mode: 'string',
+	}).defaultNow(),
+});
 
-export const Teacher = pgTable(
-	'Teacher',
-	{
-		id: serial('id').primaryKey().notNull(),
-		student_id: integer('student_id')
-			.notNull()
-			.references(() => User.id, { onDelete: 'cascade', onUpdate: 'cascade' }),
-		teacher_id: integer('chapter_id')
-			.notNull()
-			.references(() => User.id, { onDelete: 'cascade', onUpdate: 'cascade' }),
-		created_at: timestamp('created_at', {
-			precision: 3,
-			mode: 'string',
-		}).defaultNow(),
-		updated_at: timestamp('updated_at', {
-			precision: 3,
-			mode: 'string',
-		}).defaultNow(),
-	},
-	t => ({
-		pk: primaryKey({ columns: [t.student_id, t.teacher_id] }),
-	})
-);
+export const Teacher = pgTable('Teacher', {
+	id: serial('id').primaryKey().notNull(),
+	student_id: integer('student_id')
+		.notNull()
+		.references(() => User.id, { onDelete: 'cascade', onUpdate: 'cascade' }),
+	teacher_id: integer('teacher_id')
+		.notNull()
+		.references(() => User.id, { onDelete: 'cascade', onUpdate: 'cascade' }),
+	created_at: timestamp('created_at', {
+		precision: 3,
+		mode: 'string',
+	}).defaultNow(),
+	updated_at: timestamp('updated_at', {
+		precision: 3,
+		mode: 'string',
+	}).defaultNow(),
+});
 
 export const User = pgTable(
 	'User',
@@ -118,6 +106,9 @@ export const User = pgTable(
 		key_word: text('key_word').notNull(),
 		description: text('description'),
 		group: text('group'),
+		achievements: text('achievements'),
+		rate: integer('rate').default(0),
+		photo: text('photo'),
 		role: text('role').default('user').notNull(),
 		is_verify: boolean('is_verify').default(false).notNull(),
 		created_at: timestamp('created_at', { precision: 3, mode: 'string' })
@@ -134,6 +125,41 @@ export const User = pgTable(
 		};
 	}
 );
+
+export const Achievement = pgTable('Achievement', {
+	id: serial('id').primaryKey().notNull(),
+	name: text('name').notNull(),
+	photo: text('photo'),
+	descripion: text('descripion'),
+	tasks: text('tasks'),
+	created_at: timestamp('created_at', { precision: 3, mode: 'string' })
+		.defaultNow()
+		.notNull(),
+	updated_at: timestamp('updated_at', {
+		precision: 3,
+		mode: 'string',
+	}).defaultNow(),
+});
+
+export const UserAchievement = pgTable('UserAchievement', {
+	id: serial('id').primaryKey().notNull(),
+	userId: integer('user_id')
+		.notNull()
+		.references(() => User.id, { onDelete: 'cascade', onUpdate: 'cascade' }),
+	achievementId: integer('achievement_id')
+		.notNull()
+		.references(() => Achievement.id, {
+			onDelete: 'cascade',
+			onUpdate: 'cascade',
+		}),
+	created_at: timestamp('created_at', { precision: 3, mode: 'string' })
+		.defaultNow()
+		.notNull(),
+	updated_at: timestamp('updated_at', {
+		precision: 3,
+		mode: 'string',
+	}).defaultNow(),
+});
 
 export const UserWork = pgTable('UserWork', {
 	id: serial('id').primaryKey().notNull(),
@@ -264,6 +290,24 @@ export const FeedbackComment = pgTable(
 	}
 );
 
+export const AchievementRelations = relations(Achievement, ({ many }) => ({
+	users: many(User),
+}));
+
+export const UserAchievementRelations = relations(
+	UserAchievement,
+	({ one }) => ({
+		user: one(User, {
+			fields: [UserAchievement.userId],
+			references: [User.id],
+		}),
+		chievement: one(Achievement, {
+			fields: [UserAchievement.achievementId],
+			references: [Achievement.id],
+		}),
+	})
+);
+
 export const UserBookRelations = relations(UserBook, ({ one }) => ({
 	chapter: one(Chapter, {
 		fields: [UserBook.chapter_id],
@@ -306,9 +350,11 @@ export const UserRelations = relations(User, ({ many }) => ({
 	userBooks: many(UserBook),
 	userWorks: many(UserWork),
 	comments: many(Comment),
+	achievements: many(Achievement),
 	likesComments: many(LikesComment),
 	feedbackComments: many(FeedbackComment),
-	teacherChapters: many(TeacherChapter),
+	teacherChapters: many(TeacherChapter, { relationName: 'teacher' }),
+	teacherStudentChapters: many(TeacherChapter, { relationName: 'student' }),
 	teachers: many(Teacher),
 }));
 
@@ -335,13 +381,15 @@ export const TeacherRelations = relations(Teacher, ({ one }) => ({
 }));
 
 export const TeacherChapterRelations = relations(TeacherChapter, ({ one }) => ({
-	Teacher: one(User, {
+	teacher: one(User, {
 		fields: [TeacherChapter.teacher_id],
 		references: [User.id],
+		relationName: 'teacher',
 	}),
-	Student: one(User, {
+	student: one(User, {
 		fields: [TeacherChapter.student_id],
 		references: [User.id],
+		relationName: 'student',
 	}),
 	chapter: one(Chapter, {
 		fields: [TeacherChapter.chapter_id],

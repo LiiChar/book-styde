@@ -9,7 +9,7 @@ export default function useHidration(
 
 	useEffect(() => {
 		setComponent(componentReady);
-	}, []);
+	}, [componentReady]);
 
 	return component;
 }

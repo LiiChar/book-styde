@@ -1,5 +1,11 @@
-import { getCookie } from 'cookies-next';
-import { revalidateTag } from 'next/cache';
+import { AllUserResponse } from '@/app/api/user/all/route';
+
+const baseUrl = process.env.NEXT_PUBLIC_URL_SITE;
+
+export const getAllUsers = async (): Promise<AllUserResponse[]> => {
+	const res = await fetch(`${baseUrl}/api/user/all`);
+	return res.json();
+};
 
 export const register = async (user: any): Promise<any> => {
 	const res = await fetch(process.env.NEXT_PUBLIC_URL_SITE + `/api/user`, {

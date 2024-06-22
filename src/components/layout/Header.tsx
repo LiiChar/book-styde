@@ -10,6 +10,7 @@ import { DialogRegister } from '../common/modal/DialogRegister';
 import Image from 'next/image';
 import OwlSvg from '@/assets/icon/owl.svg';
 import { Owl } from '../common/svg/Owl';
+import { Teacher } from './Header/Teacher';
 
 export const Header = () => {
 	return (
@@ -34,7 +35,8 @@ export const Header = () => {
 					<Avatar />
 				</Suspense>
 			</div>
-			<div className='w-1/3 flex h-full justify-end items-center'>
+			<div className='w-1/3 flex h-full justify-end gap-3 items-center'>
+				<Teacher />
 				<Search />
 			</div>
 		</header>

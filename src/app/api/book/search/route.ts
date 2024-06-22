@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { CommentChapter } from '../../comment/route';
-import { db } from '@/drizzle/db';
+import { ChapterType, WorkType, db } from '@/drizzle/db';
 import { eq, ilike, like } from 'drizzle-orm';
 import { Chapter, Comment, LikesComment, User, Work } from '@/drizzle/schema';
 
@@ -30,9 +30,9 @@ export async function GET(req: NextRequest) {
 	}
 }
 
-export type ChapterSearch = typeof Chapter.$inferSelect & {
-	works: (typeof Work.$inferSelect)[];
-	comment: CommentChapter[];
+export type ChapterSearch = ChapterType & {
+	works: WorkType[];
+	comments: CommentChapter[];
 };
 
 export async function POST(req: NextRequest) {
@@ -40,13 +40,19 @@ export async function POST(req: NextRequest) {
 
 	console.log(`Поиск части по именя - ${title}`);
 	try {
-		const chapterFind = await db.query.Chapter.findFirst({
-			where: ilike(Chapter.title, `%${title}%`),
-			with: {
-				works: true,
-				comments: true,
-			},
-		});
+		const chapterFind: ChapterSearch | undefined =
+			await db.query.Chapter.findFirst({
+				where: ilike(Chapter.title, `%${title}%`),
+				with: {
+					works: true,
+					comments: {
+						with: {
+							user: true,
+							likesComments: true,
+						},
+					},
+				},
+			});
 		if (chapterFind != null) {
 			return NextResponse.json(chapterFind);
 		}

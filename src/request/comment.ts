@@ -9,7 +9,6 @@ export const getCommentsByChapterId = async (
 		`${process.env.NEXT_PUBLIC_URL_SITE}/api/comment?chapter_id=${chapter_id}`,
 		{
 			next: { tags: ['comment'] },
-			cache: 'default',
 		}
 	);
 	return data.json();

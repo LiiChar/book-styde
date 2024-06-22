@@ -12,7 +12,7 @@ import {
 } from '@/drizzle/db';
 import { eq } from 'drizzle-orm';
 import { User } from '@/drizzle/schema';
-import { getUser } from '@/lib/authGuardServer';
+import { getUser, setUserCookies } from '@/lib/authGuardServer';
 import { hash, genSalt } from 'bcrypt';
 import { revalidateTag } from 'next/cache';
 
@@ -36,33 +36,13 @@ export async function POST(req: NextRequest) {
 			.insert(User)
 			.values({
 				...user,
+				question: '',
 				key_word: hashPassword,
 			})
 			.returning();
 
-		cookies().set({
-			name: 'user',
-			value: JSON.stringify({
-				id: newUser[0].id,
-				name: newUser[0].name,
-				role: newUser[0].role,
-				group: newUser[0].group,
-			}),
-			sameSite: 'strict',
-			maxAge: 86400,
-		});
-		cookies().set({
-			name: 'user_private',
-			value: JSON.stringify({
-				id: newUser[0].id,
-				name: newUser[0].name,
-				role: newUser[0].role,
-				group: newUser[0].group,
-			}),
-			sameSite: 'strict',
-			maxAge: 86400,
-			httpOnly: true,
-		});
+		setUserCookies(newUser[0]);
+
 		return NextResponse.json({ type: 'success', data: newUser });
 	} catch (error) {
 		return NextResponse.json({ type: 'error', data: error });
@@ -97,29 +77,8 @@ export async function PUT(req: NextRequest) {
 		})
 		.where(eq(User.id, userFind.id))
 		.returning();
-	cookies().set({
-		name: 'user',
-		value: JSON.stringify({
-			id: userUpdated[0].id,
-			name: userUpdated[0].name,
-			role: userUpdated[0].role,
-			group: userUpdated[0].group,
-		}),
-		sameSite: 'strict',
-		maxAge: 86400,
-	});
-	cookies().set({
-		name: 'user_private',
-		value: JSON.stringify({
-			id: userUpdated[0].id,
-			name: userUpdated[0].name,
-			role: userUpdated[0].role,
-			group: userUpdated[0].group,
-		}),
-		sameSite: 'strict',
-		maxAge: 86400,
-		httpOnly: true,
-	});
+	setUserCookies(userUpdated[0]);
+
 	revalidateTag('analitic');
 
 	return NextResponse.json(userUpdated);

@@ -8,13 +8,10 @@ import { ListComment } from './comment/ListComment';
 
 interface Props {
 	chapter_id: number;
-	comments?: CommentChapter[];
+	comments: CommentChapter[];
 }
 
-const Comments: FC<Props> = async ({ chapter_id, comments: com }) => {
-	const comments =
-		com || ((await getCommentsByChapterId(chapter_id)) as CommentChapter[]);
-
+const Comments: FC<Props> = async ({ chapter_id, comments }) => {
 	return (
 		<section className='my-4 w-full'>
 			<article className=''>

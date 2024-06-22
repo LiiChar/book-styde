@@ -1,13 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server';
-import Pusher from 'pusher';
 import { cookies } from 'next/headers';
 import { revalidateTag } from 'next/cache';
 import { db, CommentType, UserType, LikesCommentType } from '@/drizzle/db';
 import { Comment, LikesComment, User } from '@/drizzle/schema';
 import { and, desc, eq } from 'drizzle-orm';
+import { socket } from '../helper/socket';
+import { SOCKET_ACTION_REFRESH } from '@/types/const/const';
 
-export type CommentChapter = CommentType & { user: UserType } & {
-	likesComment?: LikesCommentType[];
+export type CommentChapter = CommentType & {
+	user: UserType | null;
+	likesComments: LikesCommentType[];
 };
 
 export async function GET(req: NextRequest) {
@@ -23,6 +25,7 @@ export async function GET(req: NextRequest) {
 			user: true,
 			likesComments: true,
 		},
+		orderBy: [desc(Comment.created_at)],
 	});
 
 	return NextResponse.json(comments);
@@ -31,18 +34,15 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
 	const { comment, chapter_id } = await req.json();
 
-	const pusher = new Pusher({
-		appId: process.env.PUSHER_APP_ID!,
-		key: process.env.PUSHER_KEY!,
-		secret: process.env.PUSHER_SECRET!,
-		cluster: process.env.PUSHER_CLUSTER!,
-		useTLS: true,
-	});
 	try {
 		await db.insert(Comment).values({
 			content: comment.content,
 			user_id: +comment.user_id,
 			chapter_id: +chapter_id,
+		});
+		await socket.publish({
+			channel: `chapter-${chapter_id}`,
+			message: SOCKET_ACTION_REFRESH,
 		});
 	} catch (error) {
 		return NextResponse.json({
@@ -51,9 +51,6 @@ export async function POST(req: NextRequest) {
 		});
 	}
 
-	try {
-		await pusher.trigger(`chapter-${chapter_id}`, 'new_comment', 'refetch');
-	} catch (error) {}
 	revalidateTag('analitic');
 	revalidateTag('comment');
 	return NextResponse.json(null);

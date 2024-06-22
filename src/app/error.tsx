@@ -19,7 +19,7 @@ export default function Error({
 			title: 'Название ошибки: ' + error.name,
 			description: 'Описание ошибки: ' + error.message,
 		});
-	}, []);
+	}, [toast, error.name, error.message]);
 
 	return (
 		<div className='flex justify-center absolute top-0 left-0 items-center w-screen h-[calc(100vh-48px)]'>

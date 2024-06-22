@@ -53,7 +53,7 @@ const Aside = ({ className, chapter }: Props) => {
 				obs[0].unobserve(obs[1]);
 			});
 		};
-	}, []);
+	}, [observers]);
 
 	const handleNavigation = (id: string) => {
 		const element = document.getElementById(id);

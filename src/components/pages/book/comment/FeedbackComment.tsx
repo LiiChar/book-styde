@@ -28,7 +28,7 @@ const FeedbackComment = memo(({ commentId, feedbackId }: Props) => {
 		getFeedbackComment(commentId, feedbackId)
 			.then(data => setFeetbacks(data))
 			.finally(() => setLoading(false));
-	}, []);
+	}, [commentId, feedbackId]);
 
 	return (
 		<section className='flex flex-col gap-1 text-[14px]'>

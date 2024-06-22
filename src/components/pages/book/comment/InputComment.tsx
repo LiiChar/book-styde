@@ -5,12 +5,11 @@ import { Textarea } from '@/components/ui/textarea';
 import { getCookie } from 'cookies-next';
 import React, { FC, memo, useRef, useState } from 'react';
 import { storeComment } from '@/request/comment';
-import { io, Manager } from 'socket.io-client';
 import { useRouter } from 'next/navigation';
-import pusherJs from 'pusher-js';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useFetch } from '@/hooks/useFetch';
 import { ButtonLoader } from '@/components/common/ButtonLoader';
+import { getTextFromRef } from '@/lib/text';
 
 interface Props {
 	chapter_id: number;
@@ -23,64 +22,22 @@ export const InputComment: FC<Props> = ({ chapter_id }) => {
 		promise: () => handleSendComment(),
 	});
 	const editableDiv = useRef<HTMLDivElement>(null);
-	const { refresh } = useRouter();
 	const handleSendComment = async () => {
 		// TODO - сделать перенос строки https://ru.stackoverflow.com/questions/1443694/contenteditable-%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B8%D1%82%D1%8C-%D1%82%D0%BE-%D1%87%D1%82%D0%BE-%D0%B2%D0%B8%D0%B6%D1%83
+
 		await storeComment({
 			comment: {
 				user_id: user!.id,
-				content: editableDiv.current!.innerText,
+				content: getTextFromRef(editableDiv),
 			},
 			chapter_id,
 		});
-
-		const pusher = new pusherJs(process.env.NEXT_PUBLIC_PUSHER_KEY!, {
-			cluster: 'eu',
-		});
-
-		const channel = pusher.subscribe(`chapter-${chapter_id}`);
-
-		channel.emit('new_comment');
-
-		pusher.unsubscribe('chat');
 		handleReject();
 	};
 
 	const handleReject = () => {
 		setFocus(false);
 		editableDiv.current!.innerText = 'Введите комментарий';
-	};
-
-	const waitForOpenConnection = (socket: WebSocket) => {
-		return new Promise((resolve, reject) => {
-			const maxNumberOfAttempts = 10;
-			const intervalTime = 200;
-
-			let currentAttempt = 0;
-			const interval = setInterval(() => {
-				if (currentAttempt > maxNumberOfAttempts - 1) {
-					clearInterval(interval);
-					reject(new Error('Maximum number of attempts exceeded'));
-				} else if (socket.readyState === socket.OPEN) {
-					clearInterval(interval);
-					resolve('');
-				}
-				currentAttempt++;
-			}, intervalTime);
-		});
-	};
-
-	const sendMessage = async (socket: WebSocket, msg: string) => {
-		if (socket.readyState !== socket.OPEN) {
-			try {
-				await waitForOpenConnection(socket);
-				socket.send(msg);
-			} catch (err) {
-				console.error(err);
-			}
-		} else {
-			socket.send(msg);
-		}
 	};
 
 	return (

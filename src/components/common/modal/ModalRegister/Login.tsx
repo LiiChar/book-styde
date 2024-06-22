@@ -51,7 +51,7 @@ export const Login = () => {
 						toast({
 							title: data.message,
 						});
-						if (data.type == 'succesfully') {
+						if (data.type == 'success') {
 							router.refresh();
 						}
 						return;
@@ -83,10 +83,7 @@ export const Login = () => {
 			{question.length > 0 ? (
 				<>
 					<div className=''>
-						<Label htmlFor='link2'>
-							Ответьте на вопрос: <br />
-							{question}
-						</Label>
+						<Label htmlFor='link2'>Введите пароль</Label>
 						<Input
 							id='link2'
 							value={keyword}
