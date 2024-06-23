@@ -17,7 +17,7 @@ export const ButtonLoader = ({
 	return (
 		<Button {...attr}>
 			{loading ? (
-				<Loader className='scale-90 stroke-primary animate-spin-slow spin-in spin-out-180 z-[110]' />
+				<Loader className='scale-90 animate-spin-slow z-[110]' />
 			) : (
 				children
 			)}

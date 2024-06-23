@@ -14,7 +14,9 @@ import { getCookie } from 'cookies-next';
 import { STUDENT_WITHOUT_GROUP } from '@/types/const/const';
 
 export type UserTeacherChapter = UserType & {
-	teacherChapters: (TeacherChapterType & { chapter: ChapterType | null })[];
+	teacherStudentChapters: (TeacherChapterType & {
+		chapter: ChapterType | null;
+	})[];
 };
 
 export type WorkTeacherResponse = Record<string, UserTeacherChapter[]>;
@@ -54,7 +56,7 @@ export async function GET(req: NextRequest) {
 				with: {
 					student: {
 						with: {
-							teacherChapters: {
+							teacherStudentChapters: {
 								with: {
 									chapter: true,
 								},
@@ -67,15 +69,17 @@ export async function GET(req: NextRequest) {
 
 		const groupStudentsByGroup = students.reduce<WorkTeacherResponse>(
 			(acc, el) => {
-				if (el.group && acc[el.group]) {
-					acc[el.group] = [];
+				if (!el.group && acc[STUDENT_WITHOUT_GROUP]) {
+					acc[STUDENT_WITHOUT_GROUP].push(el);
 				} else if (!acc[STUDENT_WITHOUT_GROUP]) {
-					acc[STUDENT_WITHOUT_GROUP] = [];
+					acc[STUDENT_WITHOUT_GROUP] = [el];
 				}
 				if (el.group) {
-					acc[el.group].push(el);
-				} else {
-					acc[STUDENT_WITHOUT_GROUP].push(el);
+					if (acc[el.group]) {
+						acc[el.group].push(el);
+					} else {
+						acc[el.group] = [el];
+					}
 				}
 				return acc;
 			},
@@ -84,10 +88,17 @@ export async function GET(req: NextRequest) {
 
 		return NextResponse.json(groupStudentsByGroup);
 	} catch (error) {
-		return NextResponse.json({
-			type: 'error',
-			message: error,
-		});
+		if (error instanceof Error) {
+			return NextResponse.json({
+				type: 'error',
+				message: error.message,
+			});
+		} else {
+			return NextResponse.json({
+				type: 'error',
+				message: error,
+			});
+		}
 	}
 }
 

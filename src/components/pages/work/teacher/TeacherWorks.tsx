@@ -16,6 +16,7 @@ import {
 } from '@/components/ui/accordion';
 import { Button } from '@/components/ui/button';
 import { AddStudent } from '../sheet/AddStudent';
+import { Link } from '@/components/common/Link';
 
 type WorkTeacherProps = {
 	works: WorkTeacherResponse;
@@ -23,7 +24,6 @@ type WorkTeacherProps = {
 
 const TeacherWorks = memo(({ works }: WorkTeacherProps) => {
 	const groups = Object.keys(works);
-
 	return (
 		<Tabs className='w-full h-full flex px-24 py-2' orientation='vertical'>
 			<TabsList className='h-full rounded-r-none p-0 min-w-48 w-max'>
@@ -104,15 +104,18 @@ const WorkTabsContent = ({ work }: { work: UserTeacherChapter }) => {
 			<div>
 				<div>Задание данные студенту:</div>
 				<div className='flex flex-wrap gap-2'>
-					{work.teacherChapters.length > 0
-						? work.teacherChapters.map(chapter => (
+					{work.teacherStudentChapters.length > 0
+						? work.teacherStudentChapters.map(chapter => (
 								<div
 									className={`w-[calc(50%-4px)] px-4 py-2 border-2 ${
 										chapter.completed ? 'border-green-500' : 'border-red-500'
 									} rounded-md`}
 									key={chapter.id}
 								>
-									<h4>{chapter.chapter!.title}</h4>
+									<Link
+										path={`page/${chapter.chapter!.title}`}
+										title={chapter.chapter!.title}
+									/>
 								</div>
 						  ))
 						: 'Ничего не задано'}

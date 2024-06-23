@@ -18,6 +18,7 @@ export default function Error({
 		toast({
 			title: 'Название ошибки: ' + error.name,
 			description: 'Описание ошибки: ' + error.message,
+			variant: 'destructive',
 		});
 	}, [toast, error.name, error.message]);
 

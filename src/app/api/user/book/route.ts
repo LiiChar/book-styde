@@ -42,9 +42,21 @@ export async function POST(req: NextRequest) {
 			},
 		})
 	)?.userBooks.find(el => el.user_id == +user_id);
-	console.log('Существующая глава, ', findUserBook);
 
 	if (findUserBook) {
+		console.log('Существующая глава, ', +chapter_id);
+		try {
+			const res = await complateTask(+user_id, +chapter_id);
+			if (res) {
+				console.log(`Пользователь ${user_id} выполнил задание ${+chapter_id}`);
+			}
+		} catch (error) {
+			if (typeof error == 'string') {
+				console.log(error);
+			} else if (error instanceof Error) {
+				console.log(error.message);
+			}
+		}
 		return NextResponse.json({ type: 'info', message: 'Глава уже добавлена' });
 	}
 
@@ -59,7 +71,7 @@ export async function POST(req: NextRequest) {
 	try {
 		const res = await complateTask(+user_id, +chapter_id);
 		if (res) {
-			console.log(`Пользователь ${user_id} выполнил задание ${chapter_id}`);
+			console.log(`Пользователь ${user_id} выполнил задание ${+chapter_id}`);
 		}
 	} catch (error) {
 		if (typeof error == 'string') {

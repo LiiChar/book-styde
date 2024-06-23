@@ -1,5 +1,6 @@
 import { db } from '@/drizzle/db';
 import { TeacherChapter } from '@/drizzle/schema';
+import { revalidateTag } from 'next/cache';
 
 export const complateTask = async (userId: number, chapterId: number) => {
 	const teacherChapter = await db.query.TeacherChapter.findFirst({
@@ -35,7 +36,9 @@ export const complateTask = async (userId: number, chapterId: number) => {
 		throw Error('Страницы или пользователя не существует');
 	}
 
-	const isBookComplete = !!user.userBooks.find(book => book.id == chapter.id);
+	const isBookComplete = user.userBooks.find(
+		book => book.chapter_id == chapter.id
+	);
 
 	const isWorkComplete = user.userWorks.length == chapter.works.length;
 
@@ -47,6 +50,9 @@ export const complateTask = async (userId: number, chapterId: number) => {
 	await db.update(TeacherChapter).set({
 		completed: true,
 	});
+
+	revalidateTag('workTeacher');
+	revalidateTag('workStudent');
 
 	return true;
 };

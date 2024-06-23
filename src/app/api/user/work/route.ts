@@ -2,7 +2,6 @@ import { db } from '@/drizzle/db';
 import { UserWork, Work } from '@/drizzle/schema';
 import { eq } from 'drizzle-orm';
 import { NextRequest, NextResponse } from 'next/server';
-import { userCompletedTask } from '../../helper/verifyHelper';
 import { complateTask } from '../../helper/complateTask';
 
 export async function POST(req: NextRequest) {
@@ -42,6 +41,24 @@ export async function POST(req: NextRequest) {
 	console.log('Существующая решённая задача пользователя, ', findUserBook);
 
 	if (findUserBook) {
+		try {
+			const chapter = (await db.query.Work.findFirst({
+				where: (work, { eq }) => eq(work.id, +work_id),
+				with: {
+					chapter: true,
+				},
+			}))!.chapter;
+			const res = await complateTask(+user_id, chapter.id);
+			if (res) {
+				console.log(`Пользователь ${user_id} выполнил задание ${chapter.id}`);
+			}
+		} catch (error) {
+			if (typeof error == 'string') {
+				console.log(error);
+			} else if (error instanceof Error) {
+				console.log(error.message);
+			}
+		}
 		return NextResponse.json({
 			type: 'info',
 			message: 'Задача уже добавлена пользователю',
@@ -56,14 +73,13 @@ export async function POST(req: NextRequest) {
 		})
 		.returning();
 
-	const chapter = (await db.query.Work.findFirst({
-		where: (work, { eq }) => eq(work.id, +work_id),
-		with: {
-			chapter: true,
-		},
-	}))!.chapter;
-
 	try {
+		const chapter = (await db.query.Work.findFirst({
+			where: (work, { eq }) => eq(work.id, +work_id),
+			with: {
+				chapter: true,
+			},
+		}))!.chapter;
 		const res = await complateTask(+user_id, chapter.id);
 		if (res) {
 			console.log(`Пользователь ${user_id} выполнил задание ${chapter.id}`);

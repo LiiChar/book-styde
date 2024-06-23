@@ -6,6 +6,7 @@ import { and, eq } from 'drizzle-orm';
 import { authMiddlewareAdmin } from '@/lib/middleware';
 import { revalidateTag } from 'next/cache';
 import { STUDENT_WITHOUT_GROUP } from '@/types/const/const';
+import { isCompletedTask } from '@/app/api/helper/verifyHelper';
 
 export async function GET(req: NextRequest) {}
 
@@ -17,6 +18,7 @@ export type TeacherChapterPostDTO = {
 	description?: string;
 	teacher_id: number;
 };
+
 export async function POST(req: NextRequest) {
 	const {
 		student_id,
@@ -41,6 +43,20 @@ export async function POST(req: NextRequest) {
 	try {
 		revalidateTag('workTeacher');
 		revalidateTag('workStudent');
+		const reducer = (acc: Promise<any>[], id: number) => {
+			isCompletedTask(id, chapter_id).then(data => {
+				acc.push(
+					db.insert(TeacherChapter).values({
+						teacher_id: user.id,
+						chapter_id: chapter_id,
+						student_id: id,
+						completed: data,
+						description,
+					})
+				);
+			});
+			return acc;
+		};
 		if (group) {
 			if (group == STUDENT_WITHOUT_GROUP) {
 				group == null;
@@ -50,17 +66,7 @@ export async function POST(req: NextRequest) {
 			});
 
 			await Promise.all(
-				students.reduce<Promise<any>[]>((acc, val) => {
-					acc.push(
-						db.insert(TeacherChapter).values({
-							teacher_id: user.id,
-							chapter_id: chapter_id,
-							student_id: val.id,
-							description,
-						})
-					);
-					return acc;
-				}, [])
+				students.map(s => s.id).reduce<Promise<any>[]>(reducer, [])
 			);
 
 			return NextResponse.json({
@@ -68,19 +74,7 @@ export async function POST(req: NextRequest) {
 				message: 'Группе дано задание',
 			});
 		} else if (students) {
-			await Promise.all(
-				students.reduce<Promise<any>[]>((acc, val) => {
-					acc.push(
-						db.insert(TeacherChapter).values({
-							teacher_id: user.id,
-							chapter_id: chapter_id,
-							student_id: val,
-							description,
-						})
-					);
-					return acc;
-				}, [])
-			);
+			await Promise.all(students.reduce<Promise<any>[]>(reducer, []));
 
 			return NextResponse.json({
 				type: 'success',
@@ -91,6 +85,7 @@ export async function POST(req: NextRequest) {
 				teacher_id: user.id,
 				chapter_id: chapter_id,
 				student_id: student_id,
+				completed: await isCompletedTask(user.id, chapter_id),
 				description,
 			});
 

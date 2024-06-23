@@ -1,6 +1,6 @@
 import { db } from '@/drizzle/db';
 
-export const userCompletedTask = async (userId: number, chapterId: number) => {
+export const isCompletedTask = async (userId: number, chapterId: number) => {
 	const user = await db.query.User.findFirst({
 		where: (user, { eq }) => eq(user.id, userId),
 		with: {
