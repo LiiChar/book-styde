@@ -16,7 +16,7 @@ const Comments: FC<Props> = async ({ chapter_id, comments }) => {
 		<section className='my-4 w-full'>
 			<article className=''>
 				<h2 className='text-xl font-bold mb-3'>
-					{comments.length} комментариев
+					{comments?.length ?? 0} комментариев
 				</h2>
 				<InputComment chapter_id={chapter_id} />
 				<Suspense fallback={<Skeleton className='w-full h-12' />}>
