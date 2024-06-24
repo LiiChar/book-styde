@@ -54,7 +54,7 @@ const NavigationWrapper: FC<Props> = async ({ children, className, book }) => {
 			>
 				{children}
 				<div className='hidden w-full h-full md:block'>
-					<Comments chapter_id={book.id} comments={book.comments} />
+					{/* <Comments chapter_id={book.id} comments={book.comments} /> */}
 				</div>
 
 				<div className='w-full block md:hidden h-full'>
@@ -97,7 +97,7 @@ const NavigationWrapper: FC<Props> = async ({ children, className, book }) => {
 					</div>
 
 					<div className='block pb-4 w-full h-full'>
-						<Comments chapter_id={book.id} comments={book.comments} />
+						{/* <Comments chapter_id={book.id} comments={book.comments} /> */}
 					</div>
 				</div>
 			</div>
