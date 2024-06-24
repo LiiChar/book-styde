@@ -37,9 +37,13 @@ export const ListComment = ({
 			socket.unsubscribe({ channels: [`chapter-${chapter_id}`] });
 		};
 	}, [refresh, chapter_id]);
+
+	console.log('cms',comments);
+	
+
 	return (
 		<section className='flex flex-col gap-2 text-[14px]'>
-			{comments.length > 0 ? (
+			{comments && comments.length > 0 ? (
 				comments.map(com => (
 					<div className='gap-2 flex rounded-sm w-full' key={com.id}>
 						<Avatar>
