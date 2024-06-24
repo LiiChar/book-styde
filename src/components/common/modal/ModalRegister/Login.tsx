@@ -87,6 +87,7 @@ export const Login = () => {
 						<Input
 							id='link2'
 							value={keyword}
+							type='password'
 							autoFocus
 							onChange={e => setKeyword(e.target.value)}
 						/>

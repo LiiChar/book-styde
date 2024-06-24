@@ -41,6 +41,7 @@ export const Register = () => {
 				<Input
 					id='link2'
 					value={keyword}
+					type='password'
 					onChange={e => setKeyword(e.target.value)}
 				/>
 			</div>

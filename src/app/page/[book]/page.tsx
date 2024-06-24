@@ -8,6 +8,7 @@ import { Work } from '@/components/pages/book/Work';
 import { Button } from '@/components/ui/button';
 import { getChapterByTitle } from '@/request/book';
 import { ArrowLeft } from 'lucide-react';
+import { redirect } from 'next/navigation';
 
 interface Props {
 	params: {
@@ -36,6 +37,10 @@ export default async function Book({ params }: Props) {
 	const title = decodeURIComponent(params.book.replaceAll('_', ' '));
 
 	const book = await getChapterByTitle(title);
+
+	if (!book) {
+		redirect('/');
+	}
 
 	return (
 		<div className=''>

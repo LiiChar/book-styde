@@ -18,7 +18,7 @@ export const ListComment = ({
 	comments: CommentChapter[];
 	chapter_id: number;
 }) => {
-	const [comments, setComments] = useState(cms);
+	const [comments, setComments] = useState(cms ?? []);
 	const { refresh } = useRouter();
 
 	useEffect(() => {
