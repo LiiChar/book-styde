@@ -40,6 +40,9 @@ export async function POST(req: NextRequest) {
 			user_id: +comment.user_id,
 			chapter_id: +chapter_id,
 		});
+		revalidateTag('chapter');
+		revalidateTag('comment');
+
 		await socket.publish({
 			channel: `chapter-${chapter_id}`,
 			message: SOCKET_ACTION_REFRESH,

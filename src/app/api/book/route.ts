@@ -1,6 +1,7 @@
 import { db } from '@/drizzle/db';
 import { Chapter } from '@/drizzle/schema';
 import { asc, eq } from 'drizzle-orm';
+import { revalidateTag } from 'next/cache';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(req: NextRequest) {
@@ -34,6 +35,7 @@ export async function POST(req: NextRequest) {
 			message: 'Произошла ошибка',
 		});
 	}
+	revalidateTag('chapter');
 	return NextResponse.json({
 		type: 'succesfully',
 		message: 'Содержание успешно изменено',

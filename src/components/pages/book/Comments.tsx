@@ -12,6 +12,8 @@ interface Props {
 }
 
 const Comments: FC<Props> = async ({ chapter_id, comments }) => {
+	// console.log(comments);
+
 	return (
 		<section className='my-4 w-full'>
 			<article className=''>

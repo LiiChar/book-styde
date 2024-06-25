@@ -64,7 +64,7 @@ const NavigationWrapper: FC<Props> = async ({ children, className, book }) => {
 								<Link
 									path={'page/' + prev.title}
 									title={
-										<div className='flex'>
+										<div className='flex text-primary-foreground'>
 											<ArrowLeft
 												className='fill-black'
 												width={15}
@@ -82,7 +82,7 @@ const NavigationWrapper: FC<Props> = async ({ children, className, book }) => {
 								<Link
 									path={'page/' + next.title}
 									title={
-										<div className='flex'>
+										<div className='flex text-primary-foreground'>
 											{next.title}
 											<ArrowRight
 												className='fill-black'
