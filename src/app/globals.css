@@ -316,6 +316,7 @@ button,
 	&:focus {
 		outline: 0;
 	}
+	color: hsl(var(--primary-foreground))
 }
 
 button:hover {
