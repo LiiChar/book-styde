@@ -5,6 +5,7 @@ import { FC, Suspense } from 'react';
 import { getCommentsByChapterId } from '@/request/comment';
 import { CommentChapter } from '@/app/api/comment/route';
 import { ListComment } from './comment/ListComment';
+import { SocketListenerChapter } from '@/components/common/socket/SocketListenerChapter';
 
 interface Props {
 	chapter_id: number;
@@ -12,10 +13,9 @@ interface Props {
 }
 
 const Comments: FC<Props> = async ({ chapter_id, comments }) => {
-	// console.log(comments);
-
 	return (
 		<section className='my-4 w-full'>
+			<SocketListenerChapter channel={chapter_id} />
 			<article className=''>
 				<h2 className='text-xl font-bold mb-3'>
 					{comments?.length ?? 0} комментариев

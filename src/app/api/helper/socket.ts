@@ -15,7 +15,7 @@ export type ActionSocket = typeof SOCKET_ACTION_REFRESH;
 export type ActionSocketMessage = ActionSocket | string;
 
 export const sendMessage = async (
-	channel: string,
+	channel: string | number,
 	variant: VariantChannel = 'chapter',
 	message: ActionSocketMessage
 ) => {
@@ -24,3 +24,5 @@ export const sendMessage = async (
 		message: message,
 	});
 };
+
+export const linstenMessage = async () => {};

@@ -1,45 +1,17 @@
-'use client';
-
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { useEffect, useState } from 'react';
 import { ThumbsComment } from './ThumbsComment';
 import { getTimeAgo } from '@/lib/time';
-import { hasCookie } from 'cookies-next';
 import { CommentChapter } from '@/app/api/comment/route';
 import { FeedbackComment } from './FeedbackComment';
-import { useRouter } from 'next/navigation';
-import { socket } from '@/app/api/helper/socket';
-import { SOCKET_ACTION_REFRESH } from '@/types/const/const';
-
+import { useRouter } from 'next/router';
 export const ListComment = ({
-	comments: cms,
+	comments,
 	chapter_id,
 }: {
 	comments: CommentChapter[];
 	chapter_id: number;
 }) => {
-	const [comments, setComments] = useState(cms ?? []);
-	const { refresh } = useRouter();
-
-	useEffect(() => {
-		socket.subscribe({ channels: [`chapter-${chapter_id}`] });
-		socket.addListener({
-			message: event => {
-				console.log(event.message);
-
-				if (event.message == SOCKET_ACTION_REFRESH) {
-					refresh();
-				}
-			},
-		});
-
-		return () => {
-			socket.unsubscribe({ channels: [`chapter-${chapter_id}`] });
-		};
-	}, [refresh, chapter_id]);
-
-	console.log('cms',comments);
-	
+	// const { refresh } = useRouter();
 
 	return (
 		<section className='flex flex-col gap-2 text-[14px]'>
