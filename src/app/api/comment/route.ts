@@ -1,15 +1,20 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 import { revalidateTag } from 'next/cache';
-import { db, CommentType, UserType, LikesCommentType } from '@/drizzle/db';
+import {
+	db,
+	CommentType,
+	UserType,
+	LikesCommentType,
+	FeedbackCommentType,
+} from '@/drizzle/db';
 import { Comment, LikesComment, User } from '@/drizzle/schema';
 import { and, desc, eq } from 'drizzle-orm';
-import { sendMessage, socket } from '../helper/socket';
-import { SOCKET_ACTION_REFRESH } from '@/types/const/const';
 
 export type CommentChapter = CommentType & {
 	user: UserType | null;
 	likesComments: LikesCommentType[];
+	feedbackComments: FeedbackCommentType[];
 };
 
 export async function GET(req: NextRequest) {
@@ -24,6 +29,7 @@ export async function GET(req: NextRequest) {
 		with: {
 			user: true,
 			likesComments: true,
+			feedbackComments: true,
 		},
 		orderBy: [desc(Comment.created_at)],
 	});
@@ -42,8 +48,6 @@ export async function POST(req: NextRequest) {
 		});
 		revalidateTag('chapter');
 		revalidateTag('comment');
-
-		await sendMessage(chapter_id, 'chapter', SOCKET_ACTION_REFRESH);
 	} catch (error) {
 		return NextResponse.json({
 			type: 'error',

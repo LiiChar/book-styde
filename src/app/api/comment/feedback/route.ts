@@ -12,6 +12,7 @@ import type {
 
 export type FeedbackChapter = FeedbackCommentType & {
 	user: UserType;
+	feedbackCommentsd?: FeedbackCommentType[];
 };
 
 export async function GET(req: NextRequest) {
@@ -24,6 +25,7 @@ export async function GET(req: NextRequest) {
 			orderBy: [desc(FeedbackComment.created_at)],
 			with: {
 				user: true,
+				feedbackComments: true,
 			},
 		});
 
@@ -36,6 +38,7 @@ export async function GET(req: NextRequest) {
 			orderBy: [desc(FeedbackComment.created_at)],
 			with: {
 				user: true,
+				feedbackComments: true,
 			},
 		});
 

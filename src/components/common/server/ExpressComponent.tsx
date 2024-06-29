@@ -17,31 +17,35 @@ const ActionsVariant: Record<
 	},
 };
 export const ExpressComponent = async () => {
-	const app = express();
-	const server = createServer(app);
+	try {
+		const app = express();
+		const server = createServer(app);
 
-	app.use(cors({ origin: '*' }));
-	const io = new Server(server, {
-		cors: {
-			origin: '*',
-			methods: ['GET', 'POST'],
-		},
-	});
-	const PORT = process.env.NEXT_PUBLIC_SOCKET_PORT;
-	io.on('connection', socket => {
-		socket.on('chapter', (arg: SocketAction) => {
-			const { channel, message }: SocketAction = arg;
-			ActionsVariant[message](socket, io, channel);
+		app.use(cors({ origin: '*' }));
+		const io = new Server(server, {
+			cors: {
+				origin: '*',
+				methods: ['GET', 'POST'],
+			},
+		});
+		const PORT = process.env.NEXT_PUBLIC_SOCKET_PORT;
+		io.on('connection', socket => {
+			socket.on('chapter', (arg: SocketAction) => {
+				const { channel, message }: SocketAction = arg;
+				ActionsVariant[message](socket, io, channel);
+			});
+
+			socket.on('disconnect', () => {
+				console.log('disconnect');
+			});
 		});
 
-		socket.on('disconnect', () => {
-			console.log('disconnect');
+		server.listen(PORT, () => {
+			console.log(' Сервер запустился http://localhost:' + PORT);
 		});
-	});
-
-	server.listen(PORT, () => {
-		console.log('server running at http://localhost:' + PORT);
-	});
+	} catch (error) {
+		console.log('Сервер уже создан');
+	}
 
 	return <></>;
 };

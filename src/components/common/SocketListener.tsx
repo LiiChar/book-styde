@@ -15,10 +15,10 @@ export const SocketListener = ({
 	handler,
 }: SocketListenerType) => {
 	useEffect(() => {
-		const socket = listenMessage(channel, variant, handler);
-		return () => {
-			socket.disconnect();
-		};
-	}, [channel, variant, handler]);
+		listenMessage(channel, variant, handler);
+		// return () => {
+		// 	socket.disconnect();
+		// };
+	}, []);
 	return <></>;
 };

@@ -12,7 +12,7 @@ interface Props {
 	comments: CommentChapter[];
 }
 
-const Comments: FC<Props> = async ({ chapter_id, comments }) => {
+const Comments: FC<Props> = ({ chapter_id, comments }) => {
 	return (
 		<section className='my-4 w-full'>
 			<SocketListenerChapter channel={chapter_id} variant='chapter' />

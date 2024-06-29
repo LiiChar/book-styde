@@ -49,6 +49,7 @@ export async function POST(req: NextRequest) {
 						with: {
 							user: true,
 							likesComments: true,
+							feedbackComments: true,
 						},
 					},
 				},

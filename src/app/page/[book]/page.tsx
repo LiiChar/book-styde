@@ -1,4 +1,5 @@
 'use server';
+import { SocketListenerChapter } from '@/components/common/socket/SocketListenerChapter';
 import { Aside } from '@/components/pages/book/Aside';
 import { Comments } from '@/components/pages/book/Comments';
 import { Content } from '@/components/pages/book/Content';
@@ -20,8 +21,6 @@ export async function generateMetadata({ params }: Props) {
 	const title = decodeURIComponent(params.book.replaceAll('_', ' '));
 
 	const book = await getChapterByTitle(title);
-
-	console.log(book);
 
 	if (!book) {
 		redirect('/');
@@ -51,6 +50,8 @@ export default async function Book({ params }: Props) {
 	return (
 		<div className=''>
 			<div className='flex relative'>
+				<SocketListenerChapter channel={book.id} variant='chapter' />
+
 				<Aside chapter={book.title} className='overflow-y-auto' />
 				<NavigationWrapper
 					book={book}
