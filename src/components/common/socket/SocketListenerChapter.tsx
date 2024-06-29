@@ -1,6 +1,6 @@
 'use client';
 
-import { VariantChannel } from '@/app/api/helper/socket';
+import { VariantChannel } from '@/lib/socket';
 import { SocketListener } from '../SocketListener';
 
 export type SocketListenerChapterType = {
@@ -16,8 +16,8 @@ export const SocketListenerChapter = ({
 		<SocketListener
 			channel={channel}
 			variant={variant}
-			handler={event => {
-				console.log('socket ', event.message);
+			handler={(arg: any) => {
+				console.log('listen ', arg);
 			}}
 		/>
 	);

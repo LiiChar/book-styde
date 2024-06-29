@@ -1,13 +1,12 @@
 'use client';
 
 import { useEffect } from 'react';
-import { VariantChannel, socket } from '@/app/api/helper/socket';
-import Pubnub from 'pubnub';
+import { VariantChannel, listenMessage, socket } from '@/lib/socket';
 
 export type SocketListenerType = {
 	channel: string | number;
 	variant?: VariantChannel;
-	handler: (ev: Pubnub.MessageEvent) => void;
+	handler: (arg: any[]) => void;
 };
 
 export const SocketListener = ({
@@ -16,13 +15,9 @@ export const SocketListener = ({
 	handler,
 }: SocketListenerType) => {
 	useEffect(() => {
-		socket.addListener({
-			message: handler,
-		});
-		socket.subscribe({ channels: [`${variant}-${channel}`] });
-
+		const socket = listenMessage(channel, variant, handler);
 		return () => {
-			socket.unsubscribe({ channels: [`${variant}-${channel}`] });
+			socket.disconnect();
 		};
 	}, [channel, variant, handler]);
 	return <></>;

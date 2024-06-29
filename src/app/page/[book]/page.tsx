@@ -21,6 +21,12 @@ export async function generateMetadata({ params }: Props) {
 
 	const book = await getChapterByTitle(title);
 
+	console.log(book);
+
+	if (!book) {
+		redirect('/');
+	}
+
 	return {
 		title: book.title,
 		description: book.content.slice(0, 50),

@@ -3,7 +3,7 @@ import { ThumbsComment } from './ThumbsComment';
 import { getTimeAgo } from '@/lib/time';
 import { CommentChapter } from '@/app/api/comment/route';
 import { FeedbackComment } from './FeedbackComment';
-import { useRouter } from 'next/router';
+
 export const ListComment = ({
 	comments,
 	chapter_id,
@@ -11,8 +11,6 @@ export const ListComment = ({
 	comments: CommentChapter[];
 	chapter_id: number;
 }) => {
-	// const { refresh } = useRouter();
-
 	return (
 		<section className='flex flex-col gap-2 text-[14px]'>
 			{comments && comments.length > 0 ? (

@@ -10,6 +10,8 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useFetch } from '@/hooks/useFetch';
 import { ButtonLoader } from '@/components/common/ButtonLoader';
 import { getTextFromRef } from '@/lib/text';
+import { sendMessage } from '@/lib/socket';
+import { SOCKET_ACTION_REFRESH } from '@/types/const/const';
 
 interface Props {
 	chapter_id: number;
@@ -32,6 +34,7 @@ export const InputComment: FC<Props> = ({ chapter_id }) => {
 			},
 			chapter_id,
 		});
+		sendMessage(chapter_id, 'chapter', SOCKET_ACTION_REFRESH);
 		handleReject();
 	};
 

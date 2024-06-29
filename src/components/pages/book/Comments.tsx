@@ -15,7 +15,7 @@ interface Props {
 const Comments: FC<Props> = async ({ chapter_id, comments }) => {
 	return (
 		<section className='my-4 w-full'>
-			<SocketListenerChapter channel={chapter_id} />
+			<SocketListenerChapter channel={chapter_id} variant='chapter' />
 			<article className=''>
 				<h2 className='text-xl font-bold mb-3'>
 					{comments?.length ?? 0} комментариев

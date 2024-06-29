@@ -1,40 +1,31 @@
-// import { WebSocketServer } from 'ws';
+'use client';
 
-// export class SocketBase {
-// 	constructor(type: 'client' | 'server', path: string, events: string[]) {
-// 		if (type == 'client') {
-// 			return new SocketClient(path, events);
-// 		} else {
-// 			return new SocketServer(path, events);
-// 		}
-// 	}
-// }
+import { SOCKET_ACTIONS, SOCKET_ACTION_REFRESH } from '@/types/const/const';
+import { io } from 'socket.io-client';
 
-// class SocketClient extends WebSocket {
-// 	public path!: string;
-// 	public events!: string[];
-// 	public socket!: WebSocket;
+export const socket = io(
+	`ws://${process.env.NEXT_PUBLIC_URL_DOMAIN}:${process.env.NEXT_PUBLIC_SOCKET_PORT}`
+);
 
-// 	constructor(path: string, event: string[]) {
-// 		super(path);
-// 		this.path = path;
-// 		this.events = event;
-// 		this.socket = new WebSocket(path);
-// 	}
+const variant = ['chapter'] as const;
+export type VariantChannel = (typeof variant)[number];
+export type ActionSocket = SOCKET_ACTIONS;
+export type ActionSocketMessage = ActionSocket | string;
+export type SocketAction = { channel: string; message: SOCKET_ACTIONS };
 
-// 	public on(ev: evens) {}
-// }
+export const sendMessage = (
+	channel: string | number,
+	variant: VariantChannel = 'chapter',
+	message: ActionSocketMessage
+) => {
+	socket.emit(variant, { message, channel });
+};
 
-// class SocketServer extends WebSocketServer {
-// 	public path!: string;
-// 	public events!: string[];
-// 	constructor(path: string, event: string[]) {
-// 		super({
-// 			path: path,
-// 		});
-// 		this.path = path;
-// 		this.events = event;
-// 	}
-
-// 	override on() {}
-// }
+export const listenMessage = (
+	channel: string | number,
+	variant: VariantChannel = 'chapter',
+	handler: (arg: any[]) => void
+) => {
+	socket.on(`${variant}-${channel}`, handler);
+	return socket;
+};
