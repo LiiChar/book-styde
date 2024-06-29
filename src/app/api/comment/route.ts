@@ -4,8 +4,9 @@ import { revalidateTag } from 'next/cache';
 import { db, CommentType, UserType, LikesCommentType } from '@/drizzle/db';
 import { Comment, LikesComment, User } from '@/drizzle/schema';
 import { and, desc, eq } from 'drizzle-orm';
-import { socket } from '../helper/socket';
 import { SOCKET_ACTION_REFRESH } from '@/types/const/const';
+import { io } from 'socket.io-client';
+// import { sendMessage, socket } from '@/lib/socket';
 
 export type CommentChapter = CommentType & {
 	user: UserType | null;
@@ -42,11 +43,6 @@ export async function POST(req: NextRequest) {
 		});
 		revalidateTag('chapter');
 		revalidateTag('comment');
-
-		await socket.publish({
-			channel: `chapter-${chapter_id}`,
-			message: SOCKET_ACTION_REFRESH,
-		});
 	} catch (error) {
 		return NextResponse.json({
 			type: 'error',

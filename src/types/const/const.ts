@@ -7,3 +7,8 @@ export const STUDENT_WITHOUT_GROUP = 'без группы';
 // SOCKET
 export const NEW_COMMENT = 'new_comment';
 export const SOCKET_ACTION_REFRESH = 'refresh';
+export const SOCKET_ACTION_REDIRECT = 'redirect';
+
+export type SOCKET_ACTIONS =
+	| typeof SOCKET_ACTION_REFRESH
+	| typeof SOCKET_ACTION_REDIRECT;
