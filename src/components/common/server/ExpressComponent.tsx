@@ -6,6 +6,7 @@ import { Server, Socket } from 'socket.io';
 import cors from 'cors';
 import { SocketAction } from '@/lib/socket';
 import { SOCKET_ACTIONS } from '@/types/const/const';
+import { execSync } from 'child_process';
 
 const ActionsVariant: Record<
 	SOCKET_ACTIONS,
@@ -18,6 +19,8 @@ const ActionsVariant: Record<
 };
 export const ExpressComponent = async () => {
 	try {
+		const PORT = process.env.NEXT_PUBLIC_SOCKET_PORT!;
+
 		const app = express();
 		const server = createServer(app);
 
@@ -28,7 +31,6 @@ export const ExpressComponent = async () => {
 				methods: ['GET', 'POST'],
 			},
 		});
-		const PORT = process.env.NEXT_PUBLIC_SOCKET_PORT;
 		io.on('connection', socket => {
 			socket.on('chapter', (arg: SocketAction) => {
 				const { channel, message }: SocketAction = arg;
@@ -42,6 +44,10 @@ export const ExpressComponent = async () => {
 
 		server.listen(PORT, () => {
 			console.log(' Сервер запустился http://localhost:' + PORT);
+		});
+
+		server.on('error', () => {
+			console.log('Сервер уже создан');
 		});
 	} catch (error) {
 		console.log('Сервер уже создан');
