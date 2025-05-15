@@ -34,7 +34,7 @@
 		"@types/uuid": "^9.0.8",
 		"@vercel/postgres": "^0.8.0",
 		"@vercel/speed-insights": "^1.0.12",
-		"bcrypt": "^5.1.1",
+		"bcrypt": "^6.0.0",
 		"class-variance-authority": "^0.7.0",
 		"clsx": "^2.1.1",
 		"components": "link:@types/prismjs/components",
